@@ -4,6 +4,7 @@ import com.milaboratory.mir.Gene;
 import com.milaboratory.mir.Species;
 
 import java.util.Map;
+import java.util.stream.Collectors;
 
 public class SegmentLibraryImpl implements SegmentLibrary {
     private final Species species;
@@ -54,5 +55,26 @@ public class SegmentLibraryImpl implements SegmentLibrary {
     @Override
     public Gene getGene() {
         return gene;
+    }
+
+    @Override
+    public String toString() {
+        String res = "[Segment library for " + species + " " + gene + "]\n";
+
+        res += "> #V segments = " + variableSegmentMap.size() + "\n";
+        res += variableSegmentMap.values().stream().limit(10)
+                .map(VariableSegment::toString).collect(Collectors.joining("\n"));
+        res += "\n> #D segments = " + diversitySegmentMap.size() + "\n";
+        res += diversitySegmentMap.values().stream().limit(10)
+                .map(DiversitySegment::toString).collect(Collectors.joining("\n"));
+        res += "\n> #J segments = " + joiningSegmentMap.size() + "\n";
+        res += joiningSegmentMap.values().stream().limit(10)
+                .map(JoiningSegment::toString).collect(Collectors.joining("\n"));
+        res += "\n> #C segments = " + constantSegmentMap.size() + "\n";
+        res += constantSegmentMap.values().stream().limit(10)
+                .map(ConstantSegment::toString).collect(Collectors.joining("\n"));
+        res += "\n";
+
+        return res;
     }
 }

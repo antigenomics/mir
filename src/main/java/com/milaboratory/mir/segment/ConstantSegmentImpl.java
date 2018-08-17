@@ -20,4 +20,9 @@ public class ConstantSegmentImpl implements ConstantSegment {
     public NucleotideSequence getSequence() {
         return sequence;
     }
+
+    @Override
+    public String toString() {
+        return id;
+    }
 }

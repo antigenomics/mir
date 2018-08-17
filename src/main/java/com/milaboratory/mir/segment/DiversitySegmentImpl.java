@@ -41,4 +41,9 @@ public class DiversitySegmentImpl implements DiversitySegment {
     public NucleotideSequence getFullGermline() {
         return cdr3Part;
     }
+
+    @Override
+    public String toString() {
+        return id + "\t" + cdr3Part;
+    }
 }

@@ -72,4 +72,9 @@ public class VariableSegmentImpl implements VariableSegment {
     public int getReferencePoint() {
         return referencePoint;
     }
+
+    @Override
+    public String toString() {
+        return id + "\t" + cdr3Part;
+    }
 }
