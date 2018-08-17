@@ -1,0 +1,7 @@
+package com.milaboratory.mir.segment;
+
+import com.milaboratory.core.sequence.NucleotideSequence;
+
+public interface DiversitySegment extends Cdr3GermlineSegment {
+    NucleotideSequence getTrimmedCdr3Part(int trimmingSize5, int trimmingSize3);
+}

@@ -7,7 +7,11 @@ import com.milaboratory.mir.model.probability.ProbabilityUtils;
 import java.io.*;
 import java.util.*;
 
-public class MuruganModelParser {
+public final class MuruganModelParser {
+    private MuruganModelParser() {
+
+    }
+
     public static PlainTextProbabilisticModel load(InputStream params, InputStream marginals,
                                                    ProbabilisticModelFormula formula)
             throws IOException {
