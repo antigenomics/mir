@@ -11,12 +11,11 @@ public enum Gene {
 
     private final String code;
     private final boolean hasD;
-    private final Set<String> allowedValues;
 
     Gene(String code, boolean hasD) {
         this.code = code;
         this.hasD = hasD;
-        this.allowedValues = Arrays.stream(values()).map(Gene::getCode).collect(Collectors.toSet());
+
     }
 
     public String getCode() {
@@ -28,6 +27,6 @@ public enum Gene {
     }
 
     public boolean matches(String name) {
-        return this.allowedValues.contains(name.toLowerCase());
+        return code.equalsIgnoreCase(name);
     }
 }

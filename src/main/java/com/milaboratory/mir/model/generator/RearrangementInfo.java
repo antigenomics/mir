@@ -1,12 +1,13 @@
 package com.milaboratory.mir.model.generator;
 
 import com.milaboratory.mir.clonotype.SegmentTrimming;
-import com.milaboratory.mir.segment.SegmentId;
+import com.milaboratory.mir.segment.JoiningSegment;
+import com.milaboratory.mir.segment.VariableSegment;
 
 public interface RearrangementInfo {
-    SegmentId getVSegment();
+    VariableSegment getVSegment();
 
-    SegmentId getJSegment();
+    JoiningSegment getJSegment();
 
     SegmentTrimming getSegmentTrimming();
 }

@@ -3,23 +3,24 @@ package com.milaboratory.mir.model.generator;
 import com.milaboratory.core.sequence.NucleotideSequence;
 import com.milaboratory.mir.clonotype.JunctionMarkup;
 import com.milaboratory.mir.clonotype.ReadlessClonotypeImpl;
-import com.milaboratory.mir.segment.SegmentSequenceLibrary;
+import com.milaboratory.mir.segment.DiversitySegment;
+import com.milaboratory.mir.segment.JoiningSegment;
+import com.milaboratory.mir.segment.VariableSegment;
 
 public class VDJClonotypeBuilder implements ClonotypeBuilder<VDJRearrangementInfo, ReadlessClonotypeImpl> {
-    private final SegmentSequenceLibrary segmentSequenceLibrary;
-
-    public VDJClonotypeBuilder(SegmentSequenceLibrary segmentSequenceLibrary) {
-        this.segmentSequenceLibrary = segmentSequenceLibrary;
+    public VDJClonotypeBuilder() {
     }
 
     @Override
     public ReadlessClonotypeImpl build(VDJRearrangementInfo rearrangementInfo) {
-        NucleotideSequence vPart = segmentSequenceLibrary.getTrimmedVCdr3Part(rearrangementInfo.getVSegment(),
-                rearrangementInfo.getVTrimming()),
-                dPart = segmentSequenceLibrary.getTrimmedDCdr3Part(rearrangementInfo.getDSegment(),
-                        rearrangementInfo.getDTrimming5(), rearrangementInfo.getDTrimming3()),
-                jPart = segmentSequenceLibrary.getTrimmedJCdr3Part(rearrangementInfo.getJSegment(),
-                        rearrangementInfo.getJTrimming());
+        VariableSegment variableSegment = rearrangementInfo.getVSegment();
+        DiversitySegment diversitySegment = rearrangementInfo.getDSegment();
+        JoiningSegment joiningSegment = rearrangementInfo.getJSegment();
+
+        NucleotideSequence vPart = variableSegment.getTrimmedCdr3Part(rearrangementInfo.getVTrimming()),
+                dPart = diversitySegment.getTrimmedCdr3Part(rearrangementInfo.getDTrimming5(),
+                        rearrangementInfo.getDTrimming3()),
+                jPart = joiningSegment.getTrimmedCdr3Part(rearrangementInfo.getJTrimming());
 
         NucleotideSequence cdr3 = vPart;
         int vEnd = cdr3.size();

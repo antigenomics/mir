@@ -2,23 +2,27 @@ package com.milaboratory.mir.clonotype;
 
 import com.milaboratory.core.sequence.AminoAcidSequence;
 import com.milaboratory.core.sequence.NucleotideSequence;
-import com.milaboratory.mir.segment.SegmentId;
+import com.milaboratory.mir.segment.DiversitySegment;
+import com.milaboratory.mir.segment.JoiningSegment;
+import com.milaboratory.mir.segment.VariableSegment;
 
 public class ReadlessClonotypeImpl implements ClonotypeWithRearrangementInfo {
     private final SegmentTrimming segmentTrimming;
     private final JunctionMarkup junctionMarkup;
     private final NucleotideSequence cdr3nt;
     private final AminoAcidSequence cdr3aa;
-    private final SegmentId v, d, j;
+    private final VariableSegment v;
+    private final DiversitySegment d;
+    private final JoiningSegment j;
 
     public ReadlessClonotypeImpl(NucleotideSequence cdr3nt,
-                                 SegmentId v, SegmentId d, SegmentId j,
+                                 VariableSegment v, DiversitySegment d, JoiningSegment j,
                                  SegmentTrimming segmentTrimming, JunctionMarkup junctionMarkup) {
         this(cdr3nt, v, d, j, segmentTrimming, junctionMarkup, AminoAcidSequence.translateFromCenter(cdr3nt));
     }
 
     public ReadlessClonotypeImpl(NucleotideSequence cdr3nt,
-                                 SegmentId v, SegmentId d, SegmentId j,
+                                 VariableSegment v, DiversitySegment d, JoiningSegment j,
                                  SegmentTrimming segmentTrimming, JunctionMarkup junctionMarkup,
                                  AminoAcidSequence cdr3aa) {
         this.segmentTrimming = segmentTrimming;
@@ -51,17 +55,17 @@ public class ReadlessClonotypeImpl implements ClonotypeWithRearrangementInfo {
     }
 
     @Override
-    public SegmentId getV() {
+    public VariableSegment getV() {
         return v;
     }
 
     @Override
-    public SegmentId getD() {
+    public DiversitySegment getD() {
         return d;
     }
 
     @Override
-    public SegmentId getJ() {
+    public JoiningSegment getJ() {
         return j;
     }
 }

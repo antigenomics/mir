@@ -1,7 +1,7 @@
 package com.milaboratory.mir.model.generator;
 
-import com.milaboratory.mir.segment.SegmentId;
+import com.milaboratory.mir.segment.DiversitySegment;
 
-public interface SegmentTrimming2Generator {
-    TrimmingPair generate(SegmentId segmentId);
+public interface SegmentTrimming2Generator<T extends DiversitySegment> {
+    TrimmingPair generate(T segmentId);
 }

@@ -1,19 +1,21 @@
 package com.milaboratory.mir.model.generator;
 
 import com.milaboratory.core.sequence.NucleotideSequence;
-import com.milaboratory.mir.segment.SegmentId;
+import com.milaboratory.mir.segment.JoiningSegment;
+import com.milaboratory.mir.segment.VariableSegment;
 
 public class VJRearrangementGenerator implements RearrangmentGenerator<VJRearrangementInfo> {
-    private final SegmentGenerator vSegmentGenerator, jSegmentGenerator;
-    private final SegmentTrimmingGenerator vSegmentTrimmingGenerator,
-            jSegmentTrimmingGenerator;
+    private final SegmentGenerator<VariableSegment> vSegmentGenerator;
+    private final SegmentGenerator<JoiningSegment> jSegmentGenerator;
+    private final SegmentTrimmingGenerator<VariableSegment> vSegmentTrimmingGenerator;
+    private final SegmentTrimmingGenerator<JoiningSegment> jSegmentTrimmingGenerator;
     private final InsertSizeGenerator insertSizeGenerator;
     private final SequenceGenerator<NucleotideSequence> vjInsertGenerator;
 
-    public VJRearrangementGenerator(SegmentGenerator vSegmentGenerator,
-                                    SegmentGenerator jSegmentGenerator,
-                                    SegmentTrimmingGenerator vSegmentTrimmingGenerator,
-                                    SegmentTrimmingGenerator jSegmentTrimmingGenerator,
+    public VJRearrangementGenerator(SegmentGenerator<VariableSegment> vSegmentGenerator,
+                                    SegmentGenerator<JoiningSegment> jSegmentGenerator,
+                                    SegmentTrimmingGenerator<VariableSegment> vSegmentTrimmingGenerator,
+                                    SegmentTrimmingGenerator<JoiningSegment> jSegmentTrimmingGenerator,
                                     InsertSizeGenerator insertSizeGenerator,
                                     SequenceGenerator<NucleotideSequence> vjInsertGenerator) {
         this.vSegmentGenerator = vSegmentGenerator;
@@ -26,10 +28,11 @@ public class VJRearrangementGenerator implements RearrangmentGenerator<VJRearran
 
     @Override
     public VJRearrangementInfo generate() {
-        SegmentId vSegment = vSegmentGenerator.generate(),
-                jSegment = jSegmentGenerator.generate();
+        VariableSegment vSegment = vSegmentGenerator.generate();
+        JoiningSegment jSegment = jSegmentGenerator.generate();
+
         int vTrimming = vSegmentTrimmingGenerator.generate(vSegment),
-                jTrimming = jSegmentTrimmingGenerator.generate(vSegment),
+                jTrimming = jSegmentTrimmingGenerator.generate(jSegment),
                 vjInsertSize = insertSizeGenerator.generate();
 
         NucleotideSequence vjInsert = vjInsertGenerator.generateForward(vjInsertSize);

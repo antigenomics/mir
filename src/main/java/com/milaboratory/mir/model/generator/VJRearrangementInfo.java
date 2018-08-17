@@ -2,14 +2,16 @@ package com.milaboratory.mir.model.generator;
 
 import com.milaboratory.core.sequence.NucleotideSequence;
 import com.milaboratory.mir.clonotype.SegmentTrimming;
-import com.milaboratory.mir.segment.SegmentId;
+import com.milaboratory.mir.segment.JoiningSegment;
+import com.milaboratory.mir.segment.VariableSegment;
 
 public class VJRearrangementInfo implements RearrangementInfo {
-    private final SegmentId vSegment, jSegment;
+    private final VariableSegment vSegment;
+    private final JoiningSegment jSegment;
     private final int vTrimming, jTrimming, vjInsertSize;
     private final NucleotideSequence vjInsert;
 
-    public VJRearrangementInfo(SegmentId vSegment, SegmentId jSegment,
+    public VJRearrangementInfo(VariableSegment vSegment, JoiningSegment jSegment,
                                int vTrimming, int jTrimming, int vjInsertSize,
                                NucleotideSequence vjInsert) {
         this.vSegment = vSegment;
@@ -21,12 +23,12 @@ public class VJRearrangementInfo implements RearrangementInfo {
     }
 
     @Override
-    public SegmentId getVSegment() {
+    public VariableSegment getVSegment() {
         return vSegment;
     }
 
     @Override
-    public SegmentId getJSegment() {
+    public JoiningSegment getJSegment() {
         return jSegment;
     }
 

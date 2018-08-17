@@ -2,16 +2,18 @@ package com.milaboratory.mir.clonotype;
 
 import com.milaboratory.core.sequence.AminoAcidSequence;
 import com.milaboratory.core.sequence.NucleotideSequence;
-import com.milaboratory.mir.segment.SegmentId;
+import com.milaboratory.mir.segment.DiversitySegment;
+import com.milaboratory.mir.segment.JoiningSegment;
+import com.milaboratory.mir.segment.VariableSegment;
 
 public interface Clonotype {
     NucleotideSequence getCdr3Nt();
 
     AminoAcidSequence getCdr3Aa();
 
-    SegmentId getV();
+    VariableSegment getV();
 
-    SegmentId getD();
+    DiversitySegment getD();
 
-    SegmentId getJ();
+    JoiningSegment getJ();
 }
