@@ -5,7 +5,7 @@ import com.milaboratory.mir.Species;
 
 import java.util.Map;
 
-public class SegmentLibraryImpl {
+public class SegmentLibraryImpl implements SegmentLibrary {
     private final Species species;
     private final Gene gene;
     private final Map<String, VariableSegment> variableSegmentMap;
@@ -24,5 +24,35 @@ public class SegmentLibraryImpl {
         this.diversitySegmentMap = diversitySegmentMap;
         this.joiningSegmentMap = joiningSegmentMap;
         this.constantSegmentMap = constantSegmentMap;
+    }
+
+    @Override
+    public VariableSegment getOrCreateV(String id) {
+        return variableSegmentMap.getOrDefault(id, MissingVariableSegment.INSTANCE);
+    }
+
+    @Override
+    public JoiningSegment getOrCreateJ(String id) {
+        return joiningSegmentMap.getOrDefault(id, MissingJoiningSegment.INSTANCE);
+    }
+
+    @Override
+    public DiversitySegment getOrCreateD(String id) {
+        return diversitySegmentMap.getOrDefault(id, MissingDiversitySegment.INSTANCE);
+    }
+
+    @Override
+    public ConstantSegment getOrCreateC(String id) {
+        return constantSegmentMap.getOrDefault(id, MissingConstantSegment.INSTANCE);
+    }
+
+    @Override
+    public Species getSpecies() {
+        return species;
+    }
+
+    @Override
+    public Gene getGene() {
+        return gene;
     }
 }

@@ -10,6 +10,8 @@ public interface SegmentLibrary {
 
     DiversitySegment getOrCreateD(String id);
 
+    ConstantSegment getOrCreateC(String id);
+
     Species getSpecies();
 
     Gene getGene();

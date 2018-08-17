@@ -1,4 +1,7 @@
 package com.milaboratory.mir.segment;
 
-public interface ConstantSegment extends Segment{
+import com.milaboratory.core.sequence.NucleotideSequence;
+
+public interface ConstantSegment extends Segment {
+    NucleotideSequence getSequence();
 }

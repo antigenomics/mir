@@ -78,7 +78,7 @@ final class MigecSegmentLibraryParser {
                             break;
 
                         case C:
-                            // todo
+                            constantSegmentMap.put(id, new ConstantSegmentImpl(id, seq));
                             break;
                     }
                 }

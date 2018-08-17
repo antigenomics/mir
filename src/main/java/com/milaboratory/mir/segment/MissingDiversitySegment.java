@@ -2,10 +2,10 @@ package com.milaboratory.mir.segment;
 
 import com.milaboratory.core.sequence.NucleotideSequence;
 
-public final class AbsentDiversitySegment implements DiversitySegment {
-    public static AbsentDiversitySegment INSTANCE = new AbsentDiversitySegment();
+public class MissingDiversitySegment  implements DiversitySegment {
+    public static MissingDiversitySegment INSTANCE = new MissingDiversitySegment();
 
-    private AbsentDiversitySegment() {
+    private MissingDiversitySegment() {
     }
 
     @Override
@@ -30,6 +30,6 @@ public final class AbsentDiversitySegment implements DiversitySegment {
 
     @Override
     public String getId() {
-        return "D-ABSENT";
+        return "D-MISSING";
     }
 }

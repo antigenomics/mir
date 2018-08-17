@@ -2,14 +2,14 @@ package com.milaboratory.mir.segment;
 
 import com.milaboratory.core.sequence.NucleotideSequence;
 
-public final class AbsentDiversitySegment implements DiversitySegment {
-    public static AbsentDiversitySegment INSTANCE = new AbsentDiversitySegment();
+public class MissingVariableSegment implements VariableSegment {
+    public static MissingVariableSegment INSTANCE = new MissingVariableSegment();
 
-    private AbsentDiversitySegment() {
+    private MissingVariableSegment() {
     }
 
     @Override
-    public NucleotideSequence getTrimmedCdr3Part(int trimmingSize5, int trimmingSize3) {
+    public NucleotideSequence getTrimmedCdr3Part(int trimmingSize) {
         return NucleotideSequence.EMPTY;
     }
 
@@ -30,6 +30,6 @@ public final class AbsentDiversitySegment implements DiversitySegment {
 
     @Override
     public String getId() {
-        return "D-ABSENT";
+        return "V-MISSING";
     }
 }
