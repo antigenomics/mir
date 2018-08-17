@@ -16,7 +16,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-public final class MigecSegmentLibraryParser {
+final class MigecSegmentLibraryParser {
     private static final String SEP = "[\t ]+";
 
     private MigecSegmentLibraryParser() {
@@ -53,16 +53,32 @@ public final class MigecSegmentLibraryParser {
                             int cdr1End = Integer.parseInt(splitLine[H.cdr1StartColIndex]);
                             int cdr2Start = Integer.parseInt(splitLine[H.cdr2EndColIndex]);
                             int cdr2End = Integer.parseInt(splitLine[H.cdr2EndColIndex]);
+                            int referencePoint = Integer.parseInt(splitLine[H.refPointColIndex]);
 
+                            VariableSegment variableSegment = new VariableSegmentImpl(
+                                    id, seq, cdr1Start, cdr1End, cdr2Start, cdr2End, referencePoint
+                            );
+                            variableSegmentMap.put(id, variableSegment);
                             break;
 
                         case D:
+                            DiversitySegment diversitySegment = new DiversitySegmentImpl(
+                                    id, seq
+                            );
+                            diversitySegmentMap.put(id, diversitySegment);
                             break;
 
                         case J:
+                            referencePoint = Integer.parseInt(splitLine[H.refPointColIndex]);
+
+                            JoiningSegment joiningSegment = new JoiningSegmentImpl(
+                                    id, seq, referencePoint
+                            );
+                            joiningSegmentMap.put(id, joiningSegment);
                             break;
 
                         case C:
+                            // todo
                             break;
                     }
                 }

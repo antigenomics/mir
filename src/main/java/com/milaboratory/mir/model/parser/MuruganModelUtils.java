@@ -6,6 +6,7 @@ import com.milaboratory.mir.Species;
 import com.milaboratory.mir.model.probability.PlainTextProbabilisticModel;
 import com.milaboratory.mir.model.probability.ProbabilisticModelFormula;
 
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -20,13 +21,20 @@ public final class MuruganModelUtils {
         MuruganModelStream muruganModelStream = getResourceStream(species, gene);
         return MuruganModelParser.load(muruganModelStream.getParams(),
                 muruganModelStream.getMarginals(),
-                getFormula(gene));
+                getFormula(gene), species, gene);
+    }
+
+    public static PlainTextProbabilisticModel getModelFromPath(String paramsPath, String marginalsPath,
+                                                               Species species, Gene gene) throws IOException {
+        return MuruganModelParser.load(new FileInputStream(paramsPath),
+                new FileInputStream(marginalsPath),
+                getFormula(gene), species, gene);
     }
 
     static MuruganModelStream getResourceStream(Species species, Gene gene) {
         return new MuruganModelStream(
-                getStreamRes(PATH + "/" + species.getCode() + "_" + gene.getCode() + "_params.txt"),
-                getStreamRes(PATH + "/" + species.getCode() + "_" + gene.getCode() + "_marginals.txt")
+                CommonUtils.getResourceAsStream(PATH + "/" + species.getCode() + "_" + gene.getCode() + "_params.txt"),
+                CommonUtils.getResourceAsStream(PATH + "/" + species.getCode() + "_" + gene.getCode() + "_marginals.txt")
         );
     }
 
@@ -70,9 +78,5 @@ public final class MuruganModelUtils {
 
     public static ProbabilisticModelFormula getFormula(Gene gene) {
         return ProbabilisticModelFormula.fromString(getFormulaStr(gene));
-    }
-
-    private static InputStream getStreamRes(String path) {
-        return CommonUtils.getResourceAsStream(path);
     }
 }

@@ -3,12 +3,12 @@ package com.milaboratory.mir.segment;
 import com.milaboratory.core.sequence.NucleotideSequence;
 import com.milaboratory.mir.Misc;
 
-public class DiversitySegmentImpl implements DiversitySegment{
+public class DiversitySegmentImpl implements DiversitySegment {
     private final String id;
     private final NucleotideSequence cdr3Part, cdr3PartWithP;
 
     public DiversitySegmentImpl(String id,
-                              NucleotideSequence cdr3Part) {
+                                NucleotideSequence cdr3Part) {
         this.id = id;
         this.cdr3Part = cdr3Part;
         NucleotideSequence rc = cdr3Part.getReverseComplement();
@@ -35,5 +35,10 @@ public class DiversitySegmentImpl implements DiversitySegment{
     @Override
     public String getId() {
         return id;
+    }
+
+    @Override
+    public NucleotideSequence getFullGermline() {
+        return cdr3Part;
     }
 }

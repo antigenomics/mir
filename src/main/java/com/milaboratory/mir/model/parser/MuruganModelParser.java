@@ -1,5 +1,7 @@
 package com.milaboratory.mir.model.parser;
 
+import com.milaboratory.mir.Gene;
+import com.milaboratory.mir.Species;
 import com.milaboratory.mir.model.probability.PlainTextProbabilisticModel;
 import com.milaboratory.mir.model.probability.ProbabilisticModelFormula;
 import com.milaboratory.mir.model.probability.ProbabilityUtils;
@@ -7,17 +9,18 @@ import com.milaboratory.mir.model.probability.ProbabilityUtils;
 import java.io.*;
 import java.util.*;
 
-public final class MuruganModelParser {
+final class MuruganModelParser {
     private MuruganModelParser() {
 
     }
 
-    public static PlainTextProbabilisticModel load(InputStream params, InputStream marginals,
-                                                   ProbabilisticModelFormula formula)
+    public static MuruganModel load(InputStream params, InputStream marginals,
+                                    ProbabilisticModelFormula formula,
+                                    Species species, Gene gene)
             throws IOException {
         var valueIndexMap = readValueIndexMap(params, formula, true);
         var probabilities = readProbabilities(marginals, formula, valueIndexMap, true);
-        return new PlainTextProbabilisticModel(formula, probabilities);
+        return new MuruganModel(formula, probabilities, species, gene);
     }
 
     private static Map<String, Map<Integer, String>> readValueIndexMap(InputStream paramsInputStream,

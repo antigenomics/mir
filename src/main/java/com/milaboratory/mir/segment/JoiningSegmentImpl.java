@@ -5,12 +5,17 @@ import com.milaboratory.mir.Misc;
 
 public class JoiningSegmentImpl implements JoiningSegment {
     private final String id;
-    private final NucleotideSequence cdr3Part, cdr3PartWithP;
+    private final NucleotideSequence germline, cdr3Part, cdr3PartWithP;
+    private final int referencePoint;
 
     public JoiningSegmentImpl(String id,
-                              NucleotideSequence cdr3Part) {
+                              NucleotideSequence germline,
+                              int referencePoint) {
         this.id = id;
-        this.cdr3Part = cdr3Part;
+        this.germline = germline;
+        this.referencePoint = referencePoint;
+        this.cdr3Part = germline.getRange(0,
+                referencePoint + 4); // J reference point is the 0-base coordinate of first base before Phe/Trp
         this.cdr3PartWithP = cdr3Part.getReverseComplement().concatenate(cdr3Part);
     }
 
@@ -34,5 +39,14 @@ public class JoiningSegmentImpl implements JoiningSegment {
     @Override
     public String getId() {
         return id;
+    }
+
+    @Override
+    public NucleotideSequence getFullGermline() {
+        return germline;
+    }
+
+    public int getReferencePoint() {
+        return referencePoint;
     }
 }
