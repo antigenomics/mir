@@ -27,7 +27,7 @@ public class MuruganModelUtilsTest {
 
     @Test
     public void loadFromResourceTest() throws IOException {
-        MuruganModelUtils.getModelFromResources(Species.Human, Gene.TRB);
+        var mdl = MuruganModelUtils.getModelFromResources(Species.Human, Gene.TRB);
         MuruganModelUtils.getModelFromResources(Species.Human, Gene.TRA);
         MuruganModelUtils.getModelFromResources(Species.Human, Gene.IGH);
         MuruganModelUtils.getModelFromResources(Species.Mouse, Gene.TRB);

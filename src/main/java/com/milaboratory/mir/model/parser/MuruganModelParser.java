@@ -19,7 +19,9 @@ final class MuruganModelParser {
                                     Species species, Gene gene)
             throws IOException {
         var valueIndexMap = readValueIndexMap(params, formula, true);
-        var probabilities = readProbabilities(marginals, formula, valueIndexMap, true);
+        var probabilities = readProbabilities(marginals, formula, valueIndexMap,
+                true,
+                true);
         return new MuruganModel(formula, probabilities, species, gene);
     }
 
@@ -97,7 +99,8 @@ final class MuruganModelParser {
     private static Map<String, Map<String, Double>> readProbabilities(InputStream marginalsInputStream,
                                                                       ProbabilisticModelFormula formula,
                                                                       Map<String, Map<Integer, String>> valueIndexMap,
-                                                                      boolean fixDinucl)
+                                                                      boolean fixDinucl,
+                                                                      boolean maskSecondaryAlleles)
             throws IOException {
         // initialize probabilities & check that we have all param values
         var probabilityMap = new HashMap<String, Map<String, Double>>();
@@ -178,7 +181,7 @@ final class MuruganModelParser {
                             }
                         });
 
-                        var probabilities = Arrays.stream(line.substring(1).split(","))
+                        double[] probabilities = Arrays.stream(line.substring(1).split(","))
                                 .mapToDouble(Double::parseDouble).toArray();
 
                         if (firstVariable.toLowerCase().contains("dinucl") && fixDinucl) {
@@ -196,9 +199,16 @@ final class MuruganModelParser {
                                     " with 1e-5 precision).");
                         }
 
+                        if (maskSecondaryAlleles) {
+                            probabilities = maskSecondayAlleles(valueIndexMap.get(firstVariable), probabilities);
+                        }
+
                         for (int i = 0; i < probabilities.length; i++) {
-                            String variable = valueIndexMap.get(firstVariable).get(i) + variableSuffix;
-                            probabilityMap.get(parentDistributionName).put(variable, probabilities[i]);
+                            double prob = probabilities[i];
+                            if (prob > 0) {
+                                String variable = valueIndexMap.get(firstVariable).get(i) + variableSuffix;
+                                probabilityMap.get(parentDistributionName).put(variable, probabilities[i]);
+                            }
                         }
                     }
                 }
@@ -206,5 +216,17 @@ final class MuruganModelParser {
         }
 
         return probabilityMap;
+    }
+
+    private static boolean isPrimaryAllele(String segmentId) {
+        return !segmentId.contains("*") || segmentId.contains("*00") || segmentId.contains("*01");
+    }
+
+    private static double[] maskSecondayAlleles(Map<Integer, String> indexedValues, double[] probs) {
+        double[] newProbs = new double[probs.length];
+        for (int i = 0; i < probs.length; i++) {
+            newProbs[i] = isPrimaryAllele(indexedValues.get(i)) ? probs[i] : 0;
+        }
+        return ProbabilityUtils.normalize(newProbs);
     }
 }
