@@ -5,6 +5,7 @@ import com.milaboratory.mir.clonotype.JunctionMarkup;
 import com.milaboratory.mir.clonotype.ReadlessClonotypeImpl;
 import com.milaboratory.mir.segment.DiversitySegment;
 import com.milaboratory.mir.segment.JoiningSegment;
+import com.milaboratory.mir.segment.MissingConstantSegment;
 import com.milaboratory.mir.segment.VariableSegment;
 
 public class VDJClonotypeBuilder implements ClonotypeBuilder<VDJRearrangementInfo, ReadlessClonotypeImpl> {
@@ -36,6 +37,7 @@ public class VDJClonotypeBuilder implements ClonotypeBuilder<VDJRearrangementInf
                 rearrangementInfo.getVSegment(),
                 rearrangementInfo.getDSegment(),
                 rearrangementInfo.getJSegment(),
+                MissingConstantSegment.INSTANCE,
                 rearrangementInfo.getSegmentTrimming(),
                 new JunctionMarkup(vEnd, jStart, dStart, dEnd));
     }
