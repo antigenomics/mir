@@ -1,6 +1,8 @@
 package com.milaboratory.mir.clonotype;
 
 public class SegmentTrimming {
+    public static final SegmentTrimming UNKNOWN = new SegmentTrimming(-1, -1);
+
     private final int vTrimming, jTrimming, dTrimming5, dTrimming3;
 
     public SegmentTrimming(int vTrimming, int jTrimming, int dTrimming5, int dTrimming3) {
