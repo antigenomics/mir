@@ -1,14 +1,13 @@
 package com.milaboratory.mir.model.parser;
 
 import com.milaboratory.mir.CommonUtils;
-import com.milaboratory.mir.Gene;
-import com.milaboratory.mir.Species;
+import com.milaboratory.mir.segment.Gene;
+import com.milaboratory.mir.segment.Species;
 import com.milaboratory.mir.model.probability.PlainTextProbabilisticModel;
 import com.milaboratory.mir.model.probability.ProbabilisticModelFormula;
 
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 
 public final class MuruganModelUtils {
     public static final String PATH = "murugan_models";

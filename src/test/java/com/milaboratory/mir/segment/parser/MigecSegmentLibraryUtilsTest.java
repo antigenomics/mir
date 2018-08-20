@@ -1,7 +1,7 @@
 package com.milaboratory.mir.segment.parser;
 
-import com.milaboratory.mir.Gene;
-import com.milaboratory.mir.Species;
+import com.milaboratory.mir.segment.Gene;
+import com.milaboratory.mir.segment.Species;
 import org.junit.Test;
 
 import java.io.IOException;

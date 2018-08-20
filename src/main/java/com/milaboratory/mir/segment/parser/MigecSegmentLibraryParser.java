@@ -1,10 +1,10 @@
 package com.milaboratory.mir.segment.parser;
 
 import com.milaboratory.core.sequence.NucleotideSequence;
-import com.milaboratory.mir.Gene;
-import com.milaboratory.mir.HeaderParser;
-import com.milaboratory.mir.SegmentType;
-import com.milaboratory.mir.Species;
+import com.milaboratory.mir.segment.Gene;
+import com.milaboratory.mir.io.HeaderParser;
+import com.milaboratory.mir.segment.SegmentType;
+import com.milaboratory.mir.segment.Species;
 import com.milaboratory.mir.segment.*;
 
 import java.io.BufferedReader;

@@ -1,8 +1,8 @@
 package com.milaboratory.mir.clonotype.parser;
 
 import com.milaboratory.core.sequence.AminoAcidSequence;
-import com.milaboratory.mir.Gene;
-import com.milaboratory.mir.Species;
+import com.milaboratory.mir.segment.Gene;
+import com.milaboratory.mir.segment.Species;
 import com.milaboratory.mir.segment.parser.MigecSegmentLibraryUtils;
 import org.junit.Test;
 

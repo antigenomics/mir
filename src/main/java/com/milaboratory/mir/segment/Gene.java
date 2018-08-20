@@ -1,4 +1,4 @@
-package com.milaboratory.mir;
+package com.milaboratory.mir.segment;
 
 import java.util.Arrays;
 import java.util.Set;

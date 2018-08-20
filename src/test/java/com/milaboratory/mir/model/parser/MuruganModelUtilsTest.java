@@ -1,14 +1,12 @@
 package com.milaboratory.mir.model.parser;
 
-import com.milaboratory.mir.Gene;
-import com.milaboratory.mir.Species;
+import com.milaboratory.mir.segment.Gene;
+import com.milaboratory.mir.segment.Species;
 import com.milaboratory.mir.TestUtils;
 import org.junit.Assert;
 import org.junit.Test;
 
 import java.io.IOException;
-
-import static org.junit.Assert.*;
 
 public class MuruganModelUtilsTest {
     @Test

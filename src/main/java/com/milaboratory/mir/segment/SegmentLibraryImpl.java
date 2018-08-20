@@ -1,8 +1,5 @@
 package com.milaboratory.mir.segment;
 
-import com.milaboratory.mir.Gene;
-import com.milaboratory.mir.Species;
-
 import java.util.Map;
 import java.util.stream.Collectors;
 

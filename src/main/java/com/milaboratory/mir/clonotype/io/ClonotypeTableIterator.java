@@ -1,5 +1,6 @@
 package com.milaboratory.mir.clonotype.io;
 
+import com.milaboratory.mir.io.SinglePassEntityProvider;
 import com.milaboratory.mir.clonotype.Clonotype;
 import com.milaboratory.mir.clonotype.ClonotypeCall;
 import com.milaboratory.mir.clonotype.parser.ClonotypeTableParser;
@@ -9,9 +10,8 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.util.Iterator;
 
-public class ClonotypeTableIterator<T extends Clonotype> implements Iterator<ClonotypeCall<T>> {
+public class ClonotypeTableIterator<T extends Clonotype> implements SinglePassEntityProvider<ClonotypeCall<T>> {
     public static final String TOKEN = "\t";
     private final BufferedReader bufferedReader;
     private final ClonotypeTableParser<T> parser;
@@ -46,5 +46,10 @@ public class ClonotypeTableIterator<T extends Clonotype> implements Iterator<Clo
     @Override
     public ClonotypeCall<T> next() {
         return parser.parse(line.split(TOKEN));
+    }
+
+    @Override
+    public ClonotypeCall<T> getPoison() {
+        return ClonotypeCall.getDummy();
     }
 }

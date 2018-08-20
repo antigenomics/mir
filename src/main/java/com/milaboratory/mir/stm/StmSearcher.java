@@ -3,7 +3,6 @@ package com.milaboratory.mir.stm;
 import com.milaboratory.core.sequence.Alphabet;
 import com.milaboratory.core.sequence.Sequence;
 import com.milaboratory.core.tree.SequenceTreeMap;
-import com.milaboratory.mir.SequenceProvider;
 import com.milaboratory.mir.stm.align.ExplicitAlignmentScoring;
 
 import java.util.ArrayList;

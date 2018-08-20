@@ -1,10 +1,9 @@
 package com.milaboratory.mir.clonotype.io;
 
 import com.milaboratory.mir.CommonUtils;
-import com.milaboratory.mir.Gene;
-import com.milaboratory.mir.Species;
+import com.milaboratory.mir.segment.Gene;
+import com.milaboratory.mir.segment.Species;
 import com.milaboratory.mir.clonotype.ClonotypeCall;
-import com.milaboratory.mir.clonotype.ReadlessClonotypeImpl;
 import com.milaboratory.mir.clonotype.parser.VDJtoolsClonotypeParserFactory;
 import com.milaboratory.mir.io.StreamHelper;
 import com.milaboratory.mir.segment.parser.MigecSegmentLibraryUtils;
