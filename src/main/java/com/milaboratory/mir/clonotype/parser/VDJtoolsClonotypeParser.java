@@ -13,12 +13,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
-public class VDJtoolsClonotypeTableParser extends AbstractClonotypeTableParser<ReadlessClonotypeImpl> {
+public class VDJtoolsClonotypeParser extends AbstractClonotypeTableParser<ReadlessClonotypeImpl> {
     private final HeaderInfo headerInfo;
     private final AtomicInteger idCounter = new AtomicInteger();
 
-    public VDJtoolsClonotypeTableParser(String[] header,
-                                        SegmentLibrary segmentLibrary) {
+    public VDJtoolsClonotypeParser(String[] header,
+                                   SegmentLibrary segmentLibrary) {
         super(header, segmentLibrary);
         this.headerInfo = new HeaderInfo(header);
     }
