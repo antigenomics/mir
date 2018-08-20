@@ -1,6 +1,10 @@
 package com.milaboratory.mir.clonotype;
 
 public class ClonotypeCall<T extends Clonotype> {
+    public static <T extends Clonotype> ClonotypeCall<T> getDummy() {
+        return new ClonotypeCall<>(-1, -1, -1, null);
+    }
+
     private final int id, count;
     private final double frequency;
     private final T clonotype;

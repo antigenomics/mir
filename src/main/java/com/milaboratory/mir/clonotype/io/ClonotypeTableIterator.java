@@ -22,7 +22,7 @@ public class ClonotypeTableIterator<T extends Clonotype> implements Iterator<Clo
         this.bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
         line = bufferedReader.readLine();
         if (line != null) {
-            this.parser = parserFactory.create(bufferedReader.readLine().split(TOKEN));
+            this.parser = parserFactory.create(line.split(TOKEN));
         } else {
             this.parser = null; // empty file
         }
