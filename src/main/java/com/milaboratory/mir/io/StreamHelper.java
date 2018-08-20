@@ -30,7 +30,7 @@ public class StreamHelper {
 
     private static <T> Spliterator<T> parallelSpliterator(BufferedIterator<T> bufferedIterator) {
         return Spliterators.spliterator(bufferedIterator,
-                bufferedIterator.getBufferSize(),
+               0, // (long) bufferedIterator.getBufferSize(), // WTF??
                 Spliterator.CONCURRENT | Spliterator.NONNULL | Spliterator.ORDERED);
     }
 }

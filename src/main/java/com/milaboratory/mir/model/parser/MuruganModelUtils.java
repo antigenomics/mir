@@ -31,7 +31,7 @@ public final class MuruganModelUtils {
                 getFormula(gene), species, gene);
     }
 
-    static MuruganModelStream getResourceStream(Species species, Gene gene) {
+    static MuruganModelStream getResourceStream(Species species, Gene gene) throws IOException {
         return new MuruganModelStream(
                 CommonUtils.getResourceAsStream(PATH + "/" + species.getCode() + "_" + gene.getCode() + "_params.txt"),
                 CommonUtils.getResourceAsStream(PATH + "/" + species.getCode() + "_" + gene.getCode() + "_marginals.txt")
