@@ -22,6 +22,11 @@ final class MigecSegmentLibraryParser {
     }
 
     public static SegmentLibraryImpl load(InputStream data, Species species, Gene gene) throws IOException {
+        return load(data, species, gene, true);
+    }
+
+    public static SegmentLibraryImpl load(InputStream data, Species species, Gene gene,
+                                          boolean fixDV) throws IOException {
         Map<String, VariableSegment> variableSegmentMap = new HashMap<>();
         Map<String, DiversitySegment> diversitySegmentMap = new HashMap<>();
         Map<String, JoiningSegment> joiningSegmentMap = new HashMap<>();
@@ -57,6 +62,14 @@ final class MigecSegmentLibraryParser {
                                     id, seq, cdr1Start, cdr1End, cdr2Start, cdr2End, referencePoint
                             );
                             variableSegmentMap.put(id, variableSegment);
+
+                            if (fixDV && id.contains("/DV")) { // account for MIXCR naming convention
+                                id = id.replaceAll("/DV", "DV");
+                                variableSegment = new VariableSegmentImpl(
+                                        id, seq, cdr1Start, cdr1End, cdr2Start, cdr2End, referencePoint
+                                );
+                                variableSegmentMap.put(id, variableSegment);
+                            }
                             break;
 
                         case D:
