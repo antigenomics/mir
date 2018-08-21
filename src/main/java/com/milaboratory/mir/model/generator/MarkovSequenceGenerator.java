@@ -26,6 +26,16 @@ public class MarkovSequenceGenerator<S extends Sequence<S>> implements SequenceG
         this.random = random;
     }
 
+    public MarkovSequenceGenerator(Alphabet<S> alphabet,
+                                   double[][] conditionals,
+                                   double[] marginals,
+                                   Random random) {
+        this.alphabet = alphabet;
+        this.conditionals = conditionals;
+        this.marginals = marginals;
+        this.random = random;
+    }
+
     @Override
     public S generateForward(int length) {
         if (length > 0) {

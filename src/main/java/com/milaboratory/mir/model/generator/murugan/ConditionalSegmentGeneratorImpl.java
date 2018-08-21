@@ -3,6 +3,7 @@ package com.milaboratory.mir.model.generator.murugan;
 import com.milaboratory.mir.model.generator.ConditionalSegmentGenerator;
 import com.milaboratory.mir.model.parser.MuruganModelParser;
 import com.milaboratory.mir.model.probability.CategoricalProbabilityDistribution;
+import com.milaboratory.mir.model.probability.ProbabilisticModelFormula;
 import com.milaboratory.mir.segment.Cdr3GermlineSegment;
 import com.milaboratory.mir.segment.SegmentLibrary;
 import com.milaboratory.mir.segment.SegmentType;
@@ -25,17 +26,9 @@ public class ConditionalSegmentGeneratorImpl<T extends Cdr3GermlineSegment,
 
     public ConditionalSegmentGeneratorImpl(SegmentProvider<T> segmentProviderT,
                                            SegmentProvider<V> segmentProviderV,
-                                           Map<String, Double> probabilities) {
-        // un-flatten, condition -> value -> probability
-        var embeddedProbabilities = new HashMap<String, Map<String, Double>>();
-        probabilities.forEach(
-                (key, value) -> {
-                    var segmentPair = key.split(MuruganModelParser.CONDITIONAL_SEPARATOR);
-                    embeddedProbabilities
-                            .computeIfAbsent(segmentPair[1], x -> new HashMap<>())
-                            .put(segmentPair[0], value);
-                }
-        );
+                                           Map<String, Double> probabilityMap) {
+        // un-flatten, cond segment V -> var segment T -> probability
+        var embeddedProbabilities = ProbabilisticModelFormula.embed1Conditional(probabilityMap);
 
         // create categorical probabilities and put them into map condition -> {value, probability}
         this.categoricalProbabilityDistributionMap = new HashMap<>();
@@ -48,6 +41,7 @@ public class ConditionalSegmentGeneratorImpl<T extends Cdr3GermlineSegment,
 
     @Override
     public T generate(V segment) {
+        // todo: catch error
         return categoricalProbabilityDistributionMap.get(segment).sample();
     }
 }

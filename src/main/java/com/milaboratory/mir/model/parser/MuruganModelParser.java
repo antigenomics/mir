@@ -9,8 +9,6 @@ import java.io.*;
 import java.util.*;
 
 public final class MuruganModelParser {
-    public static final String CONDITIONAL_SEPARATOR = "|", VARIABLE_SEPARATOR = ",";
-
     private MuruganModelParser() {
 
     }
@@ -90,7 +88,7 @@ public final class MuruganModelParser {
         int k = 0;
         for (int i = 0; i < 4; i++) {
             for (int j = 0; j < 4; j++) {
-                results.put(k, originalMap.get(i) + originalMap.get(j));
+                results.put(k, originalMap.get(i) + ProbabilisticModelFormula.VARIABLE_SEPARATOR + originalMap.get(j));
                 k++;
             }
         }
@@ -175,9 +173,9 @@ public final class MuruganModelParser {
                         parentVariableValueIndices.forEach((parentVariable, index) -> {
                             String value = valueIndexMap.get(parentVariable).get(index);
                             if (variableSuffix.length() == 0) {
-                                variableSuffix.append(CONDITIONAL_SEPARATOR).append(value);
+                                variableSuffix.append(ProbabilisticModelFormula.CONDITIONAL_SEPARATOR).append(value);
                             } else {
-                                variableSuffix.append(VARIABLE_SEPARATOR).append(value);
+                                variableSuffix.append(ProbabilisticModelFormula.VARIABLE_SEPARATOR).append(value);
                             }
                         });
 
