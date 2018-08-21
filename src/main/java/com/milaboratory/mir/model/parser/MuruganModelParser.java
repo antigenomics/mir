@@ -8,7 +8,9 @@ import com.milaboratory.mir.model.probability.ProbabilityUtils;
 import java.io.*;
 import java.util.*;
 
-final class MuruganModelParser {
+public final class MuruganModelParser {
+    public static final String CONDITIONAL_SEPARATOR = "|", VARIABLE_SEPARATOR = ",";
+
     private MuruganModelParser() {
 
     }
@@ -171,12 +173,11 @@ final class MuruganModelParser {
                         // here we will only use conditional ones
                         StringBuilder variableSuffix = new StringBuilder();
                         parentVariableValueIndices.forEach((parentVariable, index) -> {
-                            //int index = parentVariableValueIndices.get(parentVariable);
                             String value = valueIndexMap.get(parentVariable).get(index);
                             if (variableSuffix.length() == 0) {
-                                variableSuffix.append("|").append(value);
+                                variableSuffix.append(CONDITIONAL_SEPARATOR).append(value);
                             } else {
-                                variableSuffix.append(",").append(value);
+                                variableSuffix.append(VARIABLE_SEPARATOR).append(value);
                             }
                         });
 
