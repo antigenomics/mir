@@ -95,13 +95,28 @@ public final class ProbabilisticModelFormula implements Serializable {
         var embeddedProbabilities = new HashMap<String, Map<String, Double>>();
         probabilityMap.forEach(
                 (key, value) -> {
-                    var segmentPair = key.split(separator);
+                    var variables = key.split(separator);
                     embeddedProbabilities
-                            .computeIfAbsent(segmentPair[1], x -> new HashMap<>())
-                            .put(segmentPair[0], value);
+                            .computeIfAbsent(variables[1], x -> new HashMap<>())
+                            .put(variables[0], value);
                 }
         );
         return embeddedProbabilities;
+    }
+
+    public static Map<String, Map<String, Map<String, Double>>> embed2(Map<String, Double> probabilityMap) {
+        var embeddedProbabilities = embed1(probabilityMap, CONDITIONAL_SEPARATOR);
+
+        var embeddedProbabilities2 = new HashMap<String, Map<String, Map<String, Double>>>();
+        embeddedProbabilities.forEach((key, value) -> {
+                    var variables = key.split(VARIABLE_SEPARATOR);
+                    embeddedProbabilities2
+                            .computeIfAbsent(variables[1], x -> new HashMap<>())
+                            .put(variables[0], embeddedProbabilities.get(key));
+                }
+        );
+
+        return embeddedProbabilities2;
     }
 
     public Collection<String> getVariables() {

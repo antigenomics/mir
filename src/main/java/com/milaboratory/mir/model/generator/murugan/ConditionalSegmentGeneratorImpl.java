@@ -1,7 +1,6 @@
 package com.milaboratory.mir.model.generator.murugan;
 
 import com.milaboratory.mir.model.generator.ConditionalSegmentGenerator;
-import com.milaboratory.mir.model.parser.MuruganModelParser;
 import com.milaboratory.mir.model.probability.CategoricalProbabilityDistribution;
 import com.milaboratory.mir.model.probability.ProbabilisticModelFormula;
 import com.milaboratory.mir.segment.Cdr3GermlineSegment;
