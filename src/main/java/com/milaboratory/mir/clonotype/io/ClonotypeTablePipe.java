@@ -1,32 +1,32 @@
 package com.milaboratory.mir.clonotype.io;
 
-import com.milaboratory.mir.pipe.BufferedPipe;
 import com.milaboratory.mir.clonotype.Clonotype;
 import com.milaboratory.mir.clonotype.ClonotypeCall;
 import com.milaboratory.mir.clonotype.parser.ClonotypeTableParser;
 import com.milaboratory.mir.clonotype.parser.ClonotypeTableParserFactory;
+import com.milaboratory.mir.pipe.SinglePassPipe;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
-public class ClonotypeTableIterator<T extends Clonotype> implements BufferedPipe<ClonotypeCall<T>> {
+public class ClonotypeTablePipe<T extends Clonotype> implements SinglePassPipe<ClonotypeCall<T>> {
     public static final String TOKEN = "\t";
+    public static final int DEFAULT_READER_BUFFER_SIZE = 8192;
+
     private final BufferedReader bufferedReader;
     private final ClonotypeTableParser<T> parser;
-    private final int entityBufferSize;
     private String line;
 
-    public ClonotypeTableIterator(InputStream inputStream,
-                                  ClonotypeTableParserFactory<T> parserFactory) {
-        this(inputStream, parserFactory, 8192, 2048);
+    public ClonotypeTablePipe(InputStream inputStream,
+                              ClonotypeTableParserFactory<T> parserFactory) {
+        this(inputStream, parserFactory, DEFAULT_READER_BUFFER_SIZE);
     }
 
-    public ClonotypeTableIterator(InputStream inputStream,
-                                  ClonotypeTableParserFactory<T> parserFactory,
-                                  int readerBufferSize, int entityBufferSize) {
-        this.entityBufferSize = entityBufferSize;
+    public ClonotypeTablePipe(InputStream inputStream,
+                              ClonotypeTableParserFactory<T> parserFactory,
+                              int readerBufferSize) {
         this.bufferedReader = new BufferedReader(new InputStreamReader(inputStream), readerBufferSize);
 
         try {
@@ -60,15 +60,5 @@ public class ClonotypeTableIterator<T extends Clonotype> implements BufferedPipe
     @Override
     public ClonotypeCall<T> next() {
         return parser.parse(line.split(TOKEN));
-    }
-
-    @Override
-    public ClonotypeCall<T> getPoison() {
-        return ClonotypeCall.getDummy();
-    }
-
-    @Override
-    public int getBufferSize() {
-        return entityBufferSize;
     }
 }

@@ -25,13 +25,6 @@ public interface SinglePassPipe<T> extends Iterator<T>, Pipe<T> {
          is only used by one thread at a time. This is generally easy to attain via serial thread-confinement,
          which often is a natural consequence of typical parallel algorithms that work by recursive decomposition.
          */
-
-        var spliterator = Spliterators.spliterator(this,
-                // If set to > 0 will get stuck when size of input is less than 'size'
-                0,
-                // Report characteristics: we will concurrently modify underlying supplier
-                Spliterator.CONCURRENT | Spliterator.NONNULL | Spliterator.ORDERED);
-
-        return StreamSupport.stream(spliterator, true);
+        return StreamSupport.stream(iterable().spliterator(), true);
     }
 }
