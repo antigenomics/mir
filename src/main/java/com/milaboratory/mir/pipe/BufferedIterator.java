@@ -1,12 +1,12 @@
-package com.milaboratory.mir.io;
+package com.milaboratory.mir.pipe;
 
 import java.util.Iterator;
 import java.util.concurrent.LinkedBlockingQueue;
 
-public class BufferedIterator<T> implements Iterator<T> {
+public final class BufferedIterator<T> implements Iterator<T> {
     private final LinkedBlockingQueue<T> queue;
     private final T poison;
-    private volatile T next;
+    private T next;
     private final int bufferSize;
 
     public BufferedIterator(Iterator<T> iterator,
@@ -16,6 +16,7 @@ public class BufferedIterator<T> implements Iterator<T> {
         this.poison = poison;
         this.bufferSize = bufferSize;
 
+        // TODO: Consider running this thread in supplied or common fork join pool
         new Thread(() -> {
             while (iterator.hasNext()) {
                 try {

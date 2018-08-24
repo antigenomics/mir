@@ -34,4 +34,12 @@ public class CategoricalProbabilityDistribution<T> {
     public List<CategoryProbability<T>> getCategoryProbabilityList() {
         return Collections.synchronizedList(categoryProbabilityList);
     }
+
+    public Map<T, Double> asProbabilityMap() {
+        var probabilities = new HashMap<T, Double>();
+        categoryProbabilityList.forEach(x ->
+                probabilities.put(x.getCategory(), x.getProbability())
+        );
+        return probabilities;
+    }
 }

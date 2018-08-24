@@ -2,7 +2,7 @@ package com.milaboratory.mir.clonotype.parser;
 
 import com.milaboratory.core.sequence.AminoAcidSequence;
 import com.milaboratory.core.sequence.NucleotideSequence;
-import com.milaboratory.mir.io.HeaderParser;
+import com.milaboratory.mir.HeaderParser;
 import com.milaboratory.mir.clonotype.ClonotypeCall;
 import com.milaboratory.mir.clonotype.JunctionMarkup;
 import com.milaboratory.mir.clonotype.ReadlessClonotypeImpl;

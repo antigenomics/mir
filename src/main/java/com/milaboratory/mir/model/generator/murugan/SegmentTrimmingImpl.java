@@ -30,4 +30,14 @@ public class SegmentTrimmingImpl<T extends Cdr3GermlineSegment> implements Segme
         // todo: catch error
         return generatorMap.get(segmentId).generate();
     }
+
+    @Override
+    public double getProbability(int trimming, T segment) {
+        var p1 = generatorMap.get(segment);
+        if (p1 == null) {
+            return 0;
+        }
+        var prob = p1.getProbabilities().get(trimming);
+        return prob == null ? 0 : prob;
+    }
 }

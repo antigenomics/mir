@@ -69,4 +69,14 @@ public class MarkovSequenceGenerator<S extends Sequence<S>> implements SequenceG
             return alphabet.getEmptySequence();
         }
     }
+
+    @Override
+    public double getProbabilityForward(S seq) {
+        return 0;
+    }
+
+    @Override
+    public double getProbabilityReverse(S seq) {
+        return 0;
+    }
 }

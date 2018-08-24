@@ -1,6 +1,6 @@
 package com.milaboratory.mir.clonotype.io;
 
-import com.milaboratory.mir.io.SinglePassEntityProvider;
+import com.milaboratory.mir.pipe.BufferedPipe;
 import com.milaboratory.mir.clonotype.Clonotype;
 import com.milaboratory.mir.clonotype.ClonotypeCall;
 import com.milaboratory.mir.clonotype.parser.ClonotypeTableParser;
@@ -11,16 +11,30 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
-public class ClonotypeTableIterator<T extends Clonotype> implements SinglePassEntityProvider<ClonotypeCall<T>> {
+public class ClonotypeTableIterator<T extends Clonotype> implements BufferedPipe<ClonotypeCall<T>> {
     public static final String TOKEN = "\t";
     private final BufferedReader bufferedReader;
     private final ClonotypeTableParser<T> parser;
+    private final int entityBufferSize;
     private String line;
 
     public ClonotypeTableIterator(InputStream inputStream,
-                                  ClonotypeTableParserFactory<T> parserFactory) throws IOException {
-        this.bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
-        line = bufferedReader.readLine();
+                                  ClonotypeTableParserFactory<T> parserFactory) {
+        this(inputStream, parserFactory, 8192, 2048);
+    }
+
+    public ClonotypeTableIterator(InputStream inputStream,
+                                  ClonotypeTableParserFactory<T> parserFactory,
+                                  int readerBufferSize, int entityBufferSize) {
+        this.entityBufferSize = entityBufferSize;
+        this.bufferedReader = new BufferedReader(new InputStreamReader(inputStream), readerBufferSize);
+
+        try {
+            line = bufferedReader.readLine();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
         if (line != null) {
             this.parser = parserFactory.create(line.split(TOKEN));
         } else {
@@ -51,5 +65,10 @@ public class ClonotypeTableIterator<T extends Clonotype> implements SinglePassEn
     @Override
     public ClonotypeCall<T> getPoison() {
         return ClonotypeCall.getDummy();
+    }
+
+    @Override
+    public int getBufferSize() {
+        return entityBufferSize;
     }
 }

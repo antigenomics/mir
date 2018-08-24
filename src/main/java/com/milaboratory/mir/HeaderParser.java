@@ -1,4 +1,4 @@
-package com.milaboratory.mir.io;
+package com.milaboratory.mir;
 
 import java.util.Arrays;
 import java.util.List;
