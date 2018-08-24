@@ -15,6 +15,8 @@ public interface BufferedPipe<T> extends SinglePassPipe<T> {
         return () -> new BufferedIterator<>(this, getPoison(), getBufferSize());
     }
 
+    // This override appears to be required for anything related to operations with buffers that
+    // are concurrently filled from other thread
     @Override
     default Stream<T> parallelStream() {
         /*
