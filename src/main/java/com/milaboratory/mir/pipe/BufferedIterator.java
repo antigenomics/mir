@@ -17,6 +17,10 @@ public final class BufferedIterator<T> implements Iterator<T> {
         this.bufferSize = bufferSize;
 
         // TODO: Consider running this thread in supplied or common fork join pool
+        // upsides: better management
+        // downsides: wait for e.g. sample reading while some computations,
+        // not necessary IO are running; we can have 2 ForkJoinPools:
+        // One small with IO other large with computations
         new Thread(() -> {
             while (iterator.hasNext()) {
                 try {
