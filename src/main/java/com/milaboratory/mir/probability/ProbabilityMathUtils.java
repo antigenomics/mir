@@ -3,7 +3,7 @@ package com.milaboratory.mir.probability;
 import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
 
-public final class ProbabilityUtils {
+public final class ProbabilityMathUtils {
     public static boolean isNormalized(double[] arr, double precision) {
         double sum = sum(arr);
         return Math.abs(sum) <= precision || Math.abs(sum - 1) <= precision;

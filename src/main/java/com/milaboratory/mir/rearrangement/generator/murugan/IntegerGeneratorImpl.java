@@ -1,6 +1,6 @@
 package com.milaboratory.mir.rearrangement.generator.murugan;
 
-import com.milaboratory.mir.probability.ProbabilityUtils;
+import com.milaboratory.mir.probability.ProbabilityMathUtils;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -41,7 +41,7 @@ public class IntegerGeneratorImpl {
     }
 
     public int generate() {
-        return values[ProbabilityUtils.sample(probabilityValues, random)];
+        return values[ProbabilityMathUtils.sample(probabilityValues, random)];
     }
 
     Map<Integer, Double> getProbabilities() {

@@ -1,7 +1,7 @@
 package com.milaboratory.mir.rearrangement.generator.murugan;
 
 import com.milaboratory.mir.rearrangement.generator.SegmentTrimmingGenerator;
-import com.milaboratory.mir.rearrangement.probability.ProbabilisticModelFormula;
+import com.milaboratory.mir.probability.parser.HierarchicalModelFormula;
 import com.milaboratory.mir.segment.Cdr3GermlineSegment;
 import com.milaboratory.mir.segment.provider.SegmentProvider;
 
@@ -18,7 +18,7 @@ public class SegmentTrimmingImpl<T extends Cdr3GermlineSegment> implements Segme
         this.generatorMap = new HashMap<>();
 
         // un-flatten, cond segment V -> var segment T -> probability
-        var embeddedProbabilities = ProbabilisticModelFormula.embed1Conditional(probabilityMap);
+        var embeddedProbabilities = HierarchicalModelFormula.embed1Conditional(probabilityMap);
 
         embeddedProbabilities.forEach((segmentId, trimmingProbMap) ->
                 generatorMap.put(segmentProvider.fromId(segmentId), new IntegerGeneratorImpl(trimmingProbMap, random))

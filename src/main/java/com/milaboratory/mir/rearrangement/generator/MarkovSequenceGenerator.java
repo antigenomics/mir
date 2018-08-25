@@ -2,7 +2,7 @@ package com.milaboratory.mir.rearrangement.generator;
 
 import com.milaboratory.core.sequence.Alphabet;
 import com.milaboratory.core.sequence.Sequence;
-import com.milaboratory.mir.probability.ProbabilityUtils;
+import com.milaboratory.mir.probability.ProbabilityMathUtils;
 
 import java.util.Random;
 
@@ -19,10 +19,10 @@ public class MarkovSequenceGenerator<S extends Sequence<S>> implements SequenceG
         assert jointProbability.length == jointProbability[0].length;
 
         this.alphabet = alphabet;
-        this.marginals = ProbabilityUtils.toMarginal(jointProbability);
-        assert Math.abs(ProbabilityUtils.sum(marginals) - 1.0d) < 1e-6;
+        this.marginals = ProbabilityMathUtils.toMarginal(jointProbability);
+        assert Math.abs(ProbabilityMathUtils.sum(marginals) - 1.0d) < 1e-6;
 
-        this.conditionals = ProbabilityUtils.toConditional(jointProbability, marginals);
+        this.conditionals = ProbabilityMathUtils.toConditional(jointProbability, marginals);
         this.random = random;
     }
 
@@ -40,11 +40,11 @@ public class MarkovSequenceGenerator<S extends Sequence<S>> implements SequenceG
     public S generateForward(int length) {
         if (length > 0) {
             var builder = alphabet.createBuilder().ensureCapacity(length);
-            byte prev = (byte) ProbabilityUtils.sample(marginals, random);
+            byte prev = (byte) ProbabilityMathUtils.sample(marginals, random);
             builder.set(0, prev);
 
             for (int i = 1; i < length; i++) {
-                prev = (byte) ProbabilityUtils.sample(conditionals[prev], random);
+                prev = (byte) ProbabilityMathUtils.sample(conditionals[prev], random);
                 builder.set(i, prev);
             }
             return builder.createAndDestroy();
@@ -57,11 +57,11 @@ public class MarkovSequenceGenerator<S extends Sequence<S>> implements SequenceG
     public S generateReverse(int length) {
         if (length > 0) {
             var builder = alphabet.createBuilder().ensureCapacity(length);
-            byte prev = (byte) ProbabilityUtils.sample(marginals, random);
+            byte prev = (byte) ProbabilityMathUtils.sample(marginals, random);
             builder.set(length - 1, prev);
 
             for (int i = length - 2; i >= 0; i--) {
-                prev = (byte) ProbabilityUtils.sample(conditionals[prev], random);
+                prev = (byte) ProbabilityMathUtils.sample(conditionals[prev], random);
                 builder.set(i, prev);
             }
             return builder.createAndDestroy();

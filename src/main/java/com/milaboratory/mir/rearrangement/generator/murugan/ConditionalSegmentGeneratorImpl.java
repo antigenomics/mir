@@ -2,7 +2,7 @@ package com.milaboratory.mir.rearrangement.generator.murugan;
 
 import com.milaboratory.mir.rearrangement.generator.ConditionalSegmentGenerator;
 import com.milaboratory.mir.rearrangement.probability.CategoricalProbabilityDistribution;
-import com.milaboratory.mir.rearrangement.probability.ProbabilisticModelFormula;
+import com.milaboratory.mir.probability.parser.HierarchicalModelFormula;
 import com.milaboratory.mir.segment.Cdr3GermlineSegment;
 import com.milaboratory.mir.segment.SegmentLibrary;
 import com.milaboratory.mir.segment.SegmentType;
@@ -28,7 +28,7 @@ public class ConditionalSegmentGeneratorImpl<T extends Cdr3GermlineSegment,
                                            SegmentProvider<V> segmentProviderV,
                                            Map<String, Double> probabilityMap) {
         // un-flatten, cond segment V -> var segment T -> probability
-        var embeddedProbabilities = ProbabilisticModelFormula.embed1Conditional(probabilityMap);
+        var embeddedProbabilities = HierarchicalModelFormula.embed1Conditional(probabilityMap);
 
         // create categorical probabilities and put them into map condition -> {value, probability}
         this.categoricalProbabilityDistributionMap = new HashMap<>();

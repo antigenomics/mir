@@ -1,6 +1,6 @@
 package com.milaboratory.mir.rearrangement.probability;
 
-import com.milaboratory.mir.probability.ProbabilityUtils;
+import com.milaboratory.mir.probability.ProbabilityMathUtils;
 
 import java.util.*;
 
@@ -26,11 +26,11 @@ public class CategoricalProbabilityDistribution<T> {
     }
 
     public T sample() {
-        return categories.get(ProbabilityUtils.sample(probabilities));
+        return categories.get(ProbabilityMathUtils.sample(probabilities));
     }
 
     public T sample(Random random) {
-        return categories.get(ProbabilityUtils.sample(probabilities, random));
+        return categories.get(ProbabilityMathUtils.sample(probabilities, random));
     }
 
     public List<CategoryProbability<T>> getCategoryProbabilityList() {

@@ -1,15 +1,15 @@
-package com.milaboratory.mir.rearrangement.probability;
+package com.milaboratory.mir.probability.parser;
 
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-public class PlainTextProbabilisticModel {
-    private final ProbabilisticModelFormula formula;
+public class PlainTextHierarchicalModel {
+    private final HierarchicalModelFormula formula;
     private final Map<String, Map<String, Double>> probabilities;
 
-    public PlainTextProbabilisticModel(ProbabilisticModelFormula formula,
-                                       Map<String, Map<String, Double>> probabilities) {
+    public PlainTextHierarchicalModel(HierarchicalModelFormula formula,
+                                      Map<String, Map<String, Double>> probabilities) {
         this.formula = formula;
         this.probabilities = new HashMap<>();
         probabilities.forEach((key, value) -> {
@@ -17,7 +17,7 @@ public class PlainTextProbabilisticModel {
         });
     }
 
-    public ProbabilisticModelFormula getFormula() {
+    public HierarchicalModelFormula getFormula() {
         return formula;
     }
 

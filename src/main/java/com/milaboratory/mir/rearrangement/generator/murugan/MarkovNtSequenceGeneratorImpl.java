@@ -3,7 +3,7 @@ package com.milaboratory.mir.rearrangement.generator.murugan;
 import com.milaboratory.core.sequence.Alphabet;
 import com.milaboratory.core.sequence.NucleotideSequence;
 import com.milaboratory.mir.rearrangement.generator.MarkovSequenceGenerator;
-import com.milaboratory.mir.rearrangement.probability.ProbabilisticModelFormula;
+import com.milaboratory.mir.probability.parser.HierarchicalModelFormula;
 
 import java.util.Map;
 import java.util.Random;
@@ -25,7 +25,7 @@ public class MarkovNtSequenceGeneratorImpl extends MarkovSequenceGenerator<Nucle
         double[][] jointProbability = new double[alphabet.size()][alphabet.size()];
 
         // un-flatten, base2 -> base1 -> probability
-        var embeddedProbabilities = ProbabilisticModelFormula.embed1Joint(probabilityMap);
+        var embeddedProbabilities = HierarchicalModelFormula.embed1Joint(probabilityMap);
 
         embeddedProbabilities.forEach((key2, kvp) -> {
             kvp.forEach((key1, value) -> {

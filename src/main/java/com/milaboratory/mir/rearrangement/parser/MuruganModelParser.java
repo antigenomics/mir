@@ -1,9 +1,10 @@
 package com.milaboratory.mir.rearrangement.parser;
 
+import com.milaboratory.mir.probability.parser.PlainTextHierarchicalModelUtils;
 import com.milaboratory.mir.segment.Gene;
 import com.milaboratory.mir.segment.Species;
-import com.milaboratory.mir.rearrangement.probability.ProbabilisticModelFormula;
-import com.milaboratory.mir.probability.ProbabilityUtils;
+import com.milaboratory.mir.probability.parser.HierarchicalModelFormula;
+import com.milaboratory.mir.probability.ProbabilityMathUtils;
 
 import java.io.*;
 import java.util.*;
@@ -14,7 +15,7 @@ public final class MuruganModelParser {
     }
 
     public static MuruganModel load(InputStream params, InputStream marginals,
-                                    ProbabilisticModelFormula formula,
+                                    HierarchicalModelFormula formula,
                                     Species species, Gene gene)
             throws IOException {
         var valueIndexMap = readValueIndexMap(params, formula, true);
@@ -25,7 +26,7 @@ public final class MuruganModelParser {
     }
 
     private static Map<String, Map<Integer, String>> readValueIndexMap(InputStream paramsInputStream,
-                                                                       ProbabilisticModelFormula formula,
+                                                                       HierarchicalModelFormula formula,
                                                                        boolean fixDinucl)
             throws IOException {
         // Initialize parameter value index map
@@ -88,7 +89,7 @@ public final class MuruganModelParser {
         int k = 0;
         for (int i = 0; i < 4; i++) {
             for (int j = 0; j < 4; j++) {
-                results.put(k, originalMap.get(i) + ProbabilisticModelFormula.VARIABLE_SEPARATOR + originalMap.get(j));
+                results.put(k, originalMap.get(i) + PlainTextHierarchicalModelUtils.VARIABLE_SEPARATOR + originalMap.get(j));
                 k++;
             }
         }
@@ -96,7 +97,7 @@ public final class MuruganModelParser {
     }
 
     private static Map<String, Map<String, Double>> readProbabilities(InputStream marginalsInputStream,
-                                                                      ProbabilisticModelFormula formula,
+                                                                      HierarchicalModelFormula formula,
                                                                       Map<String, Map<Integer, String>> valueIndexMap,
                                                                       boolean fixDinucl,
                                                                       boolean maskSecondaryAlleles)
@@ -173,9 +174,9 @@ public final class MuruganModelParser {
                         parentVariableValueIndices.forEach((parentVariable, index) -> {
                             String value = valueIndexMap.get(parentVariable).get(index);
                             if (variableSuffix.length() == 0) {
-                                variableSuffix.append(ProbabilisticModelFormula.CONDITIONAL_SEPARATOR).append(value);
+                                variableSuffix.append(PlainTextHierarchicalModelUtils.CONDITIONAL_SEPARATOR).append(value);
                             } else {
-                                variableSuffix.append(ProbabilisticModelFormula.VARIABLE_SEPARATOR).append(value);
+                                variableSuffix.append(PlainTextHierarchicalModelUtils.VARIABLE_SEPARATOR).append(value);
                             }
                         });
 
@@ -187,13 +188,13 @@ public final class MuruganModelParser {
                             // will get sum to 1 for each row; we'll assume that its P(nt2|nt1)
                             // as we have no P(nt1), we'll just divide it by 4 to obtain P(nt2,nt1)=P(nt2|nt1)P(nt1)
                             // this is similar to assuming that first base is added at random
-                            probabilities = ProbabilityUtils.normalize(probabilities);
+                            probabilities = ProbabilityMathUtils.normalize(probabilities);
                         }
 
-                        if (!ProbabilityUtils.isNormalized(probabilities)) {
+                        if (!ProbabilityMathUtils.isNormalized(probabilities)) {
                             throw new RuntimeException("Probabilities for '" + firstVariable +
                                     "' conditional on '" + variableSuffix + "'" +
-                                    " are not normalized (sum=" + ProbabilityUtils.sum(probabilities) +
+                                    " are not normalized (sum=" + ProbabilityMathUtils.sum(probabilities) +
                                     " with 1e-5 precision).");
                         }
 
@@ -225,6 +226,6 @@ public final class MuruganModelParser {
         for (int i = 0; i < probs.length; i++) {
             newProbs[i] = isPrimaryAllele(indexedValues.get(i)) ? probs[i] : 0;
         }
-        return ProbabilityUtils.normalize(newProbs);
+        return ProbabilityMathUtils.normalize(newProbs);
     }
 }

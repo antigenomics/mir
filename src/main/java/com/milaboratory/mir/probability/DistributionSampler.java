@@ -46,6 +46,6 @@ public class DistributionSampler<T> implements Generator<T> {
 
     @Override
     public T generate() {
-        return values[ProbabilityUtils.sample(probabilities, random)];
+        return values[ProbabilityMathUtils.sample(probabilities, random)];
     }
 }

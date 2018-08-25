@@ -1,26 +1,26 @@
-package com.milaboratory.mir.rearrangement.probability;
+package com.milaboratory.mir.probability.parser;
 
 import java.io.Serializable;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public final class ProbabilisticModelFormula implements Serializable {
-    public static final String CONDITIONAL_SEPARATOR = "|",
-            REGEX_CONDITIONAL_SEPARATOR = "\\|",
-            VARIABLE_SEPARATOR = ",";
+import static com.milaboratory.mir.probability.parser.PlainTextHierarchicalModelUtils.REGEX_CONDITIONAL_SEPARATOR;
+import static com.milaboratory.mir.probability.parser.PlainTextHierarchicalModelUtils.CONDITIONAL_SEPARATOR;
+import static com.milaboratory.mir.probability.parser.PlainTextHierarchicalModelUtils.VARIABLE_SEPARATOR;
 
+public final class HierarchicalModelFormula implements Serializable {
     private final Set<String> independentDistributionNames;
     private final Map<String, Set<String>> graph = new HashMap<>();
     private final Set<String> variables = new HashSet<>();
 
-    public static ProbabilisticModelFormula fromString(String formula) {
-        return new ProbabilisticModelFormula(
+    public static HierarchicalModelFormula fromString(String formula) {
+        return new HierarchicalModelFormula(
                 Arrays.stream(formula.replaceAll("P\\(", "").split("\\)"))
                         .collect(Collectors.toList())
         );
     }
 
-    public ProbabilisticModelFormula(List<String> independentDistributionNames) {
+    public HierarchicalModelFormula(List<String> independentDistributionNames) {
         for (String pfull : independentDistributionNames) {
             String[] pfullSplit = pfull.split(REGEX_CONDITIONAL_SEPARATOR);
             String variable = pfullSplit[0].trim();
@@ -80,43 +80,6 @@ public final class ProbabilisticModelFormula implements Serializable {
             }
         }
         return null;
-    }
-
-    public static Map<String, Map<String, Double>> embed1Conditional(Map<String, Double> probabilityMap) {
-        return embed1(probabilityMap, CONDITIONAL_SEPARATOR);
-    }
-
-    public static Map<String, Map<String, Double>> embed1Joint(Map<String, Double> probabilityMap) {
-        return embed1(probabilityMap, VARIABLE_SEPARATOR);
-    }
-
-    public static Map<String, Map<String, Double>> embed1(Map<String, Double> probabilityMap,
-                                                          String separator) {
-        var embeddedProbabilities = new HashMap<String, Map<String, Double>>();
-        probabilityMap.forEach(
-                (key, value) -> {
-                    var variables = key.split(separator);
-                    embeddedProbabilities
-                            .computeIfAbsent(variables[1], x -> new HashMap<>())
-                            .put(variables[0], value);
-                }
-        );
-        return embeddedProbabilities;
-    }
-
-    public static Map<String, Map<String, Map<String, Double>>> embed2(Map<String, Double> probabilityMap) {
-        var embeddedProbabilities = embed1(probabilityMap, CONDITIONAL_SEPARATOR);
-
-        var embeddedProbabilities2 = new HashMap<String, Map<String, Map<String, Double>>>();
-        embeddedProbabilities.forEach((key, value) -> {
-                    var variables = key.split(VARIABLE_SEPARATOR);
-                    embeddedProbabilities2
-                            .computeIfAbsent(variables[1], x -> new HashMap<>())
-                            .put(variables[0], embeddedProbabilities.get(key));
-                }
-        );
-
-        return embeddedProbabilities2;
     }
 
     public Collection<String> getVariables() {

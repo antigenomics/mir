@@ -6,9 +6,9 @@ import com.milaboratory.mir.segment.VariableSegment;
 
 import java.util.Map;
 
-public class JoiningGivenVariableSegmentDistribution
+public class JoiningVariableSegmentDistribution
         extends ConditionalDistribution1<VariableSegment, JoiningSegment, JoiningSegmentDistribution> {
-    public JoiningGivenVariableSegmentDistribution(Map<VariableSegment, JoiningSegmentDistribution> embeddedProbs) {
+    public JoiningVariableSegmentDistribution(Map<VariableSegment, JoiningSegmentDistribution> embeddedProbs) {
         super(embeddedProbs);
     }
 }
