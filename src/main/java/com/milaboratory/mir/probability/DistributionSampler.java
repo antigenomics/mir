@@ -9,12 +9,10 @@ import java.util.stream.Collectors;
 public class DistributionSampler<T> implements Generator<T> {
     private final T[] values;
     private final double[] probabilities;
-    private final Random random;
 
     @SuppressWarnings("unchecked")
     public DistributionSampler(DistributionMap<T> distributionMap,
-                               Class<T> clazz,
-                               Random random) {
+                               Class<T> clazz) {
         var sortedProbs = distributionMap
                 .listEntries()
                 .stream()
@@ -22,7 +20,6 @@ public class DistributionSampler<T> implements Generator<T> {
                 .collect(Collectors.toList());
         this.values = (T[]) Array.newInstance(clazz, sortedProbs.size());
         this.probabilities = new double[sortedProbs.size()];
-        this.random = random;
         for (int i = 0; i < sortedProbs.size(); i++) {
             var probEntry = sortedProbs.get(i);
             values[i] = probEntry.getValue();
@@ -31,8 +28,7 @@ public class DistributionSampler<T> implements Generator<T> {
     }
 
     public DistributionSampler(T[] values,
-                               double[] probabilities,
-                               Random random) {
+                               double[] probabilities) {
         if (values.length == 0) {
             throw new IllegalArgumentException("Empty value array");
         }
@@ -41,11 +37,10 @@ public class DistributionSampler<T> implements Generator<T> {
         }
         this.values = values;
         this.probabilities = probabilities;
-        this.random = random;
     }
 
     @Override
     public T generate() {
-        return values[ProbabilityMathUtils.sample(probabilities, random)];
+        return values[ProbabilityMathUtils.sample(probabilities)];
     }
 }

@@ -8,7 +8,6 @@ import com.milaboratory.mir.segment.VariableSegment;
 
 import java.util.Map;
 import java.util.Random;
-import java.util.concurrent.ThreadLocalRandom;
 
 public class DiversityJoiningVariableDistribution
         extends ConditionalDistribution2<VariableSegment, JoiningSegment, DiversitySegment,
@@ -18,12 +17,12 @@ public class DiversityJoiningVariableDistribution
         super(embeddedProbs);
     }
 
-    public DiversityJoiningVariableDistribution(Map<VariableSegment, Map<JoiningSegment, Map<DiversitySegment, Double>>> probabilities,
-                                                Random random) {
-        this(CommonUtils.map2map(
+    public DiversityJoiningVariableDistribution fromMap(
+            Map<VariableSegment, Map<JoiningSegment, Map<DiversitySegment, Double>>> probabilities) {
+        return new DiversityJoiningVariableDistribution(CommonUtils.map2map(
                 probabilities,
                 Map.Entry::getKey,
-                e -> new DiversityJoiningDistribution(e.getValue(), random)
+                e -> DiversityJoiningDistribution.fromMap(e.getValue())
         ));
     }
 }

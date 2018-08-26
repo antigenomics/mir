@@ -5,7 +5,6 @@ import com.milaboratory.mir.probability.ConditionalDistribution1;
 import com.milaboratory.mir.segment.DiversitySegment;
 
 import java.util.Map;
-import java.util.Random;
 
 public class DiversityTrimming5Distribution
         extends ConditionalDistribution1<DiversitySegment, Integer, TrimmingDistribution> {
@@ -13,12 +12,11 @@ public class DiversityTrimming5Distribution
         super(embeddedProbs);
     }
 
-    public DiversityTrimming5Distribution(Map<DiversitySegment, Map<Integer, Double>> probabilities,
-                                          Random random) {
-        this(CommonUtils.map2map(
+    public static DiversityTrimming5Distribution fromMap(Map<DiversitySegment, Map<Integer, Double>> probabilities) {
+        return new DiversityTrimming5Distribution(CommonUtils.map2map(
                 probabilities,
                 Map.Entry::getKey,
-                e -> new TrimmingDistribution(e.getValue(), random)
+                e -> TrimmingDistribution.fromMap(e.getValue())
         ));
     }
 }

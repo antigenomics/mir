@@ -8,21 +8,19 @@ public class Distribution<T> {
     private final DistributionAccumulator<T> distributionAccumulator;
 
     public Distribution(DistributionMap<T> distributionMap,
-                        Class<T> clazz,
-                        Random random) {
+                        Class<T> clazz) {
         this.distributionMap = distributionMap;
-        this.distributionSampler = new DistributionSampler<>(distributionMap, clazz, random);
+        this.distributionSampler = new DistributionSampler<>(distributionMap, clazz);
         this.distributionAccumulator = new FixedDistributionAccumulator<>(distributionMap.values());
     }
 
     public Distribution(DistributionAccumulator<T> distributionAccumulator,
-                        Class<T> clazz,
-                        Random random) {
+                        Class<T> clazz) {
         if (distributionAccumulator.values().isEmpty()) {
             throw new IllegalArgumentException("No values in accumulator");
         }
         this.distributionMap = distributionAccumulator.getNormalizedDistributionMap();
-        this.distributionSampler = new DistributionSampler<>(distributionMap, clazz, random);
+        this.distributionSampler = new DistributionSampler<>(distributionMap, clazz);
         this.distributionAccumulator = distributionAccumulator.createCleanInstance();
     }
 

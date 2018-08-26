@@ -65,12 +65,13 @@ public final class ProbabilityMathUtils {
 
     /**
      * Roulette wheel sampling. Can be sped up by sorting probabilities in a descending order.
+     * The sampling is performed using thread local random generator. Sort the array in
+     * descending order for speedup.
      *
-     * @param probabilities an array of probabilities of events
-     * @param random        random number rearrangement
+     * @param probabilities an array of event probabilities, should sum to 1
      * @return index of sampled event
      */
-    public static int sample(double[] probabilities, Random random) {
+    public static int sample(double[] probabilities) {
         double p = ThreadLocalRandom.current().nextDouble();
         double sum = 0;
 
@@ -82,16 +83,5 @@ public final class ProbabilityMathUtils {
         }
 
         return probabilities.length - 1;
-    }
-
-    /**
-     * Roulette wheel sampling. Can be sped up by sorting probabilities in a descending order.
-     * Uses thread local random for sampling.
-     *
-     * @param probabilities an array of probabilities of events
-     * @return index of sampled event
-     */
-    public static int sample(double[] probabilities) {
-        return sample(probabilities, ThreadLocalRandom.current());
     }
 }

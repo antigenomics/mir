@@ -5,16 +5,18 @@ import com.milaboratory.mir.probability.DistributionAccumulator;
 import com.milaboratory.mir.probability.DistributionMap;
 import com.milaboratory.mir.segment.JoiningSegment;
 
-import java.util.Random;
+import java.util.Map;
 
 public class JoiningDistribution extends Distribution<JoiningSegment> {
-    public JoiningDistribution(DistributionMap<JoiningSegment> distributionMap,
-                               Random random) {
-        super(distributionMap, JoiningSegment.class, random);
+    public JoiningDistribution(DistributionMap<JoiningSegment> distributionMap) {
+        super(distributionMap, JoiningSegment.class);
     }
 
-    public JoiningDistribution(DistributionAccumulator<JoiningSegment> distributionAccumulator,
-                               Random random) {
-        super(distributionAccumulator, JoiningSegment.class, random);
+    public JoiningDistribution(DistributionAccumulator<JoiningSegment> distributionAccumulator) {
+        super(distributionAccumulator, JoiningSegment.class);
+    }
+
+    public static JoiningDistribution fromMap(Map<JoiningSegment, Double> probabilities) {
+        return new JoiningDistribution(new DistributionMap<>(probabilities));
     }
 }

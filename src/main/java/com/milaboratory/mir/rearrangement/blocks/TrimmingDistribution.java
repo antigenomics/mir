@@ -8,15 +8,15 @@ import java.util.Map;
 import java.util.Random;
 
 public class TrimmingDistribution extends IntegerDistribution {
-    public TrimmingDistribution(DistributionMap<Integer> distributionMap, Random random) {
-        super(distributionMap, random);
+    public TrimmingDistribution(DistributionMap<Integer> distributionMap) {
+        super(distributionMap);
     }
 
-    public TrimmingDistribution(DistributionAccumulator<Integer> distributionAccumulator, Random random) {
-        super(distributionAccumulator, random);
+    public TrimmingDistribution(DistributionAccumulator<Integer> distributionAccumulator) {
+        super(distributionAccumulator);
     }
 
-    public TrimmingDistribution(Map<Integer, Double> probabilities, Random random) {
-        this(new DistributionMap<>(probabilities), random);
+    public static TrimmingDistribution fromMap(Map<Integer, Double> probabilities) {
+        return new TrimmingDistribution(new DistributionMap<>(probabilities));
     }
 }

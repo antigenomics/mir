@@ -5,16 +5,18 @@ import com.milaboratory.mir.probability.DistributionAccumulator;
 import com.milaboratory.mir.probability.DistributionMap;
 import com.milaboratory.mir.segment.VariableSegment;
 
-import java.util.Random;
+import java.util.Map;
 
 public class VariableDistribution extends Distribution<VariableSegment> {
-    public VariableDistribution(DistributionMap<VariableSegment> distributionMap,
-                                Random random) {
-        super(distributionMap, VariableSegment.class, random);
+    public VariableDistribution(DistributionMap<VariableSegment> distributionMap) {
+        super(distributionMap, VariableSegment.class);
     }
 
-    public VariableDistribution(DistributionAccumulator<VariableSegment> distributionAccumulator,
-                                Random random) {
-        super(distributionAccumulator, VariableSegment.class, random);
+    public VariableDistribution(DistributionAccumulator<VariableSegment> distributionAccumulator) {
+        super(distributionAccumulator, VariableSegment.class);
+    }
+
+    public static VariableDistribution fromMap(Map<VariableSegment, Double> probabilities) {
+        return new VariableDistribution(new DistributionMap<>(probabilities));
     }
 }

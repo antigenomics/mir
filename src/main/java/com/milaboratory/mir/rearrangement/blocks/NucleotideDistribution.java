@@ -4,14 +4,18 @@ import com.milaboratory.mir.probability.ByteDistribution;
 import com.milaboratory.mir.probability.DistributionAccumulator;
 import com.milaboratory.mir.probability.DistributionMap;
 
-import java.util.Random;
+import java.util.Map;
 
 public class NucleotideDistribution extends ByteDistribution {
-    public NucleotideDistribution(DistributionMap<Byte> distributionMap, Random random) {
-        super(distributionMap, random);
+    public NucleotideDistribution(DistributionMap<Byte> distributionMap) {
+        super(distributionMap);
     }
 
-    public NucleotideDistribution(DistributionAccumulator<Byte> distributionAccumulator, Random random) {
-        super(distributionAccumulator, random);
+    public NucleotideDistribution(DistributionAccumulator<Byte> distributionAccumulator) {
+        super(distributionAccumulator);
+    }
+
+    public static NucleotideDistribution fromMap(Map<Byte, Double> probabilities) {
+        return new NucleotideDistribution(new DistributionMap<>(probabilities));
     }
 }
