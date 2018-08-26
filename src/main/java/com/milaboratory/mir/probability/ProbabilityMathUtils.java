@@ -71,7 +71,7 @@ public final class ProbabilityMathUtils {
      * @return index of sampled event
      */
     public static int sample(double[] probabilities, Random random) {
-        double p = random.nextDouble();
+        double p = ThreadLocalRandom.current().nextDouble();
         double sum = 0;
 
         for (int i = 0; i < probabilities.length; i++) {

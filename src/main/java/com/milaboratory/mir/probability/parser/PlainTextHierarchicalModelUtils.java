@@ -33,7 +33,7 @@ public final class PlainTextHierarchicalModelUtils {
         return embeddedProbabilities;
     }
 
-    public static Map<String, Map<String, Map<String, Double>>> embed2(Map<String, Double> probabilityMap) {
+    public static Map<String, Map<String, Map<String, Double>>> embed2Conditional(Map<String, Double> probabilityMap) {
         var embeddedProbabilities = embed1(probabilityMap, CONDITIONAL_SEPARATOR);
 
         var embeddedProbabilities2 = new HashMap<String, Map<String, Map<String, Double>>>();

@@ -5,6 +5,7 @@ import com.milaboratory.mir.probability.DistributionAccumulator;
 import com.milaboratory.mir.probability.DistributionMap;
 import com.milaboratory.mir.segment.DiversitySegment;
 
+import java.util.Map;
 import java.util.Random;
 
 public class DiversityDistribution extends Distribution<DiversitySegment> {
@@ -16,5 +17,7 @@ public class DiversityDistribution extends Distribution<DiversitySegment> {
         super(distributionAccumulator, DiversitySegment.class, random);
     }
 
-
+    public DiversityDistribution(Map<DiversitySegment, Double> probabilities, Random random) {
+        this(new DistributionMap<>(probabilities), random);
+    }
 }
