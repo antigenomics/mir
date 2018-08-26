@@ -11,7 +11,7 @@ public class NucleotidePairDistribution extends ConditionalDistribution1<Byte, B
         super(embeddedProbs);
     }
 
-    public NucleotidePairDistribution fromMap(Map<Byte, Map<Byte, Double>> probabilities) {
+    public static NucleotidePairDistribution fromMap(Map<Byte, Map<Byte, Double>> probabilities) {
         return new NucleotidePairDistribution(CommonUtils.map2map(
                 probabilities,
                 Map.Entry::getKey,

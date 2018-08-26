@@ -15,7 +15,7 @@ public class InsertSizeDistribution extends IntegerDistribution {
         super(distributionAccumulator);
     }
 
-    public InsertSizeDistribution fromMap(Map<Integer, Double> probabilities) {
+    public static InsertSizeDistribution fromMap(Map<Integer, Double> probabilities) {
         return new InsertSizeDistribution(new DistributionMap<>(probabilities));
     }
 }

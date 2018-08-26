@@ -3,6 +3,7 @@ package com.milaboratory.mir.probability.parser;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 public class PlainTextHierarchicalModel {
     private final HierarchicalModelFormula formula;
@@ -21,7 +22,21 @@ public class PlainTextHierarchicalModel {
         return formula;
     }
 
-    public Map<String, Map<String, Double>> getProbabilities() {
-        return Collections.unmodifiableMap(probabilities);
+    //public Map<String, Map<String, Double>> getProbabilities() {
+    //    return Collections.unmodifiableMap(probabilities);
+    //}
+
+    public Set<String> getBlockNames() {
+        return probabilities.keySet();
+    }
+
+    public Map<String, Double> getProbabilityMap(String blockName) {
+        var map = probabilities.get(blockName);
+
+        if (map == null) {
+            throw new IllegalArgumentException("Unknown model block " + blockName);
+        }
+
+        return map;
     }
 }

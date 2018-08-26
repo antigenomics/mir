@@ -1,4 +1,4 @@
-package com.milaboratory.mir.rearrangement.blocks;
+package com.milaboratory.mir.rearrangement.converter;
 
 import com.milaboratory.mir.segment.Segment;
 import com.milaboratory.mir.segment.SegmentLibrary;
@@ -49,7 +49,7 @@ public class ConverterUtils {
         );
     }
 
-    private static Map<Integer, Double> convertInt(Map<String, Double> map) {
+    public static Map<Integer, Double> convertIndelSize(Map<String, Double> map) {
         return map2map(
                 map,
                 e -> Integer.parseInt(e.getKey()),
@@ -58,15 +58,15 @@ public class ConverterUtils {
     }
 
     public static <T extends Segment>
-    Map<T, Map<Integer, Double>> convertTrimming(Map<String, Map<String, Double>> probabilities,
-                                                 SegmentLibrary segmentLibrary,
-                                                 Class<T> segmentClass) {
+    Map<T, Map<Integer, Double>> convertSegmentTrimming(Map<String, Map<String, Double>> probabilities,
+                                                        SegmentLibrary segmentLibrary,
+                                                        Class<T> segmentClass) {
         var segmentProvider = segmentLibrary.asSegmentProvider(segmentClass);
 
         return map2map(
                 probabilities,
                 e -> segmentProvider.fromId(e.getKey()),
-                e -> convertInt(e.getValue())
+                e -> convertIndelSize(e.getValue())
         );
     }
 
@@ -82,7 +82,7 @@ public class ConverterUtils {
                 e -> map2map(
                         e.getValue(),
                         ee -> Integer.parseInt(ee.getKey()),
-                        ee -> convertInt(ee.getValue())
+                        ee -> convertIndelSize(ee.getValue())
                 )
         );
     }
