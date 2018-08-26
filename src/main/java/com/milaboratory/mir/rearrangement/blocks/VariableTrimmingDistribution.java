@@ -5,10 +5,10 @@ import com.milaboratory.mir.segment.VariableSegment;
 
 import java.util.Map;
 
-public class VariableSegmentTrimmingDistribution
+public class VariableTrimmingDistribution
         extends ConditionalDistribution1<VariableSegment, Integer, TrimmingDistribution> {
 
-    public VariableSegmentTrimmingDistribution(Map<VariableSegment, TrimmingDistribution> embeddedProbs) {
+    public VariableTrimmingDistribution(Map<VariableSegment, TrimmingDistribution> embeddedProbs) {
         super(embeddedProbs);
     }
 }

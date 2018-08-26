@@ -7,14 +7,14 @@ import com.milaboratory.mir.segment.JoiningSegment;
 
 import java.util.Random;
 
-public class JoiningSegmentDistribution extends Distribution<JoiningSegment> {
-    public JoiningSegmentDistribution(DistributionMap<JoiningSegment> distributionMap,
-                                      Random random) {
+public class JoiningDistribution extends Distribution<JoiningSegment> {
+    public JoiningDistribution(DistributionMap<JoiningSegment> distributionMap,
+                               Random random) {
         super(distributionMap, JoiningSegment.class, random);
     }
 
-    public JoiningSegmentDistribution(DistributionAccumulator<JoiningSegment> distributionAccumulator,
-                                      Random random) {
+    public JoiningDistribution(DistributionAccumulator<JoiningSegment> distributionAccumulator,
+                               Random random) {
         super(distributionAccumulator, JoiningSegment.class, random);
     }
 }

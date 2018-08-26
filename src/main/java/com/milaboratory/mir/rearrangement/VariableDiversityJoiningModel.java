@@ -7,12 +7,12 @@ import com.milaboratory.mir.segment.VariableSegment;
 
 public class VariableDiversityJoiningModel implements RearrangementModel {
     private final VariableDistribution variableSegmentDistribution;
-    private final JoiningVariableSegmentDistribution joiningVariableSegmentDistribution;
-    private final DiversityJoiningVariableSegmentDistribution diversityJoiningVariableSegmentDistribution;
-    private final JoiningSegmentTrimmingDistribution joiningSegmentTrimmingDistribution;
-    private final VariableSegmentTrimmingDistribution variableSegmentTrimmingDistribution;
-    private final DiversitySegmentTrimming5Distribution diversitySegmentTrimming5Distribution;
-    private final DiversitySegmentTrimming3Distribution diversitySegmentTrimming3Distribution;
+    private final JoiningVariableDistribution joiningVariableDistribution;
+    private final DiversityJoiningVariableDistribution diversityJoiningVariableDistribution;
+    private final JoiningTrimmingDistribution joiningTrimmingDistribution;
+    private final VariableTrimmingDistribution variableTrimmingDistribution;
+    private final DiversityTrimming5Distribution diversityTrimming5Distribution;
+    private final DiversityTrimming3Distribution diversityTrimming3Distribution;
     private final InsertSizeDistribution insertSizeDistributionVD,
             insertSizeDistributionDJ;
     private final NucleotideDistribution nucleotideDistributionVD,
@@ -23,12 +23,12 @@ public class VariableDiversityJoiningModel implements RearrangementModel {
             markovSequenceDistributionDJ;
 
     public VariableDiversityJoiningModel(VariableDistribution variableSegmentDistribution,
-                                         JoiningVariableSegmentDistribution joiningVariableSegmentDistribution,
-                                         DiversityJoiningVariableSegmentDistribution diversityJoiningVariableSegmentDistribution,
-                                         JoiningSegmentTrimmingDistribution joiningSegmentTrimmingDistribution,
-                                         VariableSegmentTrimmingDistribution variableSegmentTrimmingDistribution,
-                                         DiversitySegmentTrimming5Distribution diversitySegmentTrimming5Distribution,
-                                         DiversitySegmentTrimming3Distribution diversitySegmentTrimming3Distribution,
+                                         JoiningVariableDistribution joiningVariableDistribution,
+                                         DiversityJoiningVariableDistribution diversityJoiningVariableDistribution,
+                                         JoiningTrimmingDistribution joiningTrimmingDistribution,
+                                         VariableTrimmingDistribution variableTrimmingDistribution,
+                                         DiversityTrimming5Distribution diversityTrimming5Distribution,
+                                         DiversityTrimming3Distribution diversityTrimming3Distribution,
                                          InsertSizeDistribution insertSizeDistributionVD,
                                          InsertSizeDistribution insertSizeDistributionDJ,
                                          NucleotideDistribution nucleotideDistributionVD,
@@ -36,12 +36,12 @@ public class VariableDiversityJoiningModel implements RearrangementModel {
                                          NucleotidePairDistribution nucleotidePairDistributionVD,
                                          NucleotidePairDistribution nucleotidePairDistributionDJ) {
         this.variableSegmentDistribution = variableSegmentDistribution;
-        this.joiningVariableSegmentDistribution = joiningVariableSegmentDistribution;
-        this.diversityJoiningVariableSegmentDistribution = diversityJoiningVariableSegmentDistribution;
-        this.joiningSegmentTrimmingDistribution = joiningSegmentTrimmingDistribution;
-        this.variableSegmentTrimmingDistribution = variableSegmentTrimmingDistribution;
-        this.diversitySegmentTrimming5Distribution = diversitySegmentTrimming5Distribution;
-        this.diversitySegmentTrimming3Distribution = diversitySegmentTrimming3Distribution;
+        this.joiningVariableDistribution = joiningVariableDistribution;
+        this.diversityJoiningVariableDistribution = diversityJoiningVariableDistribution;
+        this.joiningTrimmingDistribution = joiningTrimmingDistribution;
+        this.variableTrimmingDistribution = variableTrimmingDistribution;
+        this.diversityTrimming5Distribution = diversityTrimming5Distribution;
+        this.diversityTrimming3Distribution = diversityTrimming3Distribution;
         this.insertSizeDistributionVD = insertSizeDistributionVD;
         this.insertSizeDistributionDJ = insertSizeDistributionDJ;
         this.nucleotideDistributionVD = nucleotideDistributionVD;
@@ -62,19 +62,19 @@ public class VariableDiversityJoiningModel implements RearrangementModel {
     @Override
     public RearrangementTemplate generate() {
         VariableSegment variableSegment = variableSegmentDistribution.getDistributionSampler().generate();
-        JoiningSegment joiningSegment = joiningVariableSegmentDistribution.getDistribution0(variableSegment)
+        JoiningSegment joiningSegment = joiningVariableDistribution.getDistribution0(variableSegment)
                 .getDistributionSampler().generate();
-        DiversitySegment diversitySegment = diversityJoiningVariableSegmentDistribution
+        DiversitySegment diversitySegment = diversityJoiningVariableDistribution
                 .getDistribution0(variableSegment, joiningSegment)
                 .getDistributionSampler().generate();
 
-        int variableTrimming = variableSegmentTrimmingDistribution.getDistribution0(variableSegment)
+        int variableTrimming = variableTrimmingDistribution.getDistribution0(variableSegment)
                 .getDistributionSampler().generate();
-        int joiningTrimming = joiningSegmentTrimmingDistribution.getDistribution0(joiningSegment)
+        int joiningTrimming = joiningTrimmingDistribution.getDistribution0(joiningSegment)
                 .getDistributionSampler().generate();
-        int diversitySegmentTrimming5 = diversitySegmentTrimming5Distribution.getDistribution0(diversitySegment)
+        int diversitySegmentTrimming5 = diversityTrimming5Distribution.getDistribution0(diversitySegment)
                 .getDistributionSampler().generate();
-        int diversitySegmentTrimming3 = diversitySegmentTrimming3Distribution
+        int diversitySegmentTrimming3 = diversityTrimming3Distribution
                 .getDistribution0(diversitySegment, diversitySegmentTrimming5)
                 .getDistributionSampler().generate();
 
@@ -98,28 +98,28 @@ public class VariableDiversityJoiningModel implements RearrangementModel {
         return variableSegmentDistribution;
     }
 
-    public JoiningVariableSegmentDistribution getJoiningVariableSegmentDistribution() {
-        return joiningVariableSegmentDistribution;
+    public JoiningVariableDistribution getJoiningVariableDistribution() {
+        return joiningVariableDistribution;
     }
 
-    public DiversityJoiningVariableSegmentDistribution getDiversityJoiningVariableSegmentDistribution() {
-        return diversityJoiningVariableSegmentDistribution;
+    public DiversityJoiningVariableDistribution getDiversityJoiningVariableDistribution() {
+        return diversityJoiningVariableDistribution;
     }
 
-    public JoiningSegmentTrimmingDistribution getJoiningSegmentTrimmingDistribution() {
-        return joiningSegmentTrimmingDistribution;
+    public JoiningTrimmingDistribution getJoiningTrimmingDistribution() {
+        return joiningTrimmingDistribution;
     }
 
-    public VariableSegmentTrimmingDistribution getVariableSegmentTrimmingDistribution() {
-        return variableSegmentTrimmingDistribution;
+    public VariableTrimmingDistribution getVariableTrimmingDistribution() {
+        return variableTrimmingDistribution;
     }
 
-    public DiversitySegmentTrimming5Distribution getDiversitySegmentTrimming5Distribution() {
-        return diversitySegmentTrimming5Distribution;
+    public DiversityTrimming5Distribution getDiversityTrimming5Distribution() {
+        return diversityTrimming5Distribution;
     }
 
-    public DiversitySegmentTrimming3Distribution getDiversitySegmentTrimming3Distribution() {
-        return diversitySegmentTrimming3Distribution;
+    public DiversityTrimming3Distribution getDiversityTrimming3Distribution() {
+        return diversityTrimming3Distribution;
     }
 
     public InsertSizeDistribution getInsertSizeDistributionVD() {

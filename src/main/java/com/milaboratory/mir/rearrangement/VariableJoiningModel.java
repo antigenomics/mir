@@ -6,25 +6,25 @@ import com.milaboratory.mir.segment.VariableSegment;
 
 public class VariableJoiningModel implements RearrangementModel {
     private final VariableDistribution variableSegmentDistribution;
-    private final JoiningVariableSegmentDistribution joiningVariableSegmentDistribution;
-    private final JoiningSegmentTrimmingDistribution joiningSegmentTrimmingDistribution;
-    private final VariableSegmentTrimmingDistribution variableSegmentTrimmingDistribution;
+    private final JoiningVariableDistribution joiningVariableDistribution;
+    private final JoiningTrimmingDistribution joiningTrimmingDistribution;
+    private final VariableTrimmingDistribution variableTrimmingDistribution;
     private final InsertSizeDistribution insertSizeDistribution;
     private final NucleotideDistribution nucleotideDistribution;
     private final NucleotidePairDistribution nucleotidePairDistribution;
     private final MarkovNucleotideSequenceDistribution markovSequenceDistribution;
 
     public VariableJoiningModel(VariableDistribution variableSegmentDistribution,
-                                JoiningVariableSegmentDistribution joiningVariableSegmentDistribution,
-                                JoiningSegmentTrimmingDistribution joiningSegmentTrimmingDistribution,
-                                VariableSegmentTrimmingDistribution variableSegmentTrimmingDistribution,
+                                JoiningVariableDistribution joiningVariableDistribution,
+                                JoiningTrimmingDistribution joiningTrimmingDistribution,
+                                VariableTrimmingDistribution variableTrimmingDistribution,
                                 InsertSizeDistribution insertSizeDistribution,
                                 NucleotideDistribution nucleotideDistribution,
                                 NucleotidePairDistribution nucleotidePairDistribution) {
         this.variableSegmentDistribution = variableSegmentDistribution;
-        this.joiningVariableSegmentDistribution = joiningVariableSegmentDistribution;
-        this.joiningSegmentTrimmingDistribution = joiningSegmentTrimmingDistribution;
-        this.variableSegmentTrimmingDistribution = variableSegmentTrimmingDistribution;
+        this.joiningVariableDistribution = joiningVariableDistribution;
+        this.joiningTrimmingDistribution = joiningTrimmingDistribution;
+        this.variableTrimmingDistribution = variableTrimmingDistribution;
         this.insertSizeDistribution = insertSizeDistribution;
         this.nucleotideDistribution = nucleotideDistribution;
         this.nucleotidePairDistribution = nucleotidePairDistribution;
@@ -40,12 +40,12 @@ public class VariableJoiningModel implements RearrangementModel {
     @Override
     public RearrangementTemplate generate() {
         VariableSegment variableSegment = variableSegmentDistribution.getDistributionSampler().generate();
-        JoiningSegment joiningSegment = joiningVariableSegmentDistribution.getDistribution0(variableSegment)
+        JoiningSegment joiningSegment = joiningVariableDistribution.getDistribution0(variableSegment)
                 .getDistributionSampler().generate();
 
-        int variableTrimming = variableSegmentTrimmingDistribution.getDistribution0(variableSegment)
+        int variableTrimming = variableTrimmingDistribution.getDistribution0(variableSegment)
                 .getDistributionSampler().generate();
-        int joiningTrimming = joiningSegmentTrimmingDistribution.getDistribution0(joiningSegment)
+        int joiningTrimming = joiningTrimmingDistribution.getDistribution0(joiningSegment)
                 .getDistributionSampler().generate();
 
         int insertSize = insertSizeDistribution.getDistributionSampler().generate();
@@ -63,16 +63,16 @@ public class VariableJoiningModel implements RearrangementModel {
         return variableSegmentDistribution;
     }
 
-    public JoiningVariableSegmentDistribution getJoiningVariableSegmentDistribution() {
-        return joiningVariableSegmentDistribution;
+    public JoiningVariableDistribution getJoiningVariableDistribution() {
+        return joiningVariableDistribution;
     }
 
-    public JoiningSegmentTrimmingDistribution getJoiningSegmentTrimmingDistribution() {
-        return joiningSegmentTrimmingDistribution;
+    public JoiningTrimmingDistribution getJoiningTrimmingDistribution() {
+        return joiningTrimmingDistribution;
     }
 
-    public VariableSegmentTrimmingDistribution getVariableSegmentTrimmingDistribution() {
-        return variableSegmentTrimmingDistribution;
+    public VariableTrimmingDistribution getVariableTrimmingDistribution() {
+        return variableTrimmingDistribution;
     }
 
     public InsertSizeDistribution getInsertSizeDistribution() {

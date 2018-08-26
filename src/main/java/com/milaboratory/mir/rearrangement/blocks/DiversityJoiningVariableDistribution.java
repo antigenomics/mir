@@ -7,11 +7,11 @@ import com.milaboratory.mir.segment.VariableSegment;
 
 import java.util.Map;
 
-public class DiversityJoiningVariableSegmentDistribution
+public class DiversityJoiningVariableDistribution
         extends ConditionalDistribution2<VariableSegment, JoiningSegment, DiversitySegment,
-        DiversitySegmentDistribution, DiversityJoiningSegmentDistribution> {
+        DiversityDistribution, DiversityJoiningDistribution> {
 
-    public DiversityJoiningVariableSegmentDistribution(Map<VariableSegment, DiversityJoiningSegmentDistribution> embeddedProbs) {
+    public DiversityJoiningVariableDistribution(Map<VariableSegment, DiversityJoiningDistribution> embeddedProbs) {
         super(embeddedProbs);
     }
 }

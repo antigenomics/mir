@@ -6,7 +6,7 @@ import com.milaboratory.mir.probability.parser.HierarchicalModelFormula;
 import com.milaboratory.mir.segment.Cdr3GermlineSegment;
 import com.milaboratory.mir.segment.SegmentLibrary;
 import com.milaboratory.mir.segment.SegmentType;
-import com.milaboratory.mir.segment.provider.SegmentProvider;
+import com.milaboratory.mir.segment.SegmentProvider;
 
 import java.util.HashMap;
 import java.util.Map;

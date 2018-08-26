@@ -5,9 +5,9 @@ import com.milaboratory.mir.segment.DiversitySegment;
 
 import java.util.Map;
 
-public class DiversitySegmentTrimming5Distribution
+public class DiversityTrimming5Distribution
         extends ConditionalDistribution1<DiversitySegment, Integer, TrimmingDistribution> {
-    public DiversitySegmentTrimming5Distribution(Map<DiversitySegment, TrimmingDistribution> embeddedProbs) {
+    public DiversityTrimming5Distribution(Map<DiversitySegment, TrimmingDistribution> embeddedProbs) {
         super(embeddedProbs);
     }
 }

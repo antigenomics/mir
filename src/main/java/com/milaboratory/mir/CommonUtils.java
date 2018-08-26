@@ -3,6 +3,9 @@ package com.milaboratory.mir;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 import java.util.zip.GZIPInputStream;
 
 public class CommonUtils {
@@ -31,5 +34,11 @@ public class CommonUtils {
 
     private static boolean isGzipped(String path) {
         return path.toLowerCase().endsWith(".gz");
+    }
+
+    public static <K1, V1, K2, V2> Map<K2, V2> map2map(Map<K1, V1> map,
+                                                       Function<Map.Entry<K1,V1>, K2> keyMapper,
+                                                       Function<Map.Entry<K1,V1>, V2> valueMapper) {
+        return map.entrySet().stream().collect(Collectors.toMap(keyMapper, valueMapper));
     }
 }

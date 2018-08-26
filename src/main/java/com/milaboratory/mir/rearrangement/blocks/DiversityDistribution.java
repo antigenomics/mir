@@ -7,12 +7,14 @@ import com.milaboratory.mir.segment.DiversitySegment;
 
 import java.util.Random;
 
-public class DiversitySegmentDistribution extends Distribution<DiversitySegment> {
-    public DiversitySegmentDistribution(DistributionMap<DiversitySegment> distributionMap, Random random) {
+public class DiversityDistribution extends Distribution<DiversitySegment> {
+    public DiversityDistribution(DistributionMap<DiversitySegment> distributionMap, Random random) {
         super(distributionMap, DiversitySegment.class, random);
     }
 
-    public DiversitySegmentDistribution(DistributionAccumulator<DiversitySegment> distributionAccumulator, Random random) {
+    public DiversityDistribution(DistributionAccumulator<DiversitySegment> distributionAccumulator, Random random) {
         super(distributionAccumulator, DiversitySegment.class, random);
     }
+
+
 }

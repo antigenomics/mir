@@ -3,7 +3,7 @@ package com.milaboratory.mir.rearrangement.generator.murugan;
 import com.milaboratory.mir.rearrangement.generator.SegmentTrimmingGenerator;
 import com.milaboratory.mir.probability.parser.HierarchicalModelFormula;
 import com.milaboratory.mir.segment.Cdr3GermlineSegment;
-import com.milaboratory.mir.segment.provider.SegmentProvider;
+import com.milaboratory.mir.segment.SegmentProvider;
 
 import java.util.HashMap;
 import java.util.Map;

@@ -4,9 +4,9 @@ import com.milaboratory.mir.probability.ConditionalDistribution1;
 
 import java.util.Map;
 
-public class TwoSideSegmentTrimmingDistribution
+public class TwoSideTrimmingDistribution
         extends ConditionalDistribution1<Integer, Integer, TrimmingDistribution> {
-    public TwoSideSegmentTrimmingDistribution(Map<Integer, TrimmingDistribution> embeddedProbs) {
+    public TwoSideTrimmingDistribution(Map<Integer, TrimmingDistribution> embeddedProbs) {
         super(embeddedProbs);
     }
 }

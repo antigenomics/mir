@@ -6,7 +6,7 @@ import com.milaboratory.mir.rearrangement.probability.CategoryProbability;
 import com.milaboratory.mir.segment.Cdr3GermlineSegment;
 import com.milaboratory.mir.segment.SegmentLibrary;
 import com.milaboratory.mir.segment.SegmentType;
-import com.milaboratory.mir.segment.provider.SegmentProvider;
+import com.milaboratory.mir.segment.SegmentProvider;
 
 import java.util.Map;
 import java.util.stream.Collectors;

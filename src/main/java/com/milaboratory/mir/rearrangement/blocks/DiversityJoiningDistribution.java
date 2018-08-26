@@ -6,9 +6,9 @@ import com.milaboratory.mir.segment.JoiningSegment;
 
 import java.util.Map;
 
-public class DiversityJoiningSegmentDistribution
-        extends ConditionalDistribution1<JoiningSegment, DiversitySegment, DiversitySegmentDistribution> {
-    public DiversityJoiningSegmentDistribution(Map<JoiningSegment, DiversitySegmentDistribution> embeddedProbs) {
+public class DiversityJoiningDistribution
+        extends ConditionalDistribution1<JoiningSegment, DiversitySegment, DiversityDistribution> {
+    public DiversityJoiningDistribution(Map<JoiningSegment, DiversityDistribution> embeddedProbs) {
         super(embeddedProbs);
     }
 }

@@ -5,10 +5,10 @@ import com.milaboratory.mir.segment.JoiningSegment;
 
 import java.util.Map;
 
-public class JoiningSegmentTrimmingDistribution
+public class JoiningTrimmingDistribution
         extends ConditionalDistribution1<JoiningSegment, Integer, TrimmingDistribution> {
 
-    public JoiningSegmentTrimmingDistribution(Map<JoiningSegment, TrimmingDistribution> embeddedProbs) {
+    public JoiningTrimmingDistribution(Map<JoiningSegment, TrimmingDistribution> embeddedProbs) {
         super(embeddedProbs);
     }
 }
