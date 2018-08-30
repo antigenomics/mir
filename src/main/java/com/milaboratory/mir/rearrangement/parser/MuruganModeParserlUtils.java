@@ -9,41 +9,28 @@ import com.milaboratory.mir.probability.parser.HierarchicalModelFormula;
 import java.io.FileInputStream;
 import java.io.IOException;
 
-public final class MuruganModelUtils {
+public final class MuruganModeParserlUtils {
     public static final String PATH = "murugan_models";
 
     public static final String
-            VJMODEL_V_FORMULA = "v_choice",
-            VJMODEL_J_FORMULA = "j_choice|v_choice",
-            VJMODEL_INS_SZ_FORMULA = "vj_ins",
-            VJMODEL_V_DEL_FORMULA = "v_3_del|v_choice",
-            VJMODEL_J_DEL_FORMULA = "j_5_del|v_choice",
-            VJMODEL_INS_JOINT_FORMULA = "vj_dinucl";
+            V_NAME = "v_choice",
+            J_NAME = "j_choice",
+            D_NAME = "d_choice";
 
-    private MuruganModelUtils() {
-
-    }
-
-    public static PlainTextHierarchicalModel getModelFromResources(Species species, Gene gene) throws IOException {
-        MuruganModelStream muruganModelStream = getResourceStream(species, gene);
-        return MuruganModelParser.load(muruganModelStream.getParams(),
-                muruganModelStream.getMarginals(),
-                getFormula(gene), species, gene);
-    }
-
-    public static PlainTextHierarchicalModel getModelFromPath(String paramsPath, String marginalsPath,
-                                                              Species species, Gene gene) throws IOException {
-        return MuruganModelParser.load(new FileInputStream(paramsPath),
-                new FileInputStream(marginalsPath),
-                getFormula(gene), species, gene);
-    }
-
-    static MuruganModelStream getResourceStream(Species species, Gene gene) throws IOException {
-        return new MuruganModelStream(
-                CommonUtils.getResourceAsStream(PATH + "/" + species.getCode() + "_" + gene.getCode() + "_params.txt"),
-                CommonUtils.getResourceAsStream(PATH + "/" + species.getCode() + "_" + gene.getCode() + "_marginals.txt")
-        );
-    }
+    public static final String
+            V_FORMULA = "v_choice",
+            J_FORMULA = "j_choice|v_choice",
+            V_DEL_FORMULA = "v_3_del|v_choice",
+            J_DEL_FORMULA = "j_5_del|j_choice",
+            VJ_INS_SZ_FORMULA = "vj_ins",
+            VJ_INS_DINUCL_FORMULA = "vj_dinucl",
+            D_FORMULA = "d_gene|j_choice,v_choice",
+            D_DEL5_FORMULA = "d_5_del|d_gene",
+            D_DEL3_FORMULA = "d_3_del|d_5_del,d_gene",
+            VD_INS_SZ_FORMULA = "vd_ins",
+            DJ_INS_SZ_FORMULA = "dj_ins",
+            VD_INS_DINUCL_FORMULA = "vd_dinucl",
+            DJ_INS_DINUCL_FORMULA = "dj_dinucl";
 
     private static String getFormulaStr(Gene gene) {
         switch (gene) {
@@ -85,5 +72,30 @@ public final class MuruganModelUtils {
 
     public static HierarchicalModelFormula getFormula(Gene gene) {
         return HierarchicalModelFormula.fromString(getFormulaStr(gene));
+    }
+
+    private MuruganModeParserlUtils() {
+
+    }
+
+    public static PlainTextHierarchicalModel getModelFromResources(Species species, Gene gene) throws IOException {
+        MuruganModelStream muruganModelStream = getResourceStream(species, gene);
+        return MuruganModelParser.load(muruganModelStream.getParams(),
+                muruganModelStream.getMarginals(),
+                getFormula(gene), species, gene);
+    }
+
+    public static PlainTextHierarchicalModel getModelFromPath(String paramsPath, String marginalsPath,
+                                                              Species species, Gene gene) throws IOException {
+        return MuruganModelParser.load(new FileInputStream(paramsPath),
+                new FileInputStream(marginalsPath),
+                getFormula(gene), species, gene);
+    }
+
+    static MuruganModelStream getResourceStream(Species species, Gene gene) throws IOException {
+        return new MuruganModelStream(
+                CommonUtils.getResourceAsStream(PATH + "/" + species.getCode() + "_" + gene.getCode() + "_params.txt"),
+                CommonUtils.getResourceAsStream(PATH + "/" + species.getCode() + "_" + gene.getCode() + "_marginals.txt")
+        );
     }
 }

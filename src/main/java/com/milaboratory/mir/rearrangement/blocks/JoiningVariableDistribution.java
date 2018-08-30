@@ -20,4 +20,14 @@ public class JoiningVariableDistribution
                 e -> JoiningDistribution.fromMap(e.getValue())
         ));
     }
+
+    // todo: remove?
+    public boolean isConsistent(VariableDistribution variableDistribution) {
+        for (VariableSegment value : variableDistribution.getDistributionMap().values()) {
+            if (getDistribution0(value) == null) {
+                return false;
+            }
+        }
+        return true;
+    }
 }

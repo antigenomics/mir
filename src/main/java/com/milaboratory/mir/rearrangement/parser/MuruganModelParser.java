@@ -104,7 +104,7 @@ public final class MuruganModelParser {
             throws IOException {
         // initialize probabilities & check that we have all param values
         var probabilityMap = new HashMap<String, Map<String, Double>>();
-        for (String name : formula.getIndependentDistributionNames()) {
+        for (String name : formula.getBlockNames()) {
             probabilityMap.put(name, new HashMap<>());
         }
 
@@ -123,7 +123,7 @@ public final class MuruganModelParser {
                         firstVariable = null;
                     } else {
                         // also fetch parent variables and distribution name once
-                        parentDistributionName = formula.getParentDistributionName(firstVariable);
+                        parentDistributionName = formula.findBlockName(firstVariable);
                         parentVariables = formula.getParentVariables(firstVariable);
 
                         // So '#' line can be omitted if no parent variables

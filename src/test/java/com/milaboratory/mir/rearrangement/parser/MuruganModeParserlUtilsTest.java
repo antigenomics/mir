@@ -8,7 +8,7 @@ import org.junit.Test;
 
 import java.io.IOException;
 
-public class MuruganModelUtilsTest {
+public class MuruganModeParserlUtilsTest {
     @Test
     public void getResourceStreamTest() throws IOException {
         getResourceStreamTest(Species.Human, Gene.TRB);
@@ -18,16 +18,16 @@ public class MuruganModelUtilsTest {
     }
 
     private void getResourceStreamTest(Species species, Gene gene) throws IOException {
-        MuruganModelStream res = MuruganModelUtils.getResourceStream(species, gene);
+        MuruganModelStream res = MuruganModeParserlUtils.getResourceStream(species, gene);
         Assert.assertTrue(TestUtils.testStream(res.getMarginals()));
         Assert.assertTrue(TestUtils.testStream(res.getParams()));
     }
 
     @Test
     public void loadFromResourceTest() throws IOException {
-        MuruganModelUtils.getModelFromResources(Species.Human, Gene.TRB);
-        MuruganModelUtils.getModelFromResources(Species.Human, Gene.TRA);
-        MuruganModelUtils.getModelFromResources(Species.Human, Gene.IGH);
-        MuruganModelUtils.getModelFromResources(Species.Mouse, Gene.TRB);
+        MuruganModeParserlUtils.getModelFromResources(Species.Human, Gene.TRB);
+        MuruganModeParserlUtils.getModelFromResources(Species.Human, Gene.TRA);
+        MuruganModeParserlUtils.getModelFromResources(Species.Human, Gene.IGH);
+        MuruganModeParserlUtils.getModelFromResources(Species.Mouse, Gene.TRB);
     }
 }

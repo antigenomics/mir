@@ -1,5 +1,6 @@
 package com.milaboratory.mir.rearrangement.converter;
 
+import com.milaboratory.mir.probability.parser.HierarchicalModelFormula;
 import com.milaboratory.mir.probability.parser.PlainTextHierarchicalModel;
 import com.milaboratory.mir.probability.parser.PlainTextHierarchicalModelUtils;
 import com.milaboratory.mir.rearrangement.RearrangementModel;
@@ -74,10 +75,36 @@ public abstract class Converter<T extends PlainTextHierarchicalModel, V extends 
         );
     }
 
+    protected JoiningVariableDistribution getJoiningVariableDistribution(String jVariableName,
+                                                                         String vVariableName) {
+        HierarchicalModelFormula formula = plainTextHierarchicalModel.getFormula();
+        String jBlockName = formula.getBlockName(jVariableName);
+        var parents = formula.getParentVariables(jVariableName);
+
+        if (parents.contains(vVariableName) && parents.size() == 1) {
+            // return as is
+            return getJoiningVariableDistribution(jBlockName);
+        } else if (parents.isEmpty()) {
+            // no parents - just mock conditional by adding all V values
+            return getJoiningVariableDistribution(
+                    PlainTextHierarchicalModelUtils.mockConditional1(
+                            plainTextHierarchicalModel.listValues(vVariableName),
+                            getProbabilities(jBlockName))
+            );
+        }
+
+        // Neither P(J|V) nor P(J) - something is messed up
+        throw new RuntimeException("Bad J formula: '" + jBlockName + "'");
+    }
+
     protected JoiningVariableDistribution getJoiningVariableDistribution(String blockName) {
+        return getJoiningVariableDistribution(getProbabilities1(blockName));
+    }
+
+    protected JoiningVariableDistribution getJoiningVariableDistribution(Map<String, Map<String, Double>> probabilityMap) {
         return JoiningVariableDistribution.fromMap(
                 ConverterUtils.convertSegment(
-                        getProbabilities1(blockName),
+                        probabilityMap,
                         segmentLibrary,
                         JoiningSegment.class,
                         VariableSegment.class
@@ -85,10 +112,53 @@ public abstract class Converter<T extends PlainTextHierarchicalModel, V extends 
         );
     }
 
+    protected DiversityJoiningVariableDistribution getDiversityJoiningVariableDistribution(String dVariableName,
+                                                                                           String jVariableName,
+                                                                                           String vVariableName) {
+        HierarchicalModelFormula formula = plainTextHierarchicalModel.getFormula();
+        String dBlockName = formula.getBlockName(dVariableName);
+        var parents = formula.getParentVariables(dVariableName);
+
+        if (parents.contains(vVariableName) && parents.contains(jVariableName) && parents.size() == 2) {
+            // todo: check parent order
+            // return as is
+            return getDiversityJoiningVariableDistribution(dBlockName);
+        } else if (parents.contains(jVariableName) && parents.size() == 1) {
+            // J as parent - mock conditional by adding all V values
+            return getDiversityJoiningVariableDistribution(
+                    PlainTextHierarchicalModelUtils.mockConditional2(
+                            plainTextHierarchicalModel.listValues(vVariableName),
+                            getProbabilities1(dBlockName)
+                    )
+            );
+        } else if (parents.isEmpty()) {
+            // no parents - mock conditional by first adding all J values and then all V values
+            return getDiversityJoiningVariableDistribution(
+                    PlainTextHierarchicalModelUtils.mockConditional2(
+                            plainTextHierarchicalModel.listValues(vVariableName),
+                            PlainTextHierarchicalModelUtils.mockConditional1(
+                                    plainTextHierarchicalModel.listValues(jVariableName),
+                                    getProbabilities(dBlockName))
+                    )
+            );
+        }
+
+        // Neither P(J|V) nor P(J) - something is messed up
+        throw new RuntimeException("Bad D formula: '" + dBlockName + "'");
+    }
+
     protected DiversityJoiningVariableDistribution getDiversityJoiningVariableDistribution(String blockName) {
+        return getDiversityJoiningVariableDistribution(
+                getProbabilities2(blockName)
+        );
+    }
+
+    protected DiversityJoiningVariableDistribution getDiversityJoiningVariableDistribution(
+            Map<String, Map<String, Map<String, Double>>> probabilityMap
+    ) {
         return DiversityJoiningVariableDistribution.fromMap(
                 ConverterUtils.convertSegment(
-                        getProbabilities2(blockName),
+                        probabilityMap,
                         segmentLibrary,
                         DiversitySegment.class,
                         JoiningSegment.class,

@@ -2,10 +2,7 @@ package com.milaboratory.mir.probability.parser;
 
 import com.milaboratory.mir.CommonUtils;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 public final class PlainTextHierarchicalModelUtils {
     private PlainTextHierarchicalModelUtils() {
@@ -35,7 +32,7 @@ public final class PlainTextHierarchicalModelUtils {
         return embeddedProbabilities;
     }
 
-    private static double sum(Collection<Double> values) {
+    static double sum(Collection<Double> values) {
         double sum = 0;
 
         for (double value : values) {
@@ -116,5 +113,29 @@ public final class PlainTextHierarchicalModelUtils {
         public Map<String, Map<String, Double>> getConditional() {
             return Collections.unmodifiableMap(conditional);
         }
+    }
+
+    //////// OTHER UTILS //////
+
+    public static Map<String, Map<String, Double>> mockConditional1(Set<String> values,
+                                                                    Map<String, Double> probabilityMap) {
+        var res = new HashMap<String, Map<String, Double>>();
+
+        for (String value : values) {
+            res.put(value, probabilityMap);
+        }
+
+        return res;
+    }
+
+    public static Map<String, Map<String, Map<String, Double>>> mockConditional2(Set<String> values,
+                                                                                 Map<String, Map<String, Double>> probabilityMap) {
+        var res = new HashMap<String, Map<String, Map<String, Double>>>();
+
+        for (String value : values) {
+            res.put(value, probabilityMap);
+        }
+
+        return res;
     }
 }

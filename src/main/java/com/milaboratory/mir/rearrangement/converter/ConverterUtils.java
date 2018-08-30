@@ -7,7 +7,11 @@ import java.util.Map;
 
 import static com.milaboratory.mir.CommonUtils.map2map;
 
-public class ConverterUtils {
+public final class ConverterUtils {
+    private ConverterUtils() {
+        
+    }
+
     public static <T extends Segment>
     Map<T, Double> convertSegment(Map<String, Double> probabilities,
                                   SegmentLibrary segmentLibrary,

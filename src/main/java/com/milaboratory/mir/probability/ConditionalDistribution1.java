@@ -9,6 +9,9 @@ public class ConditionalDistribution1<C1, T,
     // todo: dummy distribution
 
     public ConditionalDistribution1(Map<C1, D0> embeddedProbs) {
+        if (embeddedProbs.isEmpty()) {
+            throw new IllegalArgumentException("Empty probability map");
+        }
         this.embeddedProbs = embeddedProbs;
     }
 

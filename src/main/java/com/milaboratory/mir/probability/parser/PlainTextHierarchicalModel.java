@@ -13,9 +13,7 @@ public class PlainTextHierarchicalModel {
                                       Map<String, Map<String, Double>> probabilities) {
         this.formula = formula;
         this.probabilities = new HashMap<>();
-        probabilities.forEach((key, value) -> {
-            this.probabilities.put(key, Collections.unmodifiableMap(value));
-        });
+        probabilities.forEach((key, value) -> this.probabilities.put(key, Collections.unmodifiableMap(value)));
     }
 
     public HierarchicalModelFormula getFormula() {
@@ -26,6 +24,10 @@ public class PlainTextHierarchicalModel {
     //    return Collections.unmodifiableMap(probabilities);
     //}
 
+    public Set<String> listValues(String variableOrBlockName) {
+        return probabilities.get(formula.findBlockName(variableOrBlockName)).keySet();
+    }
+
     public Set<String> getBlockNames() {
         return probabilities.keySet();
     }
@@ -34,7 +36,7 @@ public class PlainTextHierarchicalModel {
         var map = probabilities.get(blockName);
 
         if (map == null) {
-            throw new IllegalArgumentException("Unknown model block " + blockName);
+            throw new IllegalArgumentException("Unknown model block '" + blockName + "'");
         }
 
         return map;

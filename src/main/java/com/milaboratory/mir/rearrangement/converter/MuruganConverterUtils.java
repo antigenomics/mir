@@ -7,7 +7,11 @@ import com.milaboratory.mir.rearrangement.parser.MuruganModel;
 import static com.milaboratory.mir.probability.parser.PlainTextHierarchicalModelUtils.*;
 import static com.milaboratory.mir.rearrangement.converter.ConverterUtils.*;
 
-public class MuruganConverterUtils {
+public final class MuruganConverterUtils {
+    private MuruganConverterUtils() {
+
+    }
+
     public static NucleotideDistributionBundle getNucleotideDistributionFromJoint(MuruganModel muruganModel,
                                                                                   String blockName) {
         var marginalConditional = decomposeJoint(muruganModel.getProbabilityMap(blockName));

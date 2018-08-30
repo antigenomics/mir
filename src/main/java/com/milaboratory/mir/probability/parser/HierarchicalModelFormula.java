@@ -9,9 +9,9 @@ import static com.milaboratory.mir.probability.parser.PlainTextHierarchicalModel
 import static com.milaboratory.mir.probability.parser.PlainTextHierarchicalModelUtils.VARIABLE_SEPARATOR;
 
 public final class HierarchicalModelFormula implements Serializable {
-    private final Set<String> independentDistributionNames;
-    private final Map<String, Set<String>> graph = new HashMap<>();
     private final Set<String> variables = new HashSet<>();
+    private final Set<String> blockNames;
+    private final Map<String, Set<String>> graph = new HashMap<>();
 
     public static HierarchicalModelFormula fromString(String formula) {
         return new HierarchicalModelFormula(
@@ -20,18 +20,19 @@ public final class HierarchicalModelFormula implements Serializable {
         );
     }
 
-    public HierarchicalModelFormula(List<String> independentDistributionNames) {
-        for (String pfull : independentDistributionNames) {
-            String[] pfullSplit = pfull.split(REGEX_CONDITIONAL_SEPARATOR);
-            String variable = pfullSplit[0].trim();
+    public HierarchicalModelFormula(List<String> blockNames) {
+        for (String blockName : blockNames) {
+            String[] blockNameSplit = blockName.split(REGEX_CONDITIONAL_SEPARATOR);
+            String variable = blockNameSplit[0].trim();
             if (variables.contains(variable)) {
-                throw new IllegalArgumentException("Bad probability: creating duplicate probability distribution for " +
-                        variable + " by " + pfull);
+                throw new IllegalArgumentException("Bad probability: " +
+                        "creating duplicate probability distribution for '" +
+                        variable + "' with '" + blockName + "'");
             }
             variables.add(variable);
-            if (pfullSplit.length > 1) {
+            if (blockNameSplit.length > 1) {
                 graph.put(variable,
-                        Arrays.stream(pfullSplit[1].split(VARIABLE_SEPARATOR))
+                        Arrays.stream(blockNameSplit[1].split(VARIABLE_SEPARATOR))
                                 .map(String::trim)
                                 .collect(Collectors.toSet())
                 );
@@ -40,23 +41,24 @@ public final class HierarchicalModelFormula implements Serializable {
             }
         }
 
-        this.independentDistributionNames = new HashSet<>();
-        var allVariables = new ArrayList<String>();
+        this.blockNames = new HashSet<>();
 
+        var variables = new ArrayList<String>();
         graph.forEach((v, vc) -> {
-            allVariables.add(v);
+            variables.add(v);
             if (vc.isEmpty()) {
-                this.independentDistributionNames.add(v);
+                this.blockNames.add(v);
             } else {
-                this.independentDistributionNames.add(v + CONDITIONAL_SEPARATOR +
+                this.blockNames.add(v + CONDITIONAL_SEPARATOR +
                         String.join(VARIABLE_SEPARATOR, vc));
-                allVariables.addAll(vc);
+                variables.addAll(vc);
             }
         });
 
-        for (String var : allVariables) {
-            if (!variables.contains(var)) {
-                throw new IllegalArgumentException("Incomplete probability: missing distribution for " + var);
+        for (String variable : variables) {
+            if (!this.variables.contains(variable)) {
+                throw new IllegalArgumentException("Incomplete probability: missing distribution for variable" +
+                        " '" + variable + "'");
             }
         }
     }
@@ -65,21 +67,29 @@ public final class HierarchicalModelFormula implements Serializable {
         return Collections.unmodifiableSet(graph.get(variable));
     }
 
-    public Collection<String> getIndependentDistributionNames() {
-        return Collections.unmodifiableSet(independentDistributionNames);
+    public Collection<String> getBlockNames() {
+        return Collections.unmodifiableSet(blockNames);
     }
 
     public boolean hasVariable(String variable) {
         return variables.contains(variable);
     }
 
-    public String getParentDistributionName(String variable) {
-        for (String ip : independentDistributionNames) {
+    public String findBlockName(String variable) {
+        for (String ip : blockNames) {
             if (ip.toLowerCase().startsWith(variable)) {
                 return ip;
             }
         }
         return null;
+    }
+
+    public String getBlockName(String variable) {
+        String res = findBlockName(variable);
+        if (res == null) {
+            throw new IllegalArgumentException("Variable '" + variable + "' not found in formula.");
+        }
+        return res;
     }
 
     public Collection<String> getVariables() {
@@ -88,6 +98,6 @@ public final class HierarchicalModelFormula implements Serializable {
 
     @Override
     public String toString() {
-        return independentDistributionNames.stream().map(x -> "P(" + x + ")").collect(Collectors.joining());
+        return blockNames.stream().map(x -> "P(" + x + ")").collect(Collectors.joining());
     }
 }

@@ -6,9 +6,9 @@ import com.milaboratory.mir.rearrangement.VariableJoiningModel;
 import com.milaboratory.mir.rearrangement.blocks.*;
 import com.milaboratory.mir.segment.SegmentLibrary;
 
-public abstract class VariableDiversityJoiningModelConverter<T extends PlainTextHierarchicalModel>
+public abstract class VDJModelConverter<T extends PlainTextHierarchicalModel>
         extends Converter<T, VariableDiversityJoiningModel> {
-    public VariableDiversityJoiningModelConverter(SegmentLibrary segmentLibrary, T plainTextHierarchicalModel) {
+    public VDJModelConverter(SegmentLibrary segmentLibrary, T plainTextHierarchicalModel) {
         super(segmentLibrary, plainTextHierarchicalModel);
     }
 

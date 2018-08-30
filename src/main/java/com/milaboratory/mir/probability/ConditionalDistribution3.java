@@ -9,6 +9,9 @@ public class ConditionalDistribution3<C3, C2, C1, T,
     private final Map<C3, D2> embeddedProbs;
 
     public ConditionalDistribution3(Map<C3, D2> embeddedProbs) {
+        if (embeddedProbs.isEmpty()) {
+            throw new IllegalArgumentException("Empty probability map");
+        }
         this.embeddedProbs = embeddedProbs;
     }
 
