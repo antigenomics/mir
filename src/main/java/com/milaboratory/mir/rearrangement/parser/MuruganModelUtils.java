@@ -12,6 +12,14 @@ import java.io.IOException;
 public final class MuruganModelUtils {
     public static final String PATH = "murugan_models";
 
+    public static final String
+            VJMODEL_V_FORMULA = "v_choice",
+            VJMODEL_J_FORMULA = "j_choice|v_choice",
+            VJMODEL_INS_SZ_FORMULA = "vj_ins",
+            VJMODEL_V_DEL_FORMULA = "v_3_del|v_choice",
+            VJMODEL_J_DEL_FORMULA = "j_5_del|v_choice",
+            VJMODEL_INS_JOINT_FORMULA = "vj_dinucl";
+
     private MuruganModelUtils() {
 
     }
@@ -71,7 +79,7 @@ public final class MuruganModelUtils {
                         "P(dj_ins)" +
                         "P(dj_dinucl)";
             default:
-                throw new IllegalArgumentException("No rearrangement for " + gene);
+                throw new IllegalArgumentException("No rearrangement model for " + gene);
         }
     }
 

@@ -1,5 +1,9 @@
 package com.milaboratory.mir.probability.parser;
 
+import com.milaboratory.mir.CommonUtils;
+
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -11,12 +15,10 @@ public final class PlainTextHierarchicalModelUtils {
             REGEX_CONDITIONAL_SEPARATOR = "\\|",
             VARIABLE_SEPARATOR = ",";
 
+    /////////// WORKING WITH CONDITIONAL PROBABILITIES //////////
+
     public static Map<String, Map<String, Double>> embed1Conditional(Map<String, Double> probabilityMap) {
         return embed1(probabilityMap, CONDITIONAL_SEPARATOR);
-    }
-
-    public static Map<String, Map<String, Double>> embed1Joint(Map<String, Double> probabilityMap) {
-        return embed1(probabilityMap, VARIABLE_SEPARATOR);
     }
 
     public static Map<String, Map<String, Double>> embed1(Map<String, Double> probabilityMap,
@@ -33,6 +35,16 @@ public final class PlainTextHierarchicalModelUtils {
         return embeddedProbabilities;
     }
 
+    private static double sum(Collection<Double> values) {
+        double sum = 0;
+
+        for (double value : values) {
+            sum += value;
+        }
+
+        return sum;
+    }
+
     public static Map<String, Map<String, Map<String, Double>>> embed2Conditional(Map<String, Double> probabilityMap) {
         var embeddedProbabilities = embed1(probabilityMap, CONDITIONAL_SEPARATOR);
 
@@ -46,5 +58,63 @@ public final class PlainTextHierarchicalModelUtils {
         );
 
         return embeddedProbabilities2;
+    }
+
+
+    /////////// WORKING WITH JOINT PROBABILITIES //////////
+
+
+    public static Map<String, Map<String, Double>> embed1Joint(Map<String, Double> probabilityMap) {
+        return embed1(probabilityMap, VARIABLE_SEPARATOR);
+    }
+
+    public static JointProbabilityDecomposition decomposeEmbeddedJoint(Map<String, Map<String, Double>> jointProbabilityMap) {
+        // todo: check that sums to 1
+        var marginal = CommonUtils.map2map(
+                jointProbabilityMap,
+                Map.Entry::getKey,
+                e -> sum(e.getValue().values())
+        );
+
+        var conditional = CommonUtils.map2map(
+                jointProbabilityMap,
+                Map.Entry::getKey,
+                e -> {
+                    double norm = marginal.get(e.getKey());
+                    return CommonUtils.map2map(
+                            e.getValue(),
+                            Map.Entry::getKey,
+                            ee -> ee.getValue() / norm
+                    );
+                }
+        );
+        return new JointProbabilityDecomposition(marginal, conditional);
+    }
+
+    // proxy for embed + decompose
+    public static JointProbabilityDecomposition decomposeJoint(Map<String, Double> probabilityMap) {
+        return decomposeEmbeddedJoint(embed1Joint(probabilityMap));
+    }
+
+    public static class JointProbabilityDecomposition {
+        private final Map<String, Double> marginal;
+        private final Map<String, Map<String, Double>> conditional;
+
+        public JointProbabilityDecomposition(Map<String, Double> marginal,
+                                             Map<String, Map<String, Double>> conditional) {
+            this.marginal = Collections.unmodifiableMap(marginal);
+            this.conditional = new HashMap<>();
+            conditional.forEach((k, v) ->
+                    this.conditional.put(k, Collections.unmodifiableMap(v))
+            );
+        }
+
+        public Map<String, Double> getMarginal() {
+            return marginal;
+        }
+
+        public Map<String, Map<String, Double>> getConditional() {
+            return Collections.unmodifiableMap(conditional);
+        }
     }
 }

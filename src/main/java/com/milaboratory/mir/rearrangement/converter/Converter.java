@@ -2,14 +2,15 @@ package com.milaboratory.mir.rearrangement.converter;
 
 import com.milaboratory.mir.probability.parser.PlainTextHierarchicalModel;
 import com.milaboratory.mir.probability.parser.PlainTextHierarchicalModelUtils;
+import com.milaboratory.mir.rearrangement.RearrangementModel;
 import com.milaboratory.mir.rearrangement.blocks.*;
 import com.milaboratory.mir.segment.*;
 
 import java.util.Map;
 
-public class Converter<T extends PlainTextHierarchicalModel> {
-    private final SegmentLibrary segmentLibrary;
-    private final T plainTextHierarchicalModel;
+public abstract class Converter<T extends PlainTextHierarchicalModel, V extends RearrangementModel> {
+    protected final SegmentLibrary segmentLibrary;
+    protected final T plainTextHierarchicalModel;
 
     public Converter(SegmentLibrary segmentLibrary, T plainTextHierarchicalModel) {
         this.segmentLibrary = segmentLibrary;
@@ -32,7 +33,7 @@ public class Converter<T extends PlainTextHierarchicalModel> {
         );
     }
 
-    public VariableDistribution getVariableDistribution(String blockName) {
+    protected VariableDistribution getVariableDistribution(String blockName) {
         return VariableDistribution.fromMap(
                 ConverterUtils.convertSegment(
                         getProbabilities(blockName),
@@ -42,7 +43,7 @@ public class Converter<T extends PlainTextHierarchicalModel> {
         );
     }
 
-    public DiversityDistribution getDiversityDistribution(String blockName) {
+    protected DiversityDistribution getDiversityDistribution(String blockName) {
         return DiversityDistribution.fromMap(
                 ConverterUtils.convertSegment(
                         getProbabilities(blockName),
@@ -52,7 +53,7 @@ public class Converter<T extends PlainTextHierarchicalModel> {
         );
     }
 
-    public JoiningDistribution getJoiningDistribution(String blockName) {
+    protected JoiningDistribution getJoiningDistribution(String blockName) {
         return JoiningDistribution.fromMap(
                 ConverterUtils.convertSegment(
                         getProbabilities(blockName),
@@ -62,7 +63,7 @@ public class Converter<T extends PlainTextHierarchicalModel> {
         );
     }
 
-    public DiversityJoiningDistribution getDiversityJoiningDistribution(String blockName) {
+    protected DiversityJoiningDistribution getDiversityJoiningDistribution(String blockName) {
         return DiversityJoiningDistribution.fromMap(
                 ConverterUtils.convertSegment(
                         getProbabilities1(blockName),
@@ -73,7 +74,7 @@ public class Converter<T extends PlainTextHierarchicalModel> {
         );
     }
 
-    public JoiningVariableDistribution getJoiningVariableDistribution(String blockName) {
+    protected JoiningVariableDistribution getJoiningVariableDistribution(String blockName) {
         return JoiningVariableDistribution.fromMap(
                 ConverterUtils.convertSegment(
                         getProbabilities1(blockName),
@@ -84,7 +85,7 @@ public class Converter<T extends PlainTextHierarchicalModel> {
         );
     }
 
-    public DiversityJoiningVariableDistribution getDiversityJoiningVariableDistribution(String blockName) {
+    protected DiversityJoiningVariableDistribution getDiversityJoiningVariableDistribution(String blockName) {
         return DiversityJoiningVariableDistribution.fromMap(
                 ConverterUtils.convertSegment(
                         getProbabilities2(blockName),
@@ -96,7 +97,7 @@ public class Converter<T extends PlainTextHierarchicalModel> {
         );
     }
 
-    public InsertSizeDistribution getInsertSizeDistribution(String blockName) {
+    protected InsertSizeDistribution getInsertSizeDistribution(String blockName) {
         return InsertSizeDistribution.fromMap(
                 ConverterUtils.convertIndelSize(
                         getProbabilities(blockName)
@@ -104,7 +105,7 @@ public class Converter<T extends PlainTextHierarchicalModel> {
         );
     }
 
-    public TrimmingDistribution getTrimmingDistribution(String blockName) {
+    protected TrimmingDistribution getTrimmingDistribution(String blockName) {
         return TrimmingDistribution.fromMap(
                 ConverterUtils.convertIndelSize(
                         getProbabilities(blockName)
@@ -112,7 +113,7 @@ public class Converter<T extends PlainTextHierarchicalModel> {
         );
     }
 
-    public VariableTrimmingDistribution getVariableTrimmingDistribution(String blockName) {
+    protected VariableTrimmingDistribution getVariableTrimmingDistribution(String blockName) {
         return VariableTrimmingDistribution.fromMap(
                 ConverterUtils.convertSegmentTrimming(
                         getProbabilities1(blockName),
@@ -122,7 +123,7 @@ public class Converter<T extends PlainTextHierarchicalModel> {
         );
     }
 
-    public JoiningTrimmingDistribution getJoiningTrimmingDistribution(String blockName) {
+    protected JoiningTrimmingDistribution getJoiningTrimmingDistribution(String blockName) {
         return JoiningTrimmingDistribution.fromMap(
                 ConverterUtils.convertSegmentTrimming(
                         getProbabilities1(blockName),
@@ -132,7 +133,7 @@ public class Converter<T extends PlainTextHierarchicalModel> {
         );
     }
 
-    public DiversityTrimming5Distribution getDiversityTrimming5Distribution(String blockName) {
+    protected DiversityTrimming5Distribution getDiversityTrimming5Distribution(String blockName) {
         return DiversityTrimming5Distribution.fromMap(
                 ConverterUtils.convertSegmentTrimming(
                         getProbabilities1(blockName),
@@ -142,7 +143,7 @@ public class Converter<T extends PlainTextHierarchicalModel> {
         );
     }
 
-    public DiversityTrimming3Distribution getDiversityTrimming3Distribution(String blockName) {
+    protected DiversityTrimming3Distribution getDiversityTrimming3Distribution(String blockName) {
         return DiversityTrimming3Distribution.fromMap(
                 ConverterUtils.convertTwoSideTrimming(
                         getProbabilities2(blockName),
@@ -152,7 +153,7 @@ public class Converter<T extends PlainTextHierarchicalModel> {
         );
     }
 
-    public NucleotideDistribution getNucleotideDistribution(String blockName) {
+    protected NucleotideDistribution getNucleotideDistribution(String blockName) {
         return NucleotideDistribution.fromMap(
                 ConverterUtils.convertNucleotide(
                         getProbabilities(blockName)
@@ -160,11 +161,13 @@ public class Converter<T extends PlainTextHierarchicalModel> {
         );
     }
 
-    public NucleotidePairDistribution getNucleotidePairDistribution(String blockName) {
+    protected NucleotidePairDistribution getNucleotidePairDistribution(String blockName) {
         return NucleotidePairDistribution.fromMap(
                 ConverterUtils.convertNucleotidePair(
                         getProbabilities1(blockName)
                 )
         );
     }
+
+    public abstract V getRearrangementModel();
 }
