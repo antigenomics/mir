@@ -7,7 +7,8 @@ import com.milaboratory.mir.segment.VariableSegment;
 import java.util.Map;
 
 public class VariableTrimmingDistribution
-        extends ConditionalDistribution1<VariableSegment, Integer, TrimmingDistribution> {
+        extends ConditionalDistribution1<VariableSegment, Integer, TrimmingDistribution>
+        implements Block<VariableTrimmingDistribution> {
 
     public VariableTrimmingDistribution(Map<VariableSegment, TrimmingDistribution> embeddedProbs) {
         super(embeddedProbs);

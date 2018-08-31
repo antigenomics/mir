@@ -1,7 +1,5 @@
 package com.milaboratory.mir.probability;
 
-import java.util.Random;
-
 public class Distribution<T> {
     private final DistributionMap<T> distributionMap;
     private final DistributionSampler<T> distributionSampler;
@@ -34,5 +32,10 @@ public class Distribution<T> {
 
     public DistributionAccumulator<T> getDistributionAccumulator() {
         return distributionAccumulator;
+    }
+
+    public Distribution<T> clone() {
+        // todo: implement
+        throw new UnsupportedOperationException();
     }
 }

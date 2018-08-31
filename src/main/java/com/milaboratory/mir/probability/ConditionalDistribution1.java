@@ -18,4 +18,9 @@ public class ConditionalDistribution1<C1, T,
     public D0 getDistribution0(C1 condition1) {
         return embeddedProbs.get(condition1);
     }
+
+    public ConditionalDistribution1<C1, T, D0> copy() {
+        // todo: implement
+        throw new UnsupportedOperationException();
+    }
 }

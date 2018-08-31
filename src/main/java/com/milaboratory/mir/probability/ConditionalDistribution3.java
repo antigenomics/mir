@@ -26,4 +26,9 @@ public class ConditionalDistribution3<C3, C2, C1, T,
     public D0 getDistribution0(C3 condition3, C2 condition2, C1 condition1) {
         return getDistribution2(condition3).getDistribution1(condition2).getDistribution0(condition1);
     }
+
+    public ConditionalDistribution3<C3, C2, C1, T, D0, D1, D2> copy() {
+        // todo: implement
+        throw new UnsupportedOperationException();
+    }
 }

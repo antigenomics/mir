@@ -59,6 +59,20 @@ public class VariableJoiningModel implements RearrangementModel {
         );
     }
 
+    public VariableJoiningModel withSegmentDistributions(VariableDistribution variableSegmentDistribution,
+                                                         JoiningVariableDistribution joiningVariableDistribution) {
+        // todo: etc
+        return new VariableJoiningModel(
+                variableSegmentDistribution,
+                joiningVariableDistribution,
+                joiningTrimmingDistribution.copy(),
+                variableTrimmingDistribution.copyBlock(),
+                insertSizeDistribution.copy(),
+                nucleotideDistribution.copy(),
+                nucleotidePairDistribution.copy()
+        );
+    }
+
     public VariableDistribution getVariableSegmentDistribution() {
         return variableSegmentDistribution;
     }

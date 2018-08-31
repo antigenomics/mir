@@ -8,4 +8,9 @@ public class ByteDistribution extends Distribution<Byte> {
     public ByteDistribution(DistributionAccumulator<Byte> distributionAccumulator) {
         super(distributionAccumulator, Byte.class);
     }
+
+    @Override
+    public ByteDistribution copy() {
+        return new ByteDistribution(getDistributionMap().copy());
+    }
 }

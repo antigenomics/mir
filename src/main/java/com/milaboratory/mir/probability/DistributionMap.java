@@ -85,6 +85,6 @@ public class DistributionMap<T> {
     }
 
     public DistributionMap<T> copy() {
-        return new DistributionMap<T>(new HashMap<>(probabilities));
+        return new DistributionMap<>(new HashMap<>(probabilities));
     }
 }

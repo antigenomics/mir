@@ -13,6 +13,7 @@ public class DistributionSampler<T> implements Generator<T> {
     @SuppressWarnings("unchecked")
     public DistributionSampler(DistributionMap<T> distributionMap,
                                Class<T> clazz) {
+        // todo: rewrite sampler
         var sortedProbs = distributionMap
                 .listEntries()
                 .stream()

@@ -9,7 +9,7 @@ import static com.milaboratory.mir.CommonUtils.map2map;
 
 public final class ConverterUtils {
     private ConverterUtils() {
-        
+
     }
 
     public static <T extends Segment>
