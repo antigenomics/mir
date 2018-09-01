@@ -29,10 +29,6 @@ public class CategoricalProbabilityDistribution<T> {
         return categories.get(ProbabilityMathUtils.sample(probabilities));
     }
 
-    public T sample(Random random) {
-        return categories.get(ProbabilityMathUtils.sample(probabilities, random));
-    }
-
     public List<CategoryProbability<T>> getCategoryProbabilityList() {
         return Collections.synchronizedList(categoryProbabilityList);
     }

@@ -3,6 +3,7 @@ package com.milaboratory.mir.probability;
 import java.util.*;
 import java.util.stream.Collectors;
 
+// immutable
 public class DistributionMap<T> {
     private final Map<T, Double> probabilities;
 
@@ -48,6 +49,7 @@ public class DistributionMap<T> {
             throw new IllegalArgumentException("No entries provided");
         }
         if (unsafe) {
+            // without cloning
             this.probabilities = probabilities;
         } else {
             this.probabilities = new HashMap<>(probabilities);
@@ -82,9 +84,5 @@ public class DistributionMap<T> {
             throw new IllegalArgumentException("Value " + value.toString() + " not present in map.");
         }
         return p;
-    }
-
-    public DistributionMap<T> copy() {
-        return new DistributionMap<>(new HashMap<>(probabilities));
     }
 }

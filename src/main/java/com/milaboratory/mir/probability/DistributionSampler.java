@@ -3,45 +3,48 @@ package com.milaboratory.mir.probability;
 import com.milaboratory.mir.pipe.Generator;
 
 import java.lang.reflect.Array;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
+import java.util.concurrent.ThreadLocalRandom;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 public class DistributionSampler<T> implements Generator<T> {
-    private final T[] values;
-    private final double[] probabilities;
+    private final List<DistributionEntry<T>> sortedDistributionEntries;
 
-    @SuppressWarnings("unchecked")
-    public DistributionSampler(DistributionMap<T> distributionMap,
-                               Class<T> clazz) {
-        // todo: rewrite sampler
-        var sortedProbs = distributionMap
-                .listEntries()
-                .stream()
-                .sorted()
-                .collect(Collectors.toList());
-        this.values = (T[]) Array.newInstance(clazz, sortedProbs.size());
-        this.probabilities = new double[sortedProbs.size()];
-        for (int i = 0; i < sortedProbs.size(); i++) {
-            var probEntry = sortedProbs.get(i);
-            values[i] = probEntry.getValue();
-            probabilities[i] = probEntry.getProbability();
-        }
+    public DistributionSampler(DistributionMap<T> distributionMap) {
+        this(distributionMap.listEntries());
+
     }
 
-    public DistributionSampler(T[] values,
-                               double[] probabilities) {
-        if (values.length == 0) {
-            throw new IllegalArgumentException("Empty value array");
+    public DistributionSampler(List<DistributionEntry<T>> distributionEntries) {
+        if (distributionEntries.isEmpty()) {
+            throw new IllegalArgumentException("Empty list provided, no elements to sample.");
         }
-        if (values.length != probabilities.length) {
-            throw new IllegalArgumentException("Probability and value array lengths don't match");
-        }
-        this.values = values;
-        this.probabilities = probabilities;
+
+        ProbabilityMathUtils.assertNormalized(
+                distributionEntries.stream().map(DistributionEntry::getProbability).collect(Collectors.toList())
+        );
+
+        this.sortedDistributionEntries = distributionEntries
+                .stream()
+                .sorted()
+                .collect(Collectors.toCollection(ArrayList::new));
     }
 
     @Override
     public T generate() {
-        return values[ProbabilityMathUtils.sample(probabilities)];
+        double p = ThreadLocalRandom.current().nextDouble();
+        double sum = 0;
+
+        for (DistributionEntry<T> distributionEntry : sortedDistributionEntries) {
+            sum += distributionEntry.getProbability();
+            if (sum >= p) {
+                return distributionEntry.getValue();
+            }
+        }
+
+        return sortedDistributionEntries.get(0).getValue();
     }
 }

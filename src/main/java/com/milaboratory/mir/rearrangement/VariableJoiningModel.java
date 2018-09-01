@@ -58,7 +58,7 @@ public class VariableJoiningModel implements RearrangementModel {
                 markovSequenceDistribution.generate(insertSize)
         );
     }
-
+/*
     public VariableJoiningModel withSegmentDistributions(VariableDistribution variableSegmentDistribution,
                                                          JoiningVariableDistribution joiningVariableDistribution) {
         // todo: etc
@@ -72,7 +72,7 @@ public class VariableJoiningModel implements RearrangementModel {
                 nucleotidePairDistribution.copy()
         );
     }
-
+*/
     public VariableDistribution getVariableSegmentDistribution() {
         return variableSegmentDistribution;
     }

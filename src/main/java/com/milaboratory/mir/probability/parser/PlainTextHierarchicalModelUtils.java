@@ -1,8 +1,10 @@
 package com.milaboratory.mir.probability.parser;
 
-import com.milaboratory.mir.CommonUtils;
-
 import java.util.*;
+
+
+import static com.milaboratory.mir.CommonUtils.map2map;
+import static com.milaboratory.mir.probability.ProbabilityMathUtils.sum;
 
 public final class PlainTextHierarchicalModelUtils {
     private PlainTextHierarchicalModelUtils() {
@@ -32,16 +34,6 @@ public final class PlainTextHierarchicalModelUtils {
         return embeddedProbabilities;
     }
 
-    static double sum(Collection<Double> values) {
-        double sum = 0;
-
-        for (double value : values) {
-            sum += value;
-        }
-
-        return sum;
-    }
-
     public static Map<String, Map<String, Map<String, Double>>> embed2Conditional(Map<String, Double> probabilityMap) {
         var embeddedProbabilities = embed1(probabilityMap, CONDITIONAL_SEPARATOR);
 
@@ -67,18 +59,18 @@ public final class PlainTextHierarchicalModelUtils {
 
     public static JointProbabilityDecomposition decomposeEmbeddedJoint(Map<String, Map<String, Double>> jointProbabilityMap) {
         // todo: check that sums to 1
-        var marginal = CommonUtils.map2map(
+        var marginal = map2map(
                 jointProbabilityMap,
                 Map.Entry::getKey,
                 e -> sum(e.getValue().values())
         );
 
-        var conditional = CommonUtils.map2map(
+        var conditional = map2map(
                 jointProbabilityMap,
                 Map.Entry::getKey,
                 e -> {
                     double norm = marginal.get(e.getKey());
-                    return CommonUtils.map2map(
+                    return map2map(
                             e.getValue(),
                             Map.Entry::getKey,
                             ee -> ee.getValue() / norm

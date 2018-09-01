@@ -8,7 +8,8 @@ import java.util.Map;
 
 public class VariableTrimmingDistribution
         extends ConditionalDistribution1<VariableSegment, Integer, TrimmingDistribution>
-        implements Block<VariableTrimmingDistribution> {
+//        implements Block<VariableTrimmingDistribution>
+{
 
     public VariableTrimmingDistribution(Map<VariableSegment, TrimmingDistribution> embeddedProbs) {
         super(embeddedProbs);
