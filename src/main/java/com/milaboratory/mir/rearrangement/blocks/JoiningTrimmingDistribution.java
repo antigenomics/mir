@@ -7,10 +7,14 @@ import com.milaboratory.mir.segment.JoiningSegment;
 import java.util.Map;
 
 public class JoiningTrimmingDistribution
-        extends ConditionalDistribution1<JoiningSegment, Integer, TrimmingDistribution> {
+        extends ConditionalDistribution1<JoiningSegment, Integer, TrimmingDistribution>
+        implements ModelBlock<JoiningTrimmingDistribution> {
+    JoiningTrimmingDistribution(ConditionalDistribution1<JoiningSegment, Integer, TrimmingDistribution> toCopy, boolean fromAccumulator) {
+        super(toCopy, TrimmingDistribution::new, fromAccumulator);
+    }
 
-    public JoiningTrimmingDistribution(Map<JoiningSegment, TrimmingDistribution> embeddedProbs) {
-        super(embeddedProbs);
+    private JoiningTrimmingDistribution(Map<JoiningSegment, TrimmingDistribution> probabilityMap) {
+        super(probabilityMap, TrimmingDistribution::new, true);
     }
 
     public static JoiningTrimmingDistribution fromMap(Map<JoiningSegment, Map<Integer, Double>> probabilities) {
@@ -19,5 +23,10 @@ public class JoiningTrimmingDistribution
                 Map.Entry::getKey,
                 e -> TrimmingDistribution.fromMap(e.getValue())
         ));
+    }
+
+    @Override
+    public JoiningTrimmingDistribution copy(boolean fromAccumulator) {
+        return new JoiningTrimmingDistribution(this, fromAccumulator);
     }
 }

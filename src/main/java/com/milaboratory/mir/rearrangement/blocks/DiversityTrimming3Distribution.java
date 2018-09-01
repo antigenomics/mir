@@ -8,10 +8,14 @@ import java.util.Map;
 
 public class DiversityTrimming3Distribution
         extends ConditionalDistribution2<DiversitySegment, Integer, Integer,
-        TrimmingDistribution, TwoSideTrimmingDistribution> {
-    public DiversityTrimming3Distribution(Map<DiversitySegment,
-            TwoSideTrimmingDistribution> embeddedProbs) {
-        super(embeddedProbs);
+        TrimmingDistribution, TwoSideTrimmingDistribution>
+        implements ModelBlock<DiversityTrimming3Distribution> {
+    DiversityTrimming3Distribution(ConditionalDistribution2<DiversitySegment, Integer, Integer, TrimmingDistribution, TwoSideTrimmingDistribution> toCopy, boolean fromAccumulator) {
+        super(toCopy, TwoSideTrimmingDistribution::new, fromAccumulator);
+    }
+
+    private DiversityTrimming3Distribution(Map<DiversitySegment, TwoSideTrimmingDistribution> probabilityMap) {
+        super(probabilityMap, TwoSideTrimmingDistribution::new, true);
     }
 
     public static DiversityTrimming3Distribution fromMap(
@@ -21,5 +25,10 @@ public class DiversityTrimming3Distribution
                 Map.Entry::getKey,
                 e -> TwoSideTrimmingDistribution.fromMap(e.getValue())
         ));
+    }
+
+    @Override
+    public DiversityTrimming3Distribution copy(boolean fromAccumulator) {
+        return new DiversityTrimming3Distribution(this, fromAccumulator);
     }
 }

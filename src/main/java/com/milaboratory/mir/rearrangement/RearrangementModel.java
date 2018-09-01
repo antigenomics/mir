@@ -2,7 +2,7 @@ package com.milaboratory.mir.rearrangement;
 
 import com.milaboratory.mir.pipe.Generator;
 
-public interface RearrangementModel extends Generator<RearrangementTemplate> {
+public interface RearrangementModel<T extends RearrangementModel<T>> extends Generator<RearrangementTemplate> {
     boolean hasD();
 
     default double computeProbability(RearrangementTemplate rearrangementTemplate) {
@@ -16,4 +16,6 @@ public interface RearrangementModel extends Generator<RearrangementTemplate> {
     default void update(RearrangementTemplate rearrangementTemplate) {
         update(rearrangementTemplate, computeProbability(rearrangementTemplate));
     }
+
+    T getUpdatedModel();
 }

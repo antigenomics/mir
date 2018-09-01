@@ -13,9 +13,21 @@ import java.util.stream.Collectors;
 public class DistributionSampler<T> implements Generator<T> {
     private final List<DistributionEntry<T>> sortedDistributionEntries;
 
+    public static <T> DistributionSampler<T> getDummy() {
+        return new DistributionSampler<>() {
+            @Override
+            public T generate() {
+                throw new UnsupportedOperationException("Cannot sample from dummy distribution.");
+            }
+        };
+    }
+
+    private DistributionSampler() {
+        this.sortedDistributionEntries = null;
+    }
+
     public DistributionSampler(DistributionMap<T> distributionMap) {
         this(distributionMap.listEntries());
-
     }
 
     public DistributionSampler(List<DistributionEntry<T>> distributionEntries) {

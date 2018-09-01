@@ -94,6 +94,46 @@ public class VariableDiversityJoiningModel implements RearrangementModel {
         );
     }
 
+    @Override
+    public VariableDiversityJoiningModel getUpdatedModel() {
+        return new VariableDiversityJoiningModel(
+                variableSegmentDistribution.copy(true),
+                joiningVariableDistribution.copy(true),
+                diversityJoiningVariableDistribution.copy(true),
+                joiningTrimmingDistribution.copy(true),
+                variableTrimmingDistribution.copy(true),
+                diversityTrimming5Distribution.copy(true),
+                diversityTrimming3Distribution.copy(true),
+                insertSizeDistributionVD.copy(true),
+                insertSizeDistributionDJ.copy(true),
+                nucleotideDistributionVD.copy(true),
+                nucleotideDistributionDJ.copy(true),
+                nucleotidePairDistributionVD.copy(true),
+                nucleotidePairDistributionDJ.copy(true)
+        );
+    }
+
+    public VariableDiversityJoiningModel withSegmentDistribution(VariableDistribution variableSegmentDistribution,
+                                                                 JoiningVariableDistribution joiningVariableDistribution,
+                                                                 DiversityJoiningVariableDistribution diversityJoiningVariableDistribution) {
+        // todo: compatibility test
+        return new VariableDiversityJoiningModel(
+                variableSegmentDistribution,
+                joiningVariableDistribution,
+                diversityJoiningVariableDistribution,
+                joiningTrimmingDistribution.copy(),
+                variableTrimmingDistribution.copy(),
+                diversityTrimming5Distribution.copy(),
+                diversityTrimming3Distribution.copy(),
+                insertSizeDistributionVD.copy(),
+                insertSizeDistributionDJ.copy(),
+                nucleotideDistributionVD.copy(),
+                nucleotideDistributionDJ.copy(),
+                nucleotidePairDistributionVD.copy(),
+                nucleotidePairDistributionDJ.copy()
+        );
+    }
+
     public VariableDistribution getVariableSegmentDistribution() {
         return variableSegmentDistribution;
     }

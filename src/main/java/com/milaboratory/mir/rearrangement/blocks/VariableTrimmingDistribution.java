@@ -8,11 +8,13 @@ import java.util.Map;
 
 public class VariableTrimmingDistribution
         extends ConditionalDistribution1<VariableSegment, Integer, TrimmingDistribution>
-//        implements Block<VariableTrimmingDistribution>
-{
+        implements ModelBlock<VariableTrimmingDistribution> {
+    VariableTrimmingDistribution(ConditionalDistribution1<VariableSegment, Integer, TrimmingDistribution> toCopy, boolean fromAccumulator) {
+        super(toCopy, TrimmingDistribution::new, fromAccumulator);
+    }
 
-    public VariableTrimmingDistribution(Map<VariableSegment, TrimmingDistribution> embeddedProbs) {
-        super(embeddedProbs);
+    private VariableTrimmingDistribution(Map<VariableSegment, TrimmingDistribution> probabilityMap) {
+        super(probabilityMap, TrimmingDistribution::new, true);
     }
 
     public static VariableTrimmingDistribution fromMap(Map<VariableSegment, Map<Integer, Double>> probabilities) {
@@ -21,5 +23,10 @@ public class VariableTrimmingDistribution
                 Map.Entry::getKey,
                 e -> TrimmingDistribution.fromMap(e.getValue())
         ));
+    }
+
+    @Override
+    public VariableTrimmingDistribution copy(boolean fromAccumulator) {
+        return new VariableTrimmingDistribution(this, fromAccumulator);
     }
 }

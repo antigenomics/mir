@@ -5,6 +5,10 @@ import java.util.stream.Collectors;
 
 // immutable
 public class DistributionMap<T> {
+    public static <T> DistributionMap<T> getDummy() {
+        return new DistributionMap<>(new HashMap<>(), true);
+    }
+
     private final Map<T, Double> probabilities;
 
     static <T> DistributionMap<T> fromValueSet(Set<T> valueSet, double p) {
@@ -45,24 +49,24 @@ public class DistributionMap<T> {
     }
 
     DistributionMap(Map<T, Double> probabilities, boolean unsafe) {
-        if (probabilities.isEmpty()) {
-            throw new IllegalArgumentException("No entries provided");
-        }
         if (unsafe) {
             // without cloning
             this.probabilities = probabilities;
         } else {
+            if (probabilities.isEmpty()) {
+                throw new IllegalArgumentException("No entries provided");
+            }
             this.probabilities = new HashMap<>(probabilities);
         }
     }
 
-    public DistributionMap(List<DistributionEntry<T>> entryList) {
+    /*public DistributionMap(List<DistributionEntry<T>> entryList) {
         if (entryList.isEmpty()) {
             throw new IllegalArgumentException("No entries provided");
         }
         this.probabilities = new HashMap<>();
         entryList.forEach(x -> probabilities.put(x.getValue(), x.getProbability()));
-    }
+    }*/
 
     public List<DistributionEntry<T>> listEntries() {
         return probabilities.entrySet().stream()

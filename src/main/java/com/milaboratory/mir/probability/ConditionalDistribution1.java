@@ -1,26 +1,48 @@
 package com.milaboratory.mir.probability;
 
+import com.milaboratory.mir.CommonUtils;
+
+import java.util.HashMap;
 import java.util.Map;
 
 public class ConditionalDistribution1<C1, T,
         D0 extends Distribution<T>> {
-    private final Map<C1, D0> embeddedProbs;
-    // todo: copy
-    // todo: dummy distribution
+    private final Map<C1, D0> probabilityMap;
+    private final DistributionFactory<T, D0> innerFactory;
 
-    public ConditionalDistribution1(Map<C1, D0> embeddedProbs) {
-        if (embeddedProbs.isEmpty()) {
-            throw new IllegalArgumentException("Empty probability map");
+    public ConditionalDistribution1(ConditionalDistribution1<C1, T, D0> toCopy,
+                                    DistributionFactory<T, D0> innerFactory,
+                                    boolean fromAccumulator) {
+        this(CommonUtils.map2map(
+                toCopy == null ? // dummy?
+                        new HashMap<>() : toCopy.probabilityMap,
+                Map.Entry::getKey,
+                e -> innerFactory.create(e.getValue(), fromAccumulator)
+                ),
+                innerFactory,
+                true);
+    }
+
+    public ConditionalDistribution1(Map<C1, D0> probabilityMap,
+                                    DistributionFactory<T, D0> innerFactory,
+                                    boolean unsafe) {
+        this.innerFactory = innerFactory;
+        if (unsafe) {
+            this.probabilityMap = probabilityMap;
+        } else {
+            if (probabilityMap.isEmpty()) {
+                throw new IllegalArgumentException("Empty probability map");
+            }
+            this.probabilityMap = CommonUtils.map2map(
+                    probabilityMap,
+                    Map.Entry::getKey,
+                    e -> innerFactory.create(e.getValue())
+            );
         }
-        this.embeddedProbs = embeddedProbs;
     }
 
     public D0 getDistribution0(C1 condition1) {
-        return embeddedProbs.get(condition1);
-    }
-
-    public ConditionalDistribution1<C1, T, D0> copy() {
-        // todo: implement
-        throw new UnsupportedOperationException();
+        return probabilityMap.getOrDefault(condition1,
+                innerFactory.create());
     }
 }

@@ -8,9 +8,14 @@ import com.milaboratory.mir.segment.VariableSegment;
 import java.util.Map;
 
 public class JoiningVariableDistribution
-        extends ConditionalDistribution1<VariableSegment, JoiningSegment, JoiningDistribution> {
-    public JoiningVariableDistribution(Map<VariableSegment, JoiningDistribution> embeddedProbs) {
-        super(embeddedProbs);
+        extends ConditionalDistribution1<VariableSegment, JoiningSegment, JoiningDistribution>
+        implements ModelBlock<JoiningVariableDistribution> {
+    JoiningVariableDistribution(ConditionalDistribution1<VariableSegment, JoiningSegment, JoiningDistribution> toCopy, boolean fromAccumulator) {
+        super(toCopy, JoiningDistribution::new, fromAccumulator);
+    }
+
+    private JoiningVariableDistribution(Map<VariableSegment, JoiningDistribution> probabilityMap) {
+        super(probabilityMap, JoiningDistribution::new, true);
     }
 
     public static JoiningVariableDistribution fromMap(Map<VariableSegment, Map<JoiningSegment, Double>> probabilities) {
@@ -21,13 +26,8 @@ public class JoiningVariableDistribution
         ));
     }
 
-    // todo: remove?
-    public boolean isConsistent(VariableDistribution variableDistribution) {
-        for (VariableSegment value : variableDistribution.getDistributionMap().values()) {
-            if (getDistribution0(value) == null) {
-                return false;
-            }
-        }
-        return true;
+    @Override
+    public JoiningVariableDistribution copy(boolean fromAccumulator) {
+        return new JoiningVariableDistribution(this, fromAccumulator);
     }
 }

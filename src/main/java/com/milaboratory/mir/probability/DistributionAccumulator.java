@@ -11,6 +11,24 @@ import java.util.stream.Collectors;
 public abstract class DistributionAccumulator<T> {
     protected final Map<T, AtomicDouble> accumulatorMap;
 
+    public static <T> DistributionAccumulator<T> getDummy() {
+        return new DistributionAccumulator<>() {
+            @Override
+            public void update(T value, double weight) {
+                throw new UnsupportedOperationException("Cannot update dummy accumulator");
+            }
+
+            @Override
+            public DistributionAccumulator<T> createCleanInstance() {
+                throw new UnsupportedOperationException("Cannot reinstantize dummy accumulator");
+            }
+        };
+    }
+
+    private DistributionAccumulator() {
+        this.accumulatorMap = null;
+    }
+
     public DistributionAccumulator(Map<T, AtomicDouble> accumulatorMap) {
         this.accumulatorMap = accumulatorMap;
     }

@@ -1,21 +1,27 @@
 package com.milaboratory.mir.rearrangement.blocks;
 
-import com.milaboratory.mir.probability.DistributionAccumulator;
 import com.milaboratory.mir.probability.DistributionMap;
 import com.milaboratory.mir.probability.IntegerDistribution;
 
 import java.util.Map;
 
-public class InsertSizeDistribution extends IntegerDistribution {
-    public InsertSizeDistribution(DistributionMap<Integer> distributionMap) {
-        super(distributionMap);
+public class InsertSizeDistribution
+        extends IntegerDistribution
+        implements ModelBlock<InsertSizeDistribution> {
+    InsertSizeDistribution(InsertSizeDistribution toCopy, boolean fromAccumulator) {
+        super(toCopy, fromAccumulator);
     }
 
-    public InsertSizeDistribution(DistributionAccumulator<Integer> distributionAccumulator) {
-        super(distributionAccumulator);
+    private InsertSizeDistribution(DistributionMap<Integer> distributionMap) {
+        super(distributionMap);
     }
 
     public static InsertSizeDistribution fromMap(Map<Integer, Double> probabilities) {
         return new InsertSizeDistribution(new DistributionMap<>(probabilities));
+    }
+
+    @Override
+    public InsertSizeDistribution copy(boolean fromAccumulator) {
+        return new InsertSizeDistribution(this, fromAccumulator);
     }
 }

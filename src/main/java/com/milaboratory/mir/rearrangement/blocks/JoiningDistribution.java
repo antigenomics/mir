@@ -7,16 +7,23 @@ import com.milaboratory.mir.segment.JoiningSegment;
 
 import java.util.Map;
 
-public class JoiningDistribution extends Distribution<JoiningSegment> {
-    public JoiningDistribution(DistributionMap<JoiningSegment> distributionMap) {
-        super(distributionMap, JoiningSegment.class);
+public class JoiningDistribution
+        extends Distribution<JoiningSegment>
+        implements ModelBlock<JoiningDistribution> {
+    JoiningDistribution(Distribution<JoiningSegment> toCopy, boolean fromAccumulator) {
+        super(toCopy, fromAccumulator);
     }
 
-    public JoiningDistribution(DistributionAccumulator<JoiningSegment> distributionAccumulator) {
-        super(distributionAccumulator, JoiningSegment.class);
+    private JoiningDistribution(DistributionMap<JoiningSegment> distributionMap) {
+        super(distributionMap);
     }
 
     public static JoiningDistribution fromMap(Map<JoiningSegment, Double> probabilities) {
         return new JoiningDistribution(new DistributionMap<>(probabilities));
+    }
+
+    @Override
+    public JoiningDistribution copy(boolean fromAccumulator) {
+        return new JoiningDistribution(this, fromAccumulator);
     }
 }

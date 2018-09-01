@@ -4,7 +4,7 @@ import com.milaboratory.mir.rearrangement.blocks.*;
 import com.milaboratory.mir.segment.JoiningSegment;
 import com.milaboratory.mir.segment.VariableSegment;
 
-public class VariableJoiningModel implements RearrangementModel {
+public class VariableJoiningModel implements RearrangementModel<VariableJoiningModel> {
     private final VariableDistribution variableSegmentDistribution;
     private final JoiningVariableDistribution joiningVariableDistribution;
     private final JoiningTrimmingDistribution joiningTrimmingDistribution;
@@ -58,21 +58,34 @@ public class VariableJoiningModel implements RearrangementModel {
                 markovSequenceDistribution.generate(insertSize)
         );
     }
-/*
-    public VariableJoiningModel withSegmentDistributions(VariableDistribution variableSegmentDistribution,
-                                                         JoiningVariableDistribution joiningVariableDistribution) {
-        // todo: etc
+
+    @Override
+    public VariableJoiningModel getUpdatedModel() {
+        return new VariableJoiningModel(
+                variableSegmentDistribution.copy(true),
+                joiningVariableDistribution.copy(true),
+                joiningTrimmingDistribution.copy(true),
+                variableTrimmingDistribution.copy(true),
+                insertSizeDistribution.copy(true),
+                nucleotideDistribution.copy(true),
+                nucleotidePairDistribution.copy(true)
+        );
+    }
+
+    public VariableJoiningModel withSegmentDistribution(VariableDistribution variableSegmentDistribution,
+                                                        JoiningVariableDistribution joiningVariableDistribution) {
+        // todo: compatibility test
         return new VariableJoiningModel(
                 variableSegmentDistribution,
                 joiningVariableDistribution,
                 joiningTrimmingDistribution.copy(),
-                variableTrimmingDistribution.copyBlock(),
+                variableTrimmingDistribution.copy(),
                 insertSizeDistribution.copy(),
                 nucleotideDistribution.copy(),
                 nucleotidePairDistribution.copy()
         );
     }
-*/
+
     public VariableDistribution getVariableSegmentDistribution() {
         return variableSegmentDistribution;
     }
