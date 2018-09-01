@@ -22,8 +22,8 @@ public class VariableSegmentImpl implements VariableSegment {
         this.cdr2End = cdr2End;
         this.referencePoint = referencePoint;
 
-        this.cdr3Part = germline.getRange(0,
-                referencePoint - 3); // V reference point = 0-based coord of point directly after Cys codon
+        this.cdr3Part = germline.getRange(referencePoint - 3, // V reference point = 0-based coord of point directly after Cys codon
+                germline.size());
         this.cdr3PartWithP = cdr3Part.concatenate(cdr3Part.getReverseComplement());
     }
 
@@ -46,6 +46,11 @@ public class VariableSegmentImpl implements VariableSegment {
     @Override
     public String getId() {
         return id;
+    }
+
+    @Override
+    public boolean isDummy() {
+        return false;
     }
 
     @Override

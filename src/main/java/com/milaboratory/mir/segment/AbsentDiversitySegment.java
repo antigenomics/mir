@@ -32,4 +32,9 @@ public final class AbsentDiversitySegment implements DiversitySegment {
     public String getId() {
         return "D-ABSENT";
     }
+
+    @Override
+    public boolean isDummy() {
+        return false;
+    }
 }

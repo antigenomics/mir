@@ -42,6 +42,11 @@ public class JoiningSegmentImpl implements JoiningSegment {
     }
 
     @Override
+    public boolean isDummy() {
+        return false;
+    }
+
+    @Override
     public NucleotideSequence getFullGermline() {
         return germline;
     }

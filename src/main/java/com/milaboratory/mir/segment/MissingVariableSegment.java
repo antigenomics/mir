@@ -32,4 +32,9 @@ public class MissingVariableSegment implements VariableSegment {
     public String getId() {
         return "V-MISSING";
     }
+
+    @Override
+    public boolean isDummy() {
+        return true;
+    }
 }

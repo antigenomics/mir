@@ -32,4 +32,9 @@ public class MissingJoiningSegment implements JoiningSegment {
     public String getId() {
         return "J-MISSING";
     }
+
+    @Override
+    public boolean isDummy() {
+        return true;
+    }
 }

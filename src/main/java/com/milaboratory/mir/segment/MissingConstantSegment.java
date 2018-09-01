@@ -14,6 +14,11 @@ public class MissingConstantSegment implements ConstantSegment {
     }
 
     @Override
+    public boolean isDummy() {
+        return true;
+    }
+
+    @Override
     public NucleotideSequence getSequence() {
         return NucleotideSequence.EMPTY;
     }

@@ -17,6 +17,11 @@ public class ConstantSegmentImpl implements ConstantSegment {
     }
 
     @Override
+    public boolean isDummy() {
+        return false;
+    }
+
+    @Override
     public NucleotideSequence getSequence() {
         return sequence;
     }

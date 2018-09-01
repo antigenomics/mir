@@ -4,7 +4,9 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.Map;
+import java.util.function.BinaryOperator;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.zip.GZIPInputStream;
@@ -42,4 +44,15 @@ public class CommonUtils {
                                                        Function<Map.Entry<K1, V1>, V2> valueMapper) {
         return map.entrySet().stream().collect(Collectors.toMap(keyMapper, valueMapper));
     }
+
+   /* public static <K1, V1, K2, T, U> Map<K2, Map<T, U>> map2mapSafe(Map<K1, V1> map,
+                                                                    Function<Map.Entry<K1, V1>, K2> keyMapper,
+                                                                    Function<Map.Entry<K1, V1>, Map<T, U>> valueMapper) {
+        return map.entrySet().stream().collect(Collectors.toMap(keyMapper, valueMapper,
+                (m1, m2) -> {
+                    var res = new HashMap<>(m1);
+                    res.putAll(m2);
+                    return res;
+                }));
+    } */
 }

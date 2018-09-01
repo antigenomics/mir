@@ -9,7 +9,7 @@ import com.milaboratory.mir.probability.parser.HierarchicalModelFormula;
 import java.io.FileInputStream;
 import java.io.IOException;
 
-public final class MuruganModeParserlUtils {
+public final class MuruganModeParserUtils {
     public static final String PATH = "murugan_models";
 
     public static final String
@@ -74,19 +74,19 @@ public final class MuruganModeParserlUtils {
         return HierarchicalModelFormula.fromString(getFormulaStr(gene));
     }
 
-    private MuruganModeParserlUtils() {
+    private MuruganModeParserUtils() {
 
     }
 
-    public static PlainTextHierarchicalModel getModelFromResources(Species species, Gene gene) throws IOException {
+    public static MuruganModel getModelFromResources(Species species, Gene gene) throws IOException {
         MuruganModelStream muruganModelStream = getResourceStream(species, gene);
         return MuruganModelParser.load(muruganModelStream.getParams(),
                 muruganModelStream.getMarginals(),
                 getFormula(gene), species, gene);
     }
 
-    public static PlainTextHierarchicalModel getModelFromPath(String paramsPath, String marginalsPath,
-                                                              Species species, Gene gene) throws IOException {
+    public static MuruganModel getModelFromPath(String paramsPath, String marginalsPath,
+                                                Species species, Gene gene) throws IOException {
         return MuruganModelParser.load(new FileInputStream(paramsPath),
                 new FileInputStream(marginalsPath),
                 getFormula(gene), species, gene);

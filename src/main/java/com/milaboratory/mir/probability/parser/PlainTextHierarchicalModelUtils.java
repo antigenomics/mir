@@ -17,7 +17,7 @@ public final class PlainTextHierarchicalModelUtils {
     /////////// WORKING WITH CONDITIONAL PROBABILITIES //////////
 
     public static Map<String, Map<String, Double>> embed1Conditional(Map<String, Double> probabilityMap) {
-        return embed1(probabilityMap, CONDITIONAL_SEPARATOR);
+        return embed1(probabilityMap, REGEX_CONDITIONAL_SEPARATOR);
     }
 
     public static Map<String, Map<String, Double>> embed1(Map<String, Double> probabilityMap,
@@ -35,7 +35,7 @@ public final class PlainTextHierarchicalModelUtils {
     }
 
     public static Map<String, Map<String, Map<String, Double>>> embed2Conditional(Map<String, Double> probabilityMap) {
-        var embeddedProbabilities = embed1(probabilityMap, CONDITIONAL_SEPARATOR);
+        var embeddedProbabilities = embed1(probabilityMap, REGEX_CONDITIONAL_SEPARATOR);
 
         var embeddedProbabilities2 = new HashMap<String, Map<String, Map<String, Double>>>();
         embeddedProbabilities.forEach((key, value) -> {

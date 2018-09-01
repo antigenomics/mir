@@ -1,6 +1,7 @@
 package com.milaboratory.mir.rearrangement;
 
 import com.milaboratory.core.sequence.Alphabet;
+import com.milaboratory.core.sequence.NucleotideAlphabet;
 import com.milaboratory.core.sequence.Sequence;
 import com.milaboratory.mir.probability.ByteDistribution;
 import com.milaboratory.mir.probability.ConditionalDistribution1;
@@ -30,15 +31,16 @@ public class MarkovSequenceDistribution<S extends Sequence<S>, D0 extends ByteDi
 
     S generateForward(int length) {
         if (length > 0) {
-            var builder = alphabet.createBuilder().ensureCapacity(length);
+            byte[] arr = new byte[length];
+
             var prev = marginal.getDistributionSampler().generate();
-            builder.set(0, prev);
+            arr[0] = prev;
 
             for (int i = 1; i < length; i++) {
                 prev = conditional.getDistribution0(prev).getDistributionSampler().generate();
-                builder.set(i, prev);
+                arr[i] = prev;
             }
-            return builder.createAndDestroy();
+            return alphabet.createBuilder().append(arr).createAndDestroy();
         } else {
             return alphabet.getEmptySequence();
         }

@@ -38,6 +38,11 @@ public class DiversitySegmentImpl implements DiversitySegment {
     }
 
     @Override
+    public boolean isDummy() {
+        return false;
+    }
+
+    @Override
     public NucleotideSequence getFullGermline() {
         return cdr3Part;
     }
