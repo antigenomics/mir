@@ -2,14 +2,17 @@ package com.milaboratory.mir;
 
 import com.milaboratory.core.sequence.Sequence;
 
-public final class Misc {
-    private Misc() {
+public final class SequenceUtils {
+    private SequenceUtils() {
 
     }
 
     public static <S extends Sequence<S>> S getSequenceRangeSafe(S seq, int from, int to) {
         int len = seq.size();
-        return seq.getRange(from < 0 ? 0 : from, to > len ? len : to);
+
+        return from > to ?
+                seq.getBuilder().createAndDestroy() :
+                seq.getRange(from < 0 ? 0 : from, to > len ? len : to);
     }
 
     public static <S extends Sequence<S>> S getReverse(S seq) {

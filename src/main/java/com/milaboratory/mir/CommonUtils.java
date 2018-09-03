@@ -3,15 +3,13 @@ package com.milaboratory.mir;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 import java.util.function.BinaryOperator;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.zip.GZIPInputStream;
 
-public class CommonUtils {
+public final class CommonUtils {
     private static final CommonUtils THIS = new CommonUtils();
 
     private CommonUtils() {
@@ -43,6 +41,18 @@ public class CommonUtils {
                                                        Function<Map.Entry<K1, V1>, K2> keyMapper,
                                                        Function<Map.Entry<K1, V1>, V2> valueMapper) {
         return map.entrySet().stream().collect(Collectors.toMap(keyMapper, valueMapper));
+    }
+
+    public static <T> boolean matchIgnoreOrder(Set<T> x, Set<T> y) {
+        return x.size() == y.size() && x.containsAll(y);
+    }
+
+    public static <T> boolean matchIgnoreOrder(List<T> x, List<T> y) {
+        return matchIgnoreOrder(new HashSet<>(x), new HashSet<>(y));
+    }
+
+    public static <T> boolean matchIgnoreOrder(T[] x, T[] y) {
+        return matchIgnoreOrder(Arrays.asList(x), Arrays.asList(y));
     }
 
    /* public static <K1, V1, K2, T, U> Map<K2, Map<T, U>> map2mapSafe(Map<K1, V1> map,

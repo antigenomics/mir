@@ -1,7 +1,7 @@
 package com.milaboratory.mir.segment;
 
 import com.milaboratory.core.sequence.NucleotideSequence;
-import com.milaboratory.mir.Misc;
+import com.milaboratory.mir.SequenceUtils;
 
 public class DiversitySegmentImpl implements DiversitySegment {
     private final String id;
@@ -12,13 +12,13 @@ public class DiversitySegmentImpl implements DiversitySegment {
         this.id = id;
         this.cdr3Part = cdr3Part;
         NucleotideSequence rc = cdr3Part.getReverseComplement();
-        this.cdr3PartWithP = Misc.getReverse(rc).concatenate(cdr3Part.concatenate(rc));
+        this.cdr3PartWithP = SequenceUtils.getReverse(rc).concatenate(cdr3Part.concatenate(rc));
     }
 
     @Override
     public NucleotideSequence getTrimmedCdr3Part(int trimmingSize5, int trimmingSize3) {
         int size = cdr3Part.size();
-        return Misc.getSequenceRangeSafe(cdr3PartWithP,
+        return SequenceUtils.getSequenceRangeSafe(cdr3PartWithP,
                 size + trimmingSize5, 2 * size - trimmingSize3);
     }
 

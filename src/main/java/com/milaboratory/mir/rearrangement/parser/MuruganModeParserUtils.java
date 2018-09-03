@@ -15,7 +15,7 @@ public final class MuruganModeParserUtils {
     public static final String
             V_NAME = "v_choice",
             J_NAME = "j_choice",
-            D_NAME = "d_choice";
+            D_NAME = "d_gene";
 
     public static final String
             V_FORMULA = "v_choice",
@@ -53,10 +53,11 @@ public final class MuruganModeParserUtils {
                         "P(vd_dinucl)" +
                         "P(dj_ins)" +
                         "P(dj_dinucl)";
-            case IGH:
+            // Inconsistent model:
+            /*case IGH:
                 return "P(v_choice)" +
                         "P(j_choice|v_choice)" +
-                        "P(d_gene|j_choice,v_choice)" +
+                        "P(d_gene|v_choice,j_choice)" +
                         "P(v_3_del|v_choice)" +
                         "P(j_5_del|j_choice)" +
                         "P(d_5_del|d_gene)" +
@@ -64,7 +65,7 @@ public final class MuruganModeParserUtils {
                         "P(vd_ins)" +
                         "P(vd_dinucl)" +
                         "P(dj_ins)" +
-                        "P(dj_dinucl)";
+                        "P(dj_dinucl)";*/
             default:
                 throw new IllegalArgumentException("No rearrangement model for " + gene);
         }

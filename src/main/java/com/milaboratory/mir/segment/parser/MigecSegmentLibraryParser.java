@@ -2,7 +2,7 @@ package com.milaboratory.mir.segment.parser;
 
 import com.milaboratory.core.sequence.NucleotideSequence;
 import com.milaboratory.mir.segment.Gene;
-import com.milaboratory.mir.HeaderParser;
+import com.milaboratory.mir.StringArrayIndexer;
 import com.milaboratory.mir.segment.SegmentType;
 import com.milaboratory.mir.segment.Species;
 import com.milaboratory.mir.segment.*;
@@ -106,7 +106,7 @@ final class MigecSegmentLibraryParser {
                 sequenceColIndex, cdr1StartColIndex, cdr1EndColIndex, cdr2StartColIndex, cdr2EndColIndex;
 
         HeaderInfo(String[] header) {
-            HeaderParser headerParser = new HeaderParser(header);
+            StringArrayIndexer headerParser = new StringArrayIndexer(header);
             this.speciesColIndex = headerParser.getIndexOf("species");
             this.geneColIndex = headerParser.getIndexOf("gene");
             this.segmentColIndex = headerParser.getIndexOf("segment");

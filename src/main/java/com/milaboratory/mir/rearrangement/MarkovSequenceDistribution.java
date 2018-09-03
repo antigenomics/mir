@@ -48,15 +48,16 @@ public class MarkovSequenceDistribution<S extends Sequence<S>, D0 extends ByteDi
 
     S generateReverse(int length) {
         if (length > 0) {
-            var builder = alphabet.createBuilder().ensureCapacity(length);
+            byte[] arr = new byte[length];
+
             var prev = marginal.getDistributionSampler().generate();
-            builder.set(length - 1, prev);
+            arr[length - 1] = prev;
 
             for (int i = length - 2; i >= 0; i--) {
                 prev = conditional.getDistribution0(prev).getDistributionSampler().generate();
-                builder.set(i, prev);
+                arr[i] = prev;
             }
-            return builder.createAndDestroy();
+            return alphabet.createBuilder().append(arr).createAndDestroy();
         } else {
             return alphabet.getEmptySequence();
         }

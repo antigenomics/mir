@@ -11,9 +11,21 @@ import static com.milaboratory.mir.probability.parser.PlainTextHierarchicalModel
 public final class HierarchicalModelFormula implements Serializable {
     private final Set<String> variables = new HashSet<>();
     private final Set<String> blockNames;
-    private final Map<String, Set<String>> graph = new HashMap<>();
+    private final Map<String, List<String>> graph = new HashMap<>();
+
+    private static boolean goodFormula(String formula) {
+        var c1 = formula.chars().filter(ch -> ch == 'P').count();
+        var c2 = formula.chars().filter(ch -> ch == ')').count();
+        var c3 = formula.chars().filter(ch -> ch == '(').count();
+
+        return c1 == c2 && c2 == c3;
+    }
 
     public static HierarchicalModelFormula fromString(String formula) {
+        if (!goodFormula(formula)) {
+            throw new IllegalArgumentException("Bad formula '" + formula + "'");
+        }
+
         return new HierarchicalModelFormula(
                 Arrays.stream(formula.replaceAll("P\\(", "").split("\\)"))
                         .collect(Collectors.toList())
@@ -22,6 +34,11 @@ public final class HierarchicalModelFormula implements Serializable {
 
     public HierarchicalModelFormula(List<String> blockNames) {
         for (String blockName : blockNames) {
+            if (blockName.chars().filter(ch -> ch == '|').count() > 1) {
+                throw new IllegalArgumentException("Bad block name: '" + blockName + "'. " +
+                        "Only one '|' (conditional) symbol is allowed.");
+            }
+
             String[] blockNameSplit = blockName.split(REGEX_CONDITIONAL_SEPARATOR);
             String variable = blockNameSplit[0].trim();
             if (variables.contains(variable)) {
@@ -31,23 +48,42 @@ public final class HierarchicalModelFormula implements Serializable {
             }
             variables.add(variable);
             if (blockNameSplit.length > 1) {
+                if (blockNameSplit[0].contains(VARIABLE_SEPARATOR)) {
+                    throw new IllegalArgumentException("Cannot mix joint probability of '" +
+                            blockNameSplit[0] + "' with conditioning on " +
+                            blockNameSplit[1] + ". Any block should be either " +
+                            "joint (multivariate) or univariate conditional or univariate unconditional.");
+                }
+
                 graph.put(variable,
                         Arrays.stream(blockNameSplit[1].split(VARIABLE_SEPARATOR))
+                                .distinct() // make sure no duplicates
                                 .map(String::trim)
-                                .collect(Collectors.toSet())
+                                .collect(Collectors.toList())
                 );
             } else {
-                graph.put(variable, Collections.emptySet());
+                graph.put(variable, Collections.emptyList());
             }
         }
 
+        // Fetch clean block names and variables from graph
         this.blockNames = new HashSet<>();
 
         var variables = new ArrayList<String>();
+        var jointVariables = new HashSet<>(); // for checking that we haven't messed up with
+        // things like 'x,y|' and 'y,x|' both in the model
         graph.forEach((v, vc) -> {
             variables.add(v);
             if (vc.isEmpty()) {
                 this.blockNames.add(v);
+                for (String vj : v.split(VARIABLE_SEPARATOR)) {
+                    if (jointVariables.contains(vj)) {
+                        throw new IllegalArgumentException("Bad block '" +
+                                v + "': variable '" + vj + "' already listed " +
+                                "as unconditional in other block.");
+                    }
+                    jointVariables.add(vj);
+                }
             } else {
                 this.blockNames.add(v + CONDITIONAL_SEPARATOR +
                         String.join(VARIABLE_SEPARATOR, vc));
@@ -63,11 +99,15 @@ public final class HierarchicalModelFormula implements Serializable {
         }
     }
 
-    public Set<String> getParentVariables(String variable) {
-        return Collections.unmodifiableSet(graph.get(variable));
+    public List<String> getParentVariables(String variable) {
+        var parents = graph.get(variable);
+        if (parents == null) {
+            throw new IllegalArgumentException("No distribution for variable '" + variable + "' is found in formula.");
+        }
+        return Collections.unmodifiableList(parents);
     }
 
-    public Collection<String> getBlockNames() {
+    public Set<String> getBlockNames() {
         return Collections.unmodifiableSet(blockNames);
     }
 
@@ -75,10 +115,16 @@ public final class HierarchicalModelFormula implements Serializable {
         return variables.contains(variable);
     }
 
+    private static boolean isConditional(String blockName) {
+        return blockName.contains(CONDITIONAL_SEPARATOR);
+    }
+
     public String findBlockName(String variable) {
-        for (String ip : blockNames) {
-            if (ip.toLowerCase().startsWith(variable)) {
-                return ip;
+        for (String blockName : blockNames) {
+            if (isConditional(blockName) ?
+                    blockName.toLowerCase().startsWith(variable) :
+                    blockName.toLowerCase().contains(variable)) {
+                return blockName;
             }
         }
         return null;
@@ -87,12 +133,12 @@ public final class HierarchicalModelFormula implements Serializable {
     public String getBlockName(String variable) {
         String res = findBlockName(variable);
         if (res == null) {
-            throw new IllegalArgumentException("Variable '" + variable + "' not found in formula.");
+            throw new IllegalArgumentException("No distribution for variable '" + variable + "' is found in formula.");
         }
         return res;
     }
 
-    public Collection<String> getVariables() {
+    public Set<String> getVariables() {
         return Collections.unmodifiableSet(variables);
     }
 

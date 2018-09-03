@@ -78,23 +78,25 @@ public abstract class Converter<T extends PlainTextHierarchicalModel, V extends 
     protected JoiningVariableDistribution getJoiningVariableDistribution(String jVariableName,
                                                                          String vVariableName) {
         HierarchicalModelFormula formula = plainTextHierarchicalModel.getFormula();
-        String jBlockName = formula.getBlockName(jVariableName);
         var parents = formula.getParentVariables(jVariableName);
 
         if (parents.contains(vVariableName) && parents.size() == 1) {
             // return as is
-            return getJoiningVariableDistribution(jBlockName);
+
+            // todo: move to utils, check other cases when order can be different
+            return getJoiningVariableDistribution(jVariableName +
+                    PlainTextHierarchicalModelUtils.CONDITIONAL_SEPARATOR + vVariableName);
         } else if (parents.isEmpty()) {
             // no parents - just mock conditional by adding all V values
             return getJoiningVariableDistribution(
                     PlainTextHierarchicalModelUtils.mockConditional1(
                             plainTextHierarchicalModel.listValues(vVariableName),
-                            getProbabilities(jBlockName))
+                            getProbabilities(jVariableName))
             );
         }
 
         // Neither P(J|V) nor P(J) - something is messed up
-        throw new RuntimeException("Bad J formula: '" + jBlockName + "'");
+        throw new RuntimeException("Bad J formula: '" + formula.getBlockName(jVariableName) + "'");
     }
 
     protected JoiningVariableDistribution getJoiningVariableDistribution(String blockName) {
@@ -116,19 +118,23 @@ public abstract class Converter<T extends PlainTextHierarchicalModel, V extends 
                                                                                            String jVariableName,
                                                                                            String vVariableName) {
         HierarchicalModelFormula formula = plainTextHierarchicalModel.getFormula();
-        String dBlockName = formula.getBlockName(dVariableName);
         var parents = formula.getParentVariables(dVariableName);
 
         if (parents.contains(vVariableName) && parents.contains(jVariableName) && parents.size() == 2) {
-            // todo: check parent order
             // return as is
-            return getDiversityJoiningVariableDistribution(dBlockName);
+            return getDiversityJoiningVariableDistribution(
+                    dVariableName + PlainTextHierarchicalModelUtils.CONDITIONAL_SEPARATOR +
+                            jVariableName + PlainTextHierarchicalModelUtils.VARIABLE_SEPARATOR + vVariableName
+            );
         } else if (parents.contains(jVariableName) && parents.size() == 1) {
             // J as parent - mock conditional by adding all V values
             return getDiversityJoiningVariableDistribution(
                     PlainTextHierarchicalModelUtils.mockConditional2(
                             plainTextHierarchicalModel.listValues(vVariableName),
-                            getProbabilities1(dBlockName)
+                            getProbabilities1(
+                                    dVariableName + PlainTextHierarchicalModelUtils.CONDITIONAL_SEPARATOR +
+                                            jVariableName
+                            )
                     )
             );
         } else if (parents.isEmpty()) {
@@ -138,13 +144,13 @@ public abstract class Converter<T extends PlainTextHierarchicalModel, V extends 
                             plainTextHierarchicalModel.listValues(vVariableName),
                             PlainTextHierarchicalModelUtils.mockConditional1(
                                     plainTextHierarchicalModel.listValues(jVariableName),
-                                    getProbabilities(dBlockName))
+                                    getProbabilities(dVariableName))
                     )
             );
         }
 
         // Neither P(J|V) nor P(J) - something is messed up
-        throw new RuntimeException("Bad D formula: '" + dBlockName + "'");
+        throw new RuntimeException("Bad D formula: '" + formula.getBlockName(dVariableName) + "'");
     }
 
     protected DiversityJoiningVariableDistribution getDiversityJoiningVariableDistribution(String blockName) {

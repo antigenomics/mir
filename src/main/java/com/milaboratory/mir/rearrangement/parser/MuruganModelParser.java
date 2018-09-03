@@ -112,7 +112,7 @@ public final class MuruganModelParser {
         try (BufferedReader br = new BufferedReader(new InputStreamReader(marginalsInputStream))) {
             String firstVariable = null;
             String parentDistributionName = null;
-            Set<String> parentVariables = null;
+            Collection<String> parentVariables = null;
             Map<String, Integer> parentVariableValueIndices = null;
 
             for (String line; (line = br.readLine()) != null; ) {
@@ -218,7 +218,7 @@ public final class MuruganModelParser {
     }
 
     private static boolean isPrimaryAllele(String segmentId) {
-        return !segmentId.contains("*") || segmentId.contains("*00") || segmentId.contains("*01");
+        return !segmentId.contains("*") || segmentId.endsWith("*00") || segmentId.endsWith("*01");
     }
 
     private static double[] maskSecondayAlleles(Map<Integer, String> indexedValues, double[] probs) {

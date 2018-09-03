@@ -64,6 +64,7 @@ public class VariableDiversityJoiningModel implements RearrangementModel {
         VariableSegment variableSegment = variableSegmentDistribution.getDistributionSampler().generate();
         JoiningSegment joiningSegment = joiningVariableDistribution.getDistribution0(variableSegment)
                 .getDistributionSampler().generate();
+
         DiversitySegment diversitySegment = diversityJoiningVariableDistribution
                 .getDistribution0(variableSegment, joiningSegment)
                 .getDistributionSampler().generate();

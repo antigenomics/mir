@@ -18,6 +18,12 @@ public class SegmentLibraryImpl implements SegmentLibrary {
                               Map<String, ConstantSegment> constantSegmentMap) {
         this.species = species;
         this.gene = gene;
+        if (variableSegmentMap.isEmpty()) {
+            throw new IllegalArgumentException("No Variable segments in library.");
+        }
+        if (joiningSegmentMap.isEmpty()) {
+            throw new IllegalArgumentException("No Joining segments in library.");
+        }
         this.variableSegmentMap = variableSegmentMap;
         this.diversitySegmentMap = diversitySegmentMap;
         this.joiningSegmentMap = joiningSegmentMap;

@@ -12,18 +12,18 @@ import java.io.IOException;
 public class MuruganConverterUtilsTest {
     @Test
     public void test() throws IOException {
-        var mdl = MuruganModeParserUtils.getModelFromResources(Species.Human, Gene.TRA);
-        var segmLib = MigecSegmentLibraryUtils.getLibraryFromResources(Species.Human, Gene.TRA);
+        var mdl = MuruganModeParserUtils.getModelFromResources(Species.Human, Gene.TRB);
+        var segmLib = MigecSegmentLibraryUtils.getLibraryFromResources(Species.Human, Gene.TRB);
         var converter = MuruganConverterUtils.getConverter(mdl, segmLib);
         var rearrMdl = converter.getRearrangementModel();
 
         long start = 0, end = 0;
 
-        start = System.nanoTime();
-        for (int i = 0; i < 100000; i++) {
+        start = System.currentTimeMillis();
+        for (int i = 0; i < 1000000; i++) {
             ((RearrangementTemplate) rearrMdl.generate()).toRearrangement().getCdr3();
         }
-        end = System.nanoTime();
-        System.out.println((end - start) + "ns");
+        end = System.currentTimeMillis();
+        System.out.println((end - start) + "ms");
     }
 }

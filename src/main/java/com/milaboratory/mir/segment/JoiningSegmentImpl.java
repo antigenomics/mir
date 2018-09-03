@@ -1,7 +1,7 @@
 package com.milaboratory.mir.segment;
 
 import com.milaboratory.core.sequence.NucleotideSequence;
-import com.milaboratory.mir.Misc;
+import com.milaboratory.mir.SequenceUtils;
 
 public class JoiningSegmentImpl implements JoiningSegment {
     private final String id;
@@ -22,7 +22,7 @@ public class JoiningSegmentImpl implements JoiningSegment {
     @Override
     public NucleotideSequence getTrimmedCdr3Part(int trimmingSize) {
         int size = cdr3Part.size();
-        return Misc.getSequenceRangeSafe(cdr3PartWithP,
+        return SequenceUtils.getSequenceRangeSafe(cdr3PartWithP,
                 size + trimmingSize, 2 * size);
     }
 
