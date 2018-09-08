@@ -11,11 +11,21 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.text.ParseException;
 import java.util.HashMap;
 import java.util.Map;
 
 final class MigecSegmentLibraryParser {
-    private static final String SEP = "[\t ]+";
+    private static final String SEP = "\t";
+
+    private static String[] safeSplit(String line) {
+        String[] splitLine = line.split(SEP);
+        if (splitLine.length != 10) {
+            throw new RuntimeException("Bad line in input file provided to MIGEC parser: '" +
+                    line + "'. Lines should contain 10 tab-separated columns.");
+        }
+        return splitLine;
+    }
 
     private MigecSegmentLibraryParser() {
 
@@ -31,6 +41,7 @@ final class MigecSegmentLibraryParser {
         Map<String, DiversitySegment> diversitySegmentMap = new HashMap<>();
         Map<String, JoiningSegment> joiningSegmentMap = new HashMap<>();
         Map<String, ConstantSegment> constantSegmentMap = new HashMap<>();
+        Map<String, String> majorAlleleAliases = new HashMap<>();
 
         try (BufferedReader br = new BufferedReader(new InputStreamReader(data))) {
             String line = br.readLine();
@@ -38,17 +49,18 @@ final class MigecSegmentLibraryParser {
                 throw new RuntimeException("Cannot parse MIGEC library: empty input.");
             }
 
-            HeaderInfo H = new HeaderInfo(line.split(SEP));
+            HeaderInfo H = new HeaderInfo(safeSplit(line));
 
             String[] splitLine;
 
             while ((line = br.readLine()) != null) {
-                splitLine = line.split(SEP);
+                splitLine = safeSplit(line);
                 if (species.matches(splitLine[H.speciesColIndex]) &&
                         gene.matches(splitLine[H.geneColIndex])) {
                     SegmentType segmentType = SegmentType.byAlias(splitLine[H.segmentColIndex]);
                     String id = splitLine[H.idColIndex];
                     NucleotideSequence seq = new NucleotideSequence(splitLine[H.sequenceColIndex]);
+                    majorAlleleAliases.put(id, id.split("\\*")[0] + "*01");
                     boolean majorAllele = id.endsWith("*01");
 
                     switch (segmentType) {
@@ -66,6 +78,7 @@ final class MigecSegmentLibraryParser {
 
                             if (fixDV && id.contains("/DV")) { // account for MIXCR naming convention
                                 id = id.replaceAll("/DV", "DV");
+                                majorAlleleAliases.put(id, id.split("\\*")[0] + "*01");
                                 variableSegment = new VariableSegmentImpl(
                                         id, seq, cdr1Start, cdr1End, cdr2Start, cdr2End, referencePoint, majorAllele
                                 );
@@ -100,7 +113,8 @@ final class MigecSegmentLibraryParser {
         }
 
         return new SegmentLibraryImpl(species, gene,
-                variableSegmentMap, diversitySegmentMap, joiningSegmentMap, constantSegmentMap);
+                variableSegmentMap, diversitySegmentMap, joiningSegmentMap, constantSegmentMap,
+                majorAlleleAliases);
     }
 
 

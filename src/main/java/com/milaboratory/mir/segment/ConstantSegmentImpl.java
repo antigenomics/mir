@@ -19,7 +19,7 @@ public class ConstantSegmentImpl implements ConstantSegment {
     }
 
     @Override
-    public boolean isDummy() {
+    public boolean isMissingInLibrary() {
         return false;
     }
 

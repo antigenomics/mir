@@ -14,7 +14,7 @@ public class MissingConstantSegment implements ConstantSegment {
     }
 
     @Override
-    public boolean isDummy() {
+    public boolean isMissingInLibrary() {
         return true;
     }
 

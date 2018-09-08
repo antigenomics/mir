@@ -34,7 +34,7 @@ public class MissingVariableSegment implements VariableSegment {
     }
 
     @Override
-    public boolean isDummy() {
+    public boolean isMissingInLibrary() {
         return true;
     }
 

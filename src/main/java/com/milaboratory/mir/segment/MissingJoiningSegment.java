@@ -34,7 +34,7 @@ public class MissingJoiningSegment implements JoiningSegment {
     }
 
     @Override
-    public boolean isDummy() {
+    public boolean isMissingInLibrary() {
         return true;
     }
 

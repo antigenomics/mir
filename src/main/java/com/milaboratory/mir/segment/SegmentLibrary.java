@@ -1,45 +1,21 @@
 package com.milaboratory.mir.segment;
 
 public interface SegmentLibrary {
-    VariableSegment getOrCreateV(String id);
+    VariableSegment getV(String id);
 
-    JoiningSegment getOrCreateJ(String id);
+    JoiningSegment getJ(String id);
 
-    DiversitySegment getOrCreateD(String id);
+    DiversitySegment getD(String id);
 
-    ConstantSegment getOrCreateC(String id);
+    ConstantSegment getC(String id);
 
-    default VariableSegment getV(String id) {
-        var segment = getOrCreateV(id);
-        if (segment == MissingVariableSegment.INSTANCE) {
-            throw new IllegalArgumentException("Segment id '" + id + "' not found in library.");
-        }
-        return segment;
-    }
+    VariableSegment getVMajor(String id);
 
-    default DiversitySegment getD(String id) {
-        var segment = getOrCreateD(id);
-        if (segment == MissingDiversitySegment.INSTANCE) {
-            throw new IllegalArgumentException("Segment id '" + id + "' not found in library.");
-        }
-        return segment;
-    }
+    JoiningSegment getJMajor(String id);
 
-    default JoiningSegment getJ(String id) {
-        var segment = getOrCreateJ(id);
-        if (segment == MissingJoiningSegment.INSTANCE) {
-            throw new IllegalArgumentException("Segment id '" + id + "' not found in library.");
-        }
-        return segment;
-    }
+    DiversitySegment getDMajor(String id);
 
-    default ConstantSegment getC(String id) {
-        var segment = getOrCreateC(id);
-        if (segment == MissingConstantSegment.INSTANCE) {
-            throw new IllegalArgumentException("Segment id '" + id + "' not found in library.");
-        }
-        return segment;
-    }
+    ConstantSegment getCMajor(String id);
 
     Species getSpecies();
 
@@ -51,15 +27,15 @@ public interface SegmentLibrary {
 
     @SuppressWarnings("unchecked")
     default <T extends Segment> SegmentProvider<T> asSegmentProvider(Class<T> segmentClass,
-                                                                     boolean strict) {
+                                                                     boolean major) {
         if (segmentClass.equals(VariableSegment.class)) {
-            return strict ? id -> (T) this.getV(id) : id -> (T) this.getOrCreateV(id);
+            return major ? id -> (T) this.getVMajor(id) : id -> (T) this.getV(id);
         } else if (segmentClass.equals(JoiningSegment.class)) {
-            return strict ? id -> (T) this.getJ(id) : id -> (T) this.getOrCreateJ(id);
+            return major ? id -> (T) this.getJMajor(id) : id -> (T) this.getJ(id);
         } else if (segmentClass.equals(DiversitySegment.class)) {
-            return strict ? id -> (T) this.getD(id) : id -> (T) this.getOrCreateD(id);
+            return major ? id -> (T) this.getDMajor(id) : id -> (T) this.getD(id);
         } else if (segmentClass.equals(ConstantSegment.class)) {
-            return strict ? id -> (T) this.getC(id) : id -> (T) this.getOrCreateC(id);
+            return major ? id -> (T) this.getCMajor(id) : id -> (T) this.getC(id);
         }
         throw new IllegalArgumentException("Unknown segment type " + segmentClass);
     }

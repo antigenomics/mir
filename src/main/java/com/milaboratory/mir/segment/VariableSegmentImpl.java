@@ -52,7 +52,7 @@ public class VariableSegmentImpl implements VariableSegment {
     }
 
     @Override
-    public boolean isDummy() {
+    public boolean isMissingInLibrary() {
         return false;
     }
 

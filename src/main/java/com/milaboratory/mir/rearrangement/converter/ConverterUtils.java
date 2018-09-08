@@ -23,7 +23,7 @@ public final class ConverterUtils {
         return map.entrySet()
                 .stream()
                 .map(x -> new Entry<>(segmentProvider.fromId(x.getKey()), x.getValue()))
-                .filter(x -> !x.segment.isDummy())
+                .filter(x -> !x.segment.isMissingInLibrary())
                 .collect(Collectors.toMap(
                         x -> x.segment,
                         x -> valueMapper.apply(x.value))

@@ -18,8 +18,9 @@ public class VDJtoolsClonotypeParser extends AbstractClonotypeTableParser<Readle
     private final AtomicInteger idCounter = new AtomicInteger();
 
     public VDJtoolsClonotypeParser(String[] header,
-                                   SegmentLibrary segmentLibrary) {
-        super(header, segmentLibrary);
+                                   SegmentLibrary segmentLibrary,
+                                   boolean majorAlleles) {
+        super(header, segmentLibrary, majorAlleles);
         this.headerInfo = new HeaderInfo(header);
     }
 
@@ -35,29 +36,25 @@ public class VDJtoolsClonotypeParser extends AbstractClonotypeTableParser<Readle
 
         List<SegmentCall<VariableSegment>> vCalls = new ArrayList<>();
         for (String v : splitLine[headerInfo.vColIndex].split(",")) {
-            VariableSegment variableSegment = segmentLibrary.getOrCreateV(v);
-            vCalls.add(SegmentCall.asCall(variableSegment));
+            vCalls.add(getV(v, 1.0f));
         }
 
         List<SegmentCall<DiversitySegment>> dCalls = new ArrayList<>();
         if (headerInfo.dColIndex >= 0) {
             for (String d : splitLine[headerInfo.dColIndex].split(",")) {
-                DiversitySegment diversitySegment = segmentLibrary.getOrCreateD(d);
-                dCalls.add(SegmentCall.asCall(diversitySegment));
+                dCalls.add(getD(d, 1.0f));
             }
         }
 
         List<SegmentCall<JoiningSegment>> jCalls = new ArrayList<>();
         for (String j : splitLine[headerInfo.jColIndex].split(",")) {
-            JoiningSegment joiningSegment = segmentLibrary.getOrCreateJ(j);
-            jCalls.add(SegmentCall.asCall(joiningSegment));
+            jCalls.add(getJ(j, 1.0f));
         }
 
         List<SegmentCall<ConstantSegment>> cCalls = new ArrayList<>();
         if (headerInfo.cColIndex >= 0) {
             for (String c : splitLine[headerInfo.cColIndex].split(",")) {
-                ConstantSegment constantSegment = segmentLibrary.getOrCreateC(c);
-                cCalls.add(SegmentCall.asCall(constantSegment));
+                cCalls.add(getC(c, 1.0f));
             }
         }
 

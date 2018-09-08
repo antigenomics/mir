@@ -34,7 +34,7 @@ public final class AbsentDiversitySegment implements DiversitySegment {
     }
 
     @Override
-    public boolean isDummy() {
+    public boolean isMissingInLibrary() {
         return false;
     }
 

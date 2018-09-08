@@ -17,7 +17,7 @@ public class ClonotypeTablePipeTest {
     public void readTest() throws IOException {
         var sampleSupplier = TestUtils.streamSupplierFrom("samples/trad_sample.txt");
         var library = MigecSegmentLibraryUtils.getLibraryFromResources(Species.Human, Gene.TRA);
-        var parserFactory = new VDJtoolsClonotypeParserFactory(library);
+        var parserFactory = new VDJtoolsClonotypeParserFactory(library, true);
 
 
         var clonotypeIterator = new ClonotypeTablePipe<>(sampleSupplier.get(), parserFactory);
