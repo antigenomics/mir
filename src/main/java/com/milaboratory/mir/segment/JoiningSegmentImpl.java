@@ -7,16 +7,19 @@ public class JoiningSegmentImpl implements JoiningSegment {
     private final String id;
     private final NucleotideSequence germline, cdr3Part, cdr3PartWithP;
     private final int referencePoint;
+    private final boolean majorAllele;
 
     public JoiningSegmentImpl(String id,
                               NucleotideSequence germline,
-                              int referencePoint) {
+                              int referencePoint,
+                              boolean majorAllele) {
         this.id = id;
         this.germline = germline;
         this.referencePoint = referencePoint;
         this.cdr3Part = germline.getRange(0,
                 referencePoint + 4); // J reference point is the 0-base coordinate of first base before Phe/Trp
         this.cdr3PartWithP = cdr3Part.getReverseComplement().concatenate(cdr3Part);
+        this.majorAllele = majorAllele;
     }
 
     @Override
@@ -44,6 +47,11 @@ public class JoiningSegmentImpl implements JoiningSegment {
     @Override
     public boolean isDummy() {
         return false;
+    }
+
+    @Override
+    public boolean isMajorAllele() {
+        return majorAllele;
     }
 
     @Override

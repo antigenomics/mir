@@ -37,4 +37,9 @@ public class MissingDiversitySegment  implements DiversitySegment {
     public boolean isDummy() {
         return true;
     }
+
+    @Override
+    public boolean isMajorAllele() {
+        return true;
+    }
 }

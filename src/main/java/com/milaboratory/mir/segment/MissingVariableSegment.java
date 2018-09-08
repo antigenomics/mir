@@ -37,4 +37,9 @@ public class MissingVariableSegment implements VariableSegment {
     public boolean isDummy() {
         return true;
     }
+
+    @Override
+    public boolean isMajorAllele() {
+        return true;
+    }
 }

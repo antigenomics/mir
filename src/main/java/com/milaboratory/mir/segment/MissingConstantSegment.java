@@ -19,6 +19,11 @@ public class MissingConstantSegment implements ConstantSegment {
     }
 
     @Override
+    public boolean isMajorAllele() {
+        return true;
+    }
+
+    @Override
     public NucleotideSequence getSequence() {
         return NucleotideSequence.EMPTY;
     }

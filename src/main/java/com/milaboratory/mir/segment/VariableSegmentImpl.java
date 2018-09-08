@@ -8,12 +8,14 @@ public class VariableSegmentImpl implements VariableSegment {
     private final NucleotideSequence germline,
             cdr3Part, cdr3PartWithP;
     private final int cdr1Start, cdr1End, cdr2Start, cdr2End, referencePoint;
+    private final boolean majorAllele;
 
     // todo: store cdr1-2 nt&aa
 
     public VariableSegmentImpl(String id,
                                NucleotideSequence germline,
-                               int cdr1Start, int cdr1End, int cdr2Start, int cdr2End, int referencePoint) {
+                               int cdr1Start, int cdr1End, int cdr2Start, int cdr2End, int referencePoint,
+                               boolean majorAllele) {
         this.id = id;
         this.germline = germline;
         this.cdr1Start = cdr1Start;
@@ -21,6 +23,7 @@ public class VariableSegmentImpl implements VariableSegment {
         this.cdr2Start = cdr2Start;
         this.cdr2End = cdr2End;
         this.referencePoint = referencePoint;
+        this.majorAllele = majorAllele;
 
         this.cdr3Part = germline.getRange(referencePoint - 3, // V reference point = 0-based coord of point directly after Cys codon
                 germline.size());
@@ -76,6 +79,11 @@ public class VariableSegmentImpl implements VariableSegment {
 
     public int getReferencePoint() {
         return referencePoint;
+    }
+
+    @Override
+    public boolean isMajorAllele() {
+        return majorAllele;
     }
 
     @Override

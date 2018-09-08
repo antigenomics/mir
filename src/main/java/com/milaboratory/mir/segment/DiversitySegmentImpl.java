@@ -6,11 +6,14 @@ import com.milaboratory.mir.SequenceUtils;
 public class DiversitySegmentImpl implements DiversitySegment {
     private final String id;
     private final NucleotideSequence cdr3Part, cdr3PartWithP;
+    private final boolean majorAllele;
 
     public DiversitySegmentImpl(String id,
-                                NucleotideSequence cdr3Part) {
+                                NucleotideSequence cdr3Part,
+                                boolean majorAllele) {
         this.id = id;
         this.cdr3Part = cdr3Part;
+        this.majorAllele = majorAllele;
         NucleotideSequence rc = cdr3Part.getReverseComplement();
         this.cdr3PartWithP = SequenceUtils.getReverse(rc).concatenate(cdr3Part.concatenate(rc));
     }
@@ -41,6 +44,12 @@ public class DiversitySegmentImpl implements DiversitySegment {
     public boolean isDummy() {
         return false;
     }
+
+    @Override
+    public boolean isMajorAllele() {
+        return majorAllele;
+    }
+
 
     @Override
     public NucleotideSequence getFullGermline() {

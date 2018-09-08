@@ -49,6 +49,7 @@ final class MigecSegmentLibraryParser {
                     SegmentType segmentType = SegmentType.byAlias(splitLine[H.segmentColIndex]);
                     String id = splitLine[H.idColIndex];
                     NucleotideSequence seq = new NucleotideSequence(splitLine[H.sequenceColIndex]);
+                    boolean majorAllele = id.endsWith("*01");
 
                     switch (segmentType) {
                         case V:
@@ -59,14 +60,14 @@ final class MigecSegmentLibraryParser {
                             int referencePoint = Integer.parseInt(splitLine[H.refPointColIndex]);
 
                             VariableSegment variableSegment = new VariableSegmentImpl(
-                                    id, seq, cdr1Start, cdr1End, cdr2Start, cdr2End, referencePoint
+                                    id, seq, cdr1Start, cdr1End, cdr2Start, cdr2End, referencePoint, majorAllele
                             );
                             variableSegmentMap.put(id, variableSegment);
 
                             if (fixDV && id.contains("/DV")) { // account for MIXCR naming convention
                                 id = id.replaceAll("/DV", "DV");
                                 variableSegment = new VariableSegmentImpl(
-                                        id, seq, cdr1Start, cdr1End, cdr2Start, cdr2End, referencePoint
+                                        id, seq, cdr1Start, cdr1End, cdr2Start, cdr2End, referencePoint, majorAllele
                                 );
                                 variableSegmentMap.put(id, variableSegment);
                             }
@@ -74,7 +75,7 @@ final class MigecSegmentLibraryParser {
 
                         case D:
                             DiversitySegment diversitySegment = new DiversitySegmentImpl(
-                                    id, seq
+                                    id, seq, majorAllele
                             );
                             diversitySegmentMap.put(id, diversitySegment);
                             break;
@@ -83,13 +84,15 @@ final class MigecSegmentLibraryParser {
                             referencePoint = Integer.parseInt(splitLine[H.refPointColIndex]);
 
                             JoiningSegment joiningSegment = new JoiningSegmentImpl(
-                                    id, seq, referencePoint
+                                    id, seq, referencePoint, majorAllele
                             );
                             joiningSegmentMap.put(id, joiningSegment);
                             break;
 
                         case C:
-                            constantSegmentMap.put(id, new ConstantSegmentImpl(id, seq));
+                            constantSegmentMap.put(id, new ConstantSegmentImpl(
+                                    id, seq, majorAllele
+                            ));
                             break;
                     }
                 }

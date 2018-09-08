@@ -4,4 +4,6 @@ public interface Segment {
     String getId();
 
     boolean isDummy();
+
+    boolean isMajorAllele();
 }

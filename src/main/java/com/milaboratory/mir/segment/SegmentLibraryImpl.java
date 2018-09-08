@@ -11,6 +11,8 @@ public class SegmentLibraryImpl implements SegmentLibrary {
     private final Map<String, JoiningSegment> joiningSegmentMap;
     private final Map<String, ConstantSegment> constantSegmentMap;
 
+    // todo: major allele conversion
+
     public SegmentLibraryImpl(Species species, Gene gene,
                               Map<String, VariableSegment> variableSegmentMap,
                               Map<String, DiversitySegment> diversitySegmentMap,

@@ -37,4 +37,9 @@ public class MissingJoiningSegment implements JoiningSegment {
     public boolean isDummy() {
         return true;
     }
+
+    @Override
+    public boolean isMajorAllele() {
+        return true;
+    }
 }
