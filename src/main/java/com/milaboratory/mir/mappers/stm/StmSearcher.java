@@ -1,15 +1,16 @@
-package com.milaboratory.mir.stm;
+package com.milaboratory.mir.mappers.stm;
 
+import com.milaboratory.core.mutations.Mutations;
 import com.milaboratory.core.sequence.Alphabet;
 import com.milaboratory.core.sequence.Sequence;
 import com.milaboratory.core.tree.SequenceTreeMap;
-import com.milaboratory.mir.stm.align.ExplicitAlignmentScoring;
+import com.milaboratory.mir.mappers.SequenceProvider;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-public class StmSearcher<T, S extends Sequence<S>> {
+public final class StmSearcher<T, S extends Sequence<S>> {
     private final SequenceTreeMap<S, List<T>> stm;
     private final SequenceProvider<T, S> sequenceProvider;
     private final SequenceSearchScope searchScope;
@@ -89,5 +90,30 @@ public class StmSearcher<T, S extends Sequence<S>> {
         }
 
         return hits;
+    }
+
+    private static final class StmGroupHit<T, S extends Sequence<S>> {
+        private final List<T> group;
+        private final double alignmentScore;
+        private final Mutations<S> mutations;
+
+        StmGroupHit(List<T> group, double alignmentScore,
+                    Mutations<S> mutations) {
+            this.group = group;
+            this.alignmentScore = alignmentScore;
+            this.mutations = mutations;
+        }
+
+        List<T> getGroup() {
+            return group;
+        }
+
+        double getAlignmentScore() {
+            return alignmentScore;
+        }
+
+        Mutations<S> getMutations() {
+            return mutations;
+        }
     }
 }

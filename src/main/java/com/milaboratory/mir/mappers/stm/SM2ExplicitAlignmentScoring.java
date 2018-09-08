@@ -1,4 +1,4 @@
-package com.milaboratory.mir.stm.align;
+package com.milaboratory.mir.mappers.stm;
 
 import com.milaboratory.core.alignment.BLASTMatrix;
 import com.milaboratory.core.alignment.LinearGapAlignmentScoring;
@@ -8,7 +8,7 @@ import com.milaboratory.core.sequence.Alphabet;
 import com.milaboratory.core.sequence.AminoAcidSequence;
 import com.milaboratory.core.sequence.Sequence;
 
-public class SM2ExplicitAlignmentScoring<S extends Sequence<S>> implements ExplicitAlignmentScoring<S> {
+public final class SM2ExplicitAlignmentScoring<S extends Sequence<S>> implements ExplicitAlignmentScoring<S> {
     private final double[][] substitutionMatrix;
     private final double gapFactor;
 

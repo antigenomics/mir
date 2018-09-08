@@ -1,4 +1,4 @@
-package com.milaboratory.mir.stm;
+package com.milaboratory.mir.mappers;
 
 import com.milaboratory.core.sequence.Sequence;
 

@@ -1,24 +1,29 @@
-package com.milaboratory.mir.stm;
+package com.milaboratory.mir.mappers;
 
 import com.milaboratory.core.mutations.Mutations;
 import com.milaboratory.core.sequence.Sequence;
 
-import java.util.List;
-
-class StmGroupHit<T, S extends Sequence<S>> {
-    private final List<T> group;
+public class Hit<Q, T, S extends Sequence<S>> {
+    private final Q query;
+    private final T target;
     private final double alignmentScore;
     private final Mutations<S> mutations;
 
-    StmGroupHit(List<T> group, double alignmentScore,
-                Mutations<S> mutations) {
-        this.group = group;
+    public Hit(Q query, T target,
+               double alignmentScore,
+               Mutations<S> mutations) {
+        this.query = query;
+        this.target = target;
         this.alignmentScore = alignmentScore;
         this.mutations = mutations;
     }
 
-    public List<T> getGroup() {
-        return group;
+    public Q getQuery() {
+        return query;
+    }
+
+    public T getTarget() {
+        return target;
     }
 
     public double getAlignmentScore() {

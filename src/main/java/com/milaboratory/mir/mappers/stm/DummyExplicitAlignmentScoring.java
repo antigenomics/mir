@@ -1,9 +1,9 @@
-package com.milaboratory.mir.stm.align;
+package com.milaboratory.mir.mappers.stm;
 
 import com.milaboratory.core.mutations.Mutations;
 import com.milaboratory.core.sequence.Sequence;
 
-public class DummyExplicitAlignmentScoring<S extends Sequence<S>> implements ExplicitAlignmentScoring<S> {
+public final class DummyExplicitAlignmentScoring<S extends Sequence<S>> implements ExplicitAlignmentScoring<S> {
     public static final DummyExplicitAlignmentScoring INSTANCE = new DummyExplicitAlignmentScoring();
 
     private DummyExplicitAlignmentScoring() {

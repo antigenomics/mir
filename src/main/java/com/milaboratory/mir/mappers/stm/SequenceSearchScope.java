@@ -1,4 +1,4 @@
-package com.milaboratory.mir.stm;
+package com.milaboratory.mir.mappers.stm;
 
 import com.milaboratory.core.tree.TreeSearchParameters;
 
