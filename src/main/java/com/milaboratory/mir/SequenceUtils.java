@@ -11,7 +11,7 @@ public final class SequenceUtils {
         int len = seq.size();
 
         return from > to ?
-                seq.getBuilder().createAndDestroy() :
+                seq.getAlphabet().getEmptySequence() :
                 seq.getRange(from < 0 ? 0 : from, to > len ? len : to);
     }
 

@@ -1,7 +1,7 @@
 package com.milaboratory.mir.rearrangement;
 
 import com.milaboratory.core.sequence.NucleotideSequence;
-import com.milaboratory.mir.clonotype.JunctionMarkup;
+import com.milaboratory.mir.clonotype.rearrangement.JunctionMarkup;
 import com.milaboratory.mir.segment.AbsentDiversitySegment;
 import com.milaboratory.mir.segment.DiversitySegment;
 import com.milaboratory.mir.segment.JoiningSegment;

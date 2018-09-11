@@ -1,4 +1,4 @@
-package com.milaboratory.mir.clonotype;
+package com.milaboratory.mir.clonotype.rearrangement;
 
 import com.milaboratory.core.sequence.AminoAcidSequence;
 import com.milaboratory.core.sequence.NucleotideSequence;

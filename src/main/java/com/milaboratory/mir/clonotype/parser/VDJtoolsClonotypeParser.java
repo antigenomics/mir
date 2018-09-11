@@ -4,9 +4,9 @@ import com.milaboratory.core.sequence.AminoAcidSequence;
 import com.milaboratory.core.sequence.NucleotideSequence;
 import com.milaboratory.mir.StringArrayIndexer;
 import com.milaboratory.mir.clonotype.ClonotypeCall;
-import com.milaboratory.mir.clonotype.JunctionMarkup;
-import com.milaboratory.mir.clonotype.ReadlessClonotypeImpl;
-import com.milaboratory.mir.clonotype.SegmentTrimming;
+import com.milaboratory.mir.clonotype.rearrangement.JunctionMarkup;
+import com.milaboratory.mir.clonotype.rearrangement.ReadlessClonotypeImpl;
+import com.milaboratory.mir.clonotype.rearrangement.SegmentTrimming;
 import com.milaboratory.mir.segment.*;
 
 import java.util.ArrayList;

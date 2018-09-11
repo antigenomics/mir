@@ -1,7 +1,7 @@
 package com.milaboratory.mir.clonotype.parser;
 
 
-import com.milaboratory.mir.clonotype.ReadlessClonotypeImpl;
+import com.milaboratory.mir.clonotype.rearrangement.ReadlessClonotypeImpl;
 import com.milaboratory.mir.segment.SegmentLibrary;
 
 public class VDJtoolsClonotypeParserFactory implements ClonotypeTableParserFactory<ReadlessClonotypeImpl> {

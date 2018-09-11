@@ -1,4 +1,4 @@
-package com.milaboratory.mir.clonotype;
+package com.milaboratory.mir.clonotype.rearrangement;
 
 public class JunctionMarkup {
     private final int vEnd, jStart, dStart, dEnd;
