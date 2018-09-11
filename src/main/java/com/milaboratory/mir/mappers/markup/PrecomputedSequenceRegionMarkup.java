@@ -9,15 +9,15 @@ public class PrecomputedSequenceRegionMarkup<S extends Sequence<S>, E extends En
         extends SequenceRegionMarkup<S, E> {
     private final EnumMap<E, SequenceRegion<S, E>> regionMap;
 
-    public PrecomputedSequenceRegionMarkup(EnumMap<E, SequenceRegion<S, E>> regionMap,
-                                           S fullSequence,
+    public PrecomputedSequenceRegionMarkup(S fullSequence,
+                                           EnumMap<E, SequenceRegion<S, E>> regionMap,
                                            Class<E> regionTypeClass) {
         super(fullSequence, regionTypeClass);
         this.regionMap = regionMap;
     }
 
-    public PrecomputedSequenceRegionMarkup(Collection<SequenceRegion<S, E>> regions,
-                                           S fullSequence,
+    public PrecomputedSequenceRegionMarkup(S fullSequence,
+                                           Collection<SequenceRegion<S, E>> regions,
                                            Class<E> regionTypeClass) {
         super(fullSequence, regionTypeClass);
         this.regionMap = new EnumMap<>(regionTypeClass);
@@ -58,6 +58,6 @@ public class PrecomputedSequenceRegionMarkup<S extends Sequence<S>, E extends En
                 markup[i + 1] = sequenceRegion.getEnd();
             }
         }
-        return new ArrayBasedSequenceRegionMarkup<>(fullSequence, regionTypeClass, markup);
+        return new ArrayBasedSequenceRegionMarkup<>(fullSequence, markup, regionTypeClass);
     }
 }

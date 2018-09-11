@@ -9,7 +9,7 @@ public class ArrayBasedSequenceRegionMarkup<S extends Sequence<S>, E extends Enu
         extends SequenceRegionMarkup<S, E> {
     private final int[] markup;
 
-    public ArrayBasedSequenceRegionMarkup(S fullSequence, Class<E> regionTypeClass, int[] markup) {
+    public ArrayBasedSequenceRegionMarkup(S fullSequence, int[] markup, Class<E> regionTypeClass) {
         super(fullSequence, regionTypeClass);
         this.markup = markup;
         checkMarkup(markup);
@@ -82,7 +82,7 @@ public class ArrayBasedSequenceRegionMarkup<S extends Sequence<S>, E extends Enu
     }
 
     public PrecomputedSequenceRegionMarkup<S, E> asPrecomputed() {
-        return new PrecomputedSequenceRegionMarkup<>(getAllRegions(), fullSequence, regionTypeClass);
+        return new PrecomputedSequenceRegionMarkup<>(fullSequence, getAllRegions(), regionTypeClass);
     }
 
     @Override
@@ -108,7 +108,7 @@ public class ArrayBasedSequenceRegionMarkup<S extends Sequence<S>, E extends Enu
                 }
             }
 
-            return new ArrayBasedSequenceRegionMarkup<>(fullSequence, regionTypeClass, newMarkup);
+            return new ArrayBasedSequenceRegionMarkup<>(fullSequence, newMarkup, regionTypeClass);
         } else if (other instanceof PrecomputedSequenceRegionMarkup) {
             return merge(((PrecomputedSequenceRegionMarkup<S, E>) other).asArrayBased());
         } else {
