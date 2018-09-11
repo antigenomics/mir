@@ -1,4 +1,4 @@
-package com.milaboratory.mir.mappers;
+package com.milaboratory.mir.mappers.markup;
 
 import com.milaboratory.core.sequence.Alphabet;
 import com.milaboratory.core.sequence.Sequence;
@@ -64,5 +64,10 @@ public class SequenceRegion<S extends Sequence<S>, E extends Enum<E>> {
     @Override
     public int hashCode() {
         return Objects.hash(start, end, regionType, sequence);
+    }
+
+    @Override
+    public String toString() {
+        return regionType + "\t" + start + "\t" + end + "\t" + sequence + "\t" + incomplete;
     }
 }

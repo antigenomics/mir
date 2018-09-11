@@ -1,4 +1,4 @@
-package com.milaboratory.mir.mappers;
+package com.milaboratory.mir.mappers.markup;
 
 import com.milaboratory.core.sequence.Sequence;
 
@@ -6,14 +6,11 @@ import java.util.Arrays;
 import java.util.EnumMap;
 
 public class ArrayBasedSequenceRegionMarkup<S extends Sequence<S>, E extends Enum<E>>
-        implements SequenceRegionMarkup<S, E> {
-    private final S fullSequence;
-    private final Class<E> regionTypeClass;
+        extends SequenceRegionMarkup<S, E> {
     private final int[] markup;
 
     public ArrayBasedSequenceRegionMarkup(S fullSequence, Class<E> regionTypeClass, int[] markup) {
-        this.fullSequence = fullSequence;
-        this.regionTypeClass = regionTypeClass;
+        super(fullSequence, regionTypeClass);
         this.markup = markup;
         checkMarkup(markup);
     }
@@ -24,11 +21,6 @@ public class ArrayBasedSequenceRegionMarkup<S extends Sequence<S>, E extends Enu
                 throw new IllegalArgumentException("Bad markup: " + Arrays.toString(markup));
             }
         }
-    }
-
-    @Override
-    public S getFullSequence() {
-        return fullSequence;
     }
 
     private SequenceRegion<S, E> getRegion(E regionType,
@@ -81,11 +73,6 @@ public class ArrayBasedSequenceRegionMarkup<S extends Sequence<S>, E extends Enu
     }
 
     @Override
-    public Class<E> getRegionTypeClass() {
-        return regionTypeClass;
-    }
-
-    @Override
     public EnumMap<E, SequenceRegion<S, E>> getAllRegions() {
         var map = new EnumMap<E, SequenceRegion<S, E>>(regionTypeClass);
         for (E regionType : regionTypeClass.getEnumConstants()) {
@@ -96,5 +83,36 @@ public class ArrayBasedSequenceRegionMarkup<S extends Sequence<S>, E extends Enu
 
     public PrecomputedSequenceRegionMarkup<S, E> asPrecomputed() {
         return new PrecomputedSequenceRegionMarkup<>(getAllRegions(), fullSequence, regionTypeClass);
+    }
+
+    @Override
+    public ArrayBasedSequenceRegionMarkup<S, E> merge(SequenceRegionMarkup<S, E> other) {
+        if (other instanceof ArrayBasedSequenceRegionMarkup) {
+            var other2 = (ArrayBasedSequenceRegionMarkup<S, E>) other;
+
+            if (!this.fullSequence.equals(other.fullSequence)) {
+                throw new IllegalArgumentException("Markups were computed for different sequences");
+            }
+
+            int[] newMarkup = markup.clone();
+
+            for (int i = 0; i < newMarkup.length; i++) {
+                int x = newMarkup[i], y = other2.markup[i];
+                if (x != y) {
+                    if (x == -1) {
+                        newMarkup[i] = y;
+                    } else if (y != -1) {
+                        throw new IllegalArgumentException("Markups at position " + i + " don't match " +
+                                x + "(this)!=" + y + "(other) while both positions aren't absent (== -1)");
+                    }
+                }
+            }
+
+            return new ArrayBasedSequenceRegionMarkup<>(fullSequence, regionTypeClass, newMarkup);
+        } else if (other instanceof PrecomputedSequenceRegionMarkup) {
+            return merge(((PrecomputedSequenceRegionMarkup<S, E>) other).asArrayBased());
+        } else {
+            throw new IllegalArgumentException("Don't know how to merge with " + other.getClass());
+        }
     }
 }
