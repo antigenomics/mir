@@ -1,4 +1,4 @@
-package com.milaboratory.mir.complex;
+package com.milaboratory.mir.structure;
 
 import com.milaboratory.core.sequence.AminoAcidSequence;
 

@@ -1,4 +1,4 @@
-package com.milaboratory.mir.complex;
+package com.milaboratory.mir.structure;
 
 public interface TcrPeptideMhcComplex {
     AntigenReceptor getAntigenReceptor();
