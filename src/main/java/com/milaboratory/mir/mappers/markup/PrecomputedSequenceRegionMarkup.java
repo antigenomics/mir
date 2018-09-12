@@ -5,6 +5,7 @@ import com.milaboratory.core.sequence.Sequence;
 
 import java.util.Collection;
 import java.util.EnumMap;
+import java.util.Objects;
 
 public class PrecomputedSequenceRegionMarkup<S extends Sequence<S>, E extends Enum<E>>
         extends SequenceRegionMarkup<S, E> {
@@ -72,5 +73,20 @@ public class PrecomputedSequenceRegionMarkup<S extends Sequence<S>, E extends En
             }
         }
         return new ArrayBasedSequenceRegionMarkup<>(fullSequence, markup, regionTypeClass);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        PrecomputedSequenceRegionMarkup<?, ?> that = (PrecomputedSequenceRegionMarkup<?, ?>) o;
+        return Objects.equals(regionMap, that.regionMap) &&
+                Objects.equals(fullSequence, that.fullSequence) &&
+                Objects.equals(regionTypeClass, that.regionTypeClass);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(regionMap, fullSequence, regionTypeClass);
     }
 }

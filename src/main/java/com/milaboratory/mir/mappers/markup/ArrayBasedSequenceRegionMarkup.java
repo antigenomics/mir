@@ -1,9 +1,11 @@
 package com.milaboratory.mir.mappers.markup;
 
 import com.milaboratory.core.sequence.Sequence;
+import com.milaboratory.mir.structure.AntigenReceptorRegionType;
 
 import java.util.Arrays;
 import java.util.EnumMap;
+import java.util.Objects;
 
 public class ArrayBasedSequenceRegionMarkup<S extends Sequence<S>, E extends Enum<E>>
         extends SequenceRegionMarkup<S, E> {
@@ -17,7 +19,7 @@ public class ArrayBasedSequenceRegionMarkup<S extends Sequence<S>, E extends Enu
 
     private static void checkMarkup(int[] markup) {
         for (int i = 1; i < markup.length; i++) {
-            if (markup[i - 1] >= 0 && markup[i - 1] > markup[i]) {
+            if (markup[i - 1] >= 0 && markup[i] >= 0 && markup[i - 1] > markup[i]) {
                 throw new IllegalArgumentException("Bad markup: " + Arrays.toString(markup));
             }
         }
@@ -25,16 +27,16 @@ public class ArrayBasedSequenceRegionMarkup<S extends Sequence<S>, E extends Enu
 
     private SequenceRegion<S, E> getRegion(E regionType,
                                            int start, int end) {
-        if (start >= end || end == 0) {
-            return new SequenceRegion<>(regionType,
-                    fullSequence.getAlphabet().getEmptySequence(),
-                    -1, -1,
-                    true);
-        }
-
         boolean incomplete = false;
 
-        if (start < 0) {
+        if (start <= 0) {
+            if (end <= 0) {
+                return new SequenceRegion<>(regionType,
+                        fullSequence.getAlphabet().getEmptySequence(),
+                        -1, -1,
+                        true);
+            }
+
             start = 0;
             incomplete = true;
         }
@@ -114,5 +116,22 @@ public class ArrayBasedSequenceRegionMarkup<S extends Sequence<S>, E extends Enu
         } else {
             throw new IllegalArgumentException("Don't know how to merge with " + other.getClass());
         }
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        ArrayBasedSequenceRegionMarkup<?, ?> that = (ArrayBasedSequenceRegionMarkup<?, ?>) o;
+        return Arrays.equals(markup, that.markup) &&
+                Objects.equals(fullSequence, that.fullSequence) &&
+                Objects.equals(regionTypeClass, that.regionTypeClass);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = Objects.hash(fullSequence, regionTypeClass);
+        result = 31 * result + Arrays.hashCode(markup);
+        return result;
     }
 }

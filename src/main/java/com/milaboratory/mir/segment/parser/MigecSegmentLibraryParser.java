@@ -66,8 +66,8 @@ final class MigecSegmentLibraryParser {
                     switch (segmentType) {
                         case V:
                             int cdr1Start = Integer.parseInt(splitLine[H.cdr1StartColIndex]);
-                            int cdr1End = Integer.parseInt(splitLine[H.cdr1StartColIndex]);
-                            int cdr2Start = Integer.parseInt(splitLine[H.cdr2EndColIndex]);
+                            int cdr1End = Integer.parseInt(splitLine[H.cdr1EndColIndex]);
+                            int cdr2Start = Integer.parseInt(splitLine[H.cdr2StartColIndex]);
                             int cdr2End = Integer.parseInt(splitLine[H.cdr2EndColIndex]);
                             int referencePoint = Integer.parseInt(splitLine[H.refPointColIndex]);
 

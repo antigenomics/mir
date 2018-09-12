@@ -24,14 +24,20 @@ public class JoiningSegmentImpl implements JoiningSegment {
         this.id = id;
         this.germline = germline;
         this.referencePoint = referencePoint;
-        this.cdr3Part = germline.getRange(0,
-                referencePoint + 4); // J reference point is the 0-base coordinate of first base before Phe/Trp
+        int cdr3End = referencePoint + 4; // J reference point is the 0-base coordinate of first base before Phe/Trp
+        this.cdr3Part = germline.getRange(0,cdr3End);
         this.cdr3PartWithP = cdr3Part.getReverseComplement().concatenate(cdr3Part);
         this.majorAllele = majorAllele;
 
         this.regionMarkupNt = new ArrayBasedSequenceRegionMarkup<>(
                 germline,
-                new int[]{-1, referencePoint, germline.size()}, // mark start as incomplete
+                new int[]{-1, //fr1
+                        -1, //cdr1
+                        -1, //fr2
+                        -1, //cdr2
+                        -1, //fr3
+                        -1, //cdr3
+                        cdr3End, germline.size()}, // mark start as incomplete
                 AntigenReceptorRegionType.class
         ).asPrecomputed();
         this.regionMarkupAa = SequenceRegionMarkupUtils.translate(regionMarkupNt,

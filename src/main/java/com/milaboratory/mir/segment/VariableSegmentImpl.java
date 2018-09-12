@@ -28,14 +28,13 @@ public class VariableSegmentImpl implements VariableSegment {
         this.germline = germline;
         this.referencePoint = referencePoint;
         this.majorAllele = majorAllele;
-
-        this.cdr3Part = germline.getRange(referencePoint - 3, // V reference point = 0-based coord of point directly after Cys codon
-                germline.size());
+        int cdr3Start = referencePoint - 3; // V reference point = 0-based coord of point directly after Cys codon
+        this.cdr3Part = germline.getRange(cdr3Start, germline.size());
         this.cdr3PartWithP = cdr3Part.concatenate(cdr3Part.getReverseComplement());
 
         this.regionMarkupNt = new ArrayBasedSequenceRegionMarkup<>(
                 germline,
-                new int[]{0, cdr1Start, cdr1End, cdr2Start, cdr2End, referencePoint, -1}, // mark end as incomplete
+                new int[]{0, cdr1Start, cdr1End, cdr2Start, cdr2End, cdr3Start, -1, -1}, // mark end as incomplete
                 AntigenReceptorRegionType.class
         ).asPrecomputed();
         this.regionMarkupAa = SequenceRegionMarkupUtils.translate(regionMarkupNt,

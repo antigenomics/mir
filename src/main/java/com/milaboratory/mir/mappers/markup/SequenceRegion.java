@@ -4,7 +4,8 @@ import com.milaboratory.core.sequence.*;
 
 import java.util.Objects;
 
-public class SequenceRegion<S extends Sequence<S>, E extends Enum<E>> {
+public class SequenceRegion<S extends Sequence<S>, E extends Enum<E>>
+        implements Comparable<SequenceRegion<S, E>> {
     public static <S extends Sequence<S>, E extends Enum<E>> SequenceRegion<S, E> empty(E regionType,
                                                                                         Alphabet<S> alphabet) {
         return new SequenceRegion<>(regionType, alphabet.getEmptySequence(), -1, -1, true);
@@ -18,6 +19,11 @@ public class SequenceRegion<S extends Sequence<S>, E extends Enum<E>> {
     public SequenceRegion(E regionType, S sequence,
                           int start, int end,
                           boolean incomplete) {
+        if (start <= -1 || end <= -1) {
+            if (start + end != -2) {
+                throw new IllegalArgumentException("Negative start/end only allowed when start=end=-1.");
+            }
+        }
         if (sequence.size() != end - start) {
             throw new IllegalArgumentException("Region boundaries do not match sequence length");
         }
@@ -75,5 +81,12 @@ public class SequenceRegion<S extends Sequence<S>, E extends Enum<E>> {
     @Override
     public String toString() {
         return regionType + "\t" + start + "\t" + end + "\t" + sequence + "\t" + incomplete;
+    }
+
+    @Override
+    public int compareTo(SequenceRegion<S, E> o) {
+        int res = Integer.compare(regionType.ordinal(), o.regionType.ordinal());
+        res = res == 0 ? Integer.compare(start, o.start) : res;
+        return res == 0 ? Integer.compare(end, o.end) : res;
     }
 }
