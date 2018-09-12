@@ -1,5 +1,6 @@
 package com.milaboratory.mir.segment;
 
+import com.milaboratory.core.sequence.AminoAcidSequence;
 import com.milaboratory.core.sequence.NucleotideSequence;
 
 public final class AbsentDiversitySegment implements DiversitySegment {
@@ -24,8 +25,13 @@ public final class AbsentDiversitySegment implements DiversitySegment {
     }
 
     @Override
-    public NucleotideSequence getGermlineSequence() {
+    public NucleotideSequence getGermlineSequenceNt() {
         return NucleotideSequence.EMPTY;
+    }
+
+    @Override
+    public AminoAcidSequence getGermlineSequenceAa() {
+        return AminoAcidSequence.EMPTY;
     }
 
     @Override

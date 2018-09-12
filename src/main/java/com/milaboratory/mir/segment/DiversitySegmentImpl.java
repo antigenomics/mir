@@ -1,11 +1,13 @@
 package com.milaboratory.mir.segment;
 
+import com.milaboratory.core.sequence.AminoAcidSequence;
 import com.milaboratory.core.sequence.NucleotideSequence;
 import com.milaboratory.mir.SequenceUtils;
 
 public class DiversitySegmentImpl implements DiversitySegment {
     private final String id;
     private final NucleotideSequence cdr3Part, cdr3PartWithP;
+    private final AminoAcidSequence cdr3PartAa;
     private final boolean majorAllele;
 
     public DiversitySegmentImpl(String id,
@@ -13,6 +15,7 @@ public class DiversitySegmentImpl implements DiversitySegment {
                                 boolean majorAllele) {
         this.id = id;
         this.cdr3Part = cdr3Part;
+        this.cdr3PartAa = AminoAcidSequence.translateFromLeft(cdr3Part);
         this.majorAllele = majorAllele;
         NucleotideSequence rc = cdr3Part.getReverseComplement();
         this.cdr3PartWithP = SequenceUtils.getReverse(rc).concatenate(cdr3Part.concatenate(rc));
@@ -52,8 +55,13 @@ public class DiversitySegmentImpl implements DiversitySegment {
 
 
     @Override
-    public NucleotideSequence getGermlineSequence() {
+    public NucleotideSequence getGermlineSequenceNt() {
         return cdr3Part;
+    }
+
+    @Override
+    public AminoAcidSequence getGermlineSequenceAa() {
+        return cdr3PartAa;
     }
 
     @Override

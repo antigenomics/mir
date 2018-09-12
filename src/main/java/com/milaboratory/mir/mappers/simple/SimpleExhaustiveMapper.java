@@ -1,7 +1,6 @@
 package com.milaboratory.mir.mappers.simple;
 
 import com.milaboratory.core.alignment.Aligner;
-import com.milaboratory.core.alignment.Alignment;
 import com.milaboratory.core.alignment.AlignmentScoring;
 import com.milaboratory.core.sequence.Sequence;
 import com.milaboratory.mir.mappers.Hit;

@@ -1,15 +1,18 @@
 package com.milaboratory.mir.segment;
 
+import com.milaboratory.core.sequence.AminoAcidSequence;
 import com.milaboratory.core.sequence.NucleotideSequence;
 
 public class ConstantSegmentImpl implements ConstantSegment {
     private final String id;
-    private final NucleotideSequence sequence;
+    private final NucleotideSequence germlineSequenceNt;
+    private final AminoAcidSequence germlineSequenceAa;
     private final boolean majorAllele;
 
-    public ConstantSegmentImpl(String id, NucleotideSequence sequence, boolean majorAllele) {
+    public ConstantSegmentImpl(String id, NucleotideSequence germlineSequenceNt, boolean majorAllele) {
         this.id = id;
-        this.sequence = sequence;
+        this.germlineSequenceNt = germlineSequenceNt;
+        this.germlineSequenceAa = AminoAcidSequence.translateFromLeft(germlineSequenceNt);
         this.majorAllele = majorAllele;
     }
 
@@ -29,8 +32,13 @@ public class ConstantSegmentImpl implements ConstantSegment {
     }
 
     @Override
-    public NucleotideSequence getGermlineSequence() {
-        return sequence;
+    public NucleotideSequence getGermlineSequenceNt() {
+        return germlineSequenceNt;
+    }
+
+    @Override
+    public AminoAcidSequence getGermlineSequenceAa() {
+        return germlineSequenceAa;
     }
 
     @Override

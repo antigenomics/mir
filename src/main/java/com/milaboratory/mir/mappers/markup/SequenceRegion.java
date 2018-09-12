@@ -1,10 +1,11 @@
 package com.milaboratory.mir.mappers.markup;
 
+import com.milaboratory.core.Range;
 import com.milaboratory.core.sequence.*;
 
 import java.util.Objects;
 
-public class SequenceRegion<S extends Sequence<S>, E extends Enum<E>>
+public final class SequenceRegion<S extends Sequence<S>, E extends Enum<E>>
         implements Comparable<SequenceRegion<S, E>> {
     public static <S extends Sequence<S>, E extends Enum<E>> SequenceRegion<S, E> empty(E regionType,
                                                                                         Alphabet<S> alphabet,
@@ -15,6 +16,10 @@ public class SequenceRegion<S extends Sequence<S>, E extends Enum<E>>
     private final E regionType;
     private final S sequence;
     private final int start, end;
+
+    public SequenceRegion(E regionType, S sequence, Range range) {
+        this(regionType, sequence, range.getFrom(), range.getTo());
+    }
 
     public SequenceRegion(E regionType, S sequence,
                           int start, int end) {
@@ -52,6 +57,10 @@ public class SequenceRegion<S extends Sequence<S>, E extends Enum<E>>
 
     public boolean isEmpty() {
         return sequence.size() == 0;
+    }
+
+    public Range getRange() {
+        return new Range(start, end);
     }
 
     @Override

@@ -6,7 +6,7 @@ import java.util.Arrays;
 import java.util.EnumMap;
 import java.util.Objects;
 
-public class ArrayBasedSequenceRegionMarkup<S extends Sequence<S>, E extends Enum<E>>
+public final class ArrayBasedSequenceRegionMarkup<S extends Sequence<S>, E extends Enum<E>>
         extends SequenceRegionMarkup<S, E> {
     private final int[] markup;
 

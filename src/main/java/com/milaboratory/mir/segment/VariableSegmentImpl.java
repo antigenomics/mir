@@ -11,29 +11,31 @@ import com.milaboratory.mir.structure.AntigenReceptorRegionType;
 
 public class VariableSegmentImpl implements VariableSegment {
     private final String id;
-    private final NucleotideSequence germline,
-            cdr3Part, cdr3PartWithP;
+    private final NucleotideSequence germlineNt, cdr3Part, cdr3PartWithP;
+    private final AminoAcidSequence germlineAa;
     private final int referencePoint;
     private final PrecomputedSequenceRegionMarkup<NucleotideSequence, AntigenReceptorRegionType> regionMarkupNt;
     private final PrecomputedSequenceRegionMarkup<AminoAcidSequence, AntigenReceptorRegionType> regionMarkupAa;
     private final boolean majorAllele;
 
     public VariableSegmentImpl(String id,
-                               NucleotideSequence germline,
+                               NucleotideSequence germlineNt,
                                int cdr1Start, int cdr1End, int cdr2Start, int cdr2End, int referencePoint,
                                boolean majorAllele) {
         this.id = id;
-        this.germline = germline;
+        this.germlineNt = germlineNt;
         this.referencePoint = referencePoint;
         this.majorAllele = majorAllele;
         int cdr3Start = referencePoint - 3; // V reference point = 0-based coord of point directly after Cys codon
-        this.cdr3Part = germline.getRange(cdr3Start, germline.size());
+        int offset = germlineNt.size() % 3;
+        this.germlineAa = AminoAcidSequence.translateFromLeft(germlineNt.getRange(0, germlineNt.size() - offset));
+        this.cdr3Part = germlineNt.getRange(cdr3Start, germlineNt.size());
         this.cdr3PartWithP = cdr3Part.concatenate(cdr3Part.getReverseComplement());
 
         this.regionMarkupNt = new ArrayBasedSequenceRegionMarkup<>(
-                germline,
+                germlineNt,
                 new int[]{0, cdr1Start, cdr1End, cdr2Start, cdr2End, cdr3Start, // fr1-cdr3
-                        germline.size(), germline.size()}, // fr4 missing
+                        germlineNt.size(), germlineNt.size()}, // fr4 missing
                 AntigenReceptorRegionType.class
         ).asPrecomputed();
         this.regionMarkupAa = SequenceRegionMarkupUtils.translate(regionMarkupNt,
@@ -67,8 +69,13 @@ public class VariableSegmentImpl implements VariableSegment {
     }
 
     @Override
-    public NucleotideSequence getGermlineSequence() {
-        return germline;
+    public NucleotideSequence getGermlineSequenceNt() {
+        return germlineNt;
+    }
+
+    @Override
+    public AminoAcidSequence getGermlineSequenceAa() {
+        return germlineAa;
     }
 
     @Override

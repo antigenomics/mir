@@ -1,5 +1,6 @@
 package com.milaboratory.mir.segment;
 
+import com.milaboratory.core.sequence.AminoAcidSequence;
 import com.milaboratory.core.sequence.NucleotideSequence;
 
 public class MissingConstantSegment implements ConstantSegment {
@@ -24,7 +25,12 @@ public class MissingConstantSegment implements ConstantSegment {
     }
 
     @Override
-    public NucleotideSequence getGermlineSequence() {
+    public NucleotideSequence getGermlineSequenceNt() {
         return NucleotideSequence.EMPTY;
+    }
+
+    @Override
+    public AminoAcidSequence getGermlineSequenceAa() {
+        return AminoAcidSequence.EMPTY;
     }
 }

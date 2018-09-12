@@ -7,7 +7,7 @@ import java.util.Collection;
 import java.util.EnumMap;
 import java.util.Objects;
 
-public class PrecomputedSequenceRegionMarkup<S extends Sequence<S>, E extends Enum<E>>
+public final class PrecomputedSequenceRegionMarkup<S extends Sequence<S>, E extends Enum<E>>
         extends SequenceRegionMarkup<S, E> {
     private final EnumMap<E, SequenceRegion<S, E>> regionMap;
 

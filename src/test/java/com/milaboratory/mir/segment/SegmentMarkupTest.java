@@ -44,7 +44,7 @@ public class SegmentMarkupTest {
 
         Assert.assertEquals(
                 SequenceRegion.empty(AntigenReceptorRegionType.FR4, NucleotideSequence.ALPHABET,
-                        v.getGermlineSequence().size()),
+                        v.getGermlineSequenceNt().size()),
                 v.getRegion(SegmentRegionType.FR4NT)
         );
 
@@ -76,7 +76,7 @@ public class SegmentMarkupTest {
         Assert.assertEquals(
                 SequenceRegion.empty(AntigenReceptorRegionType.FR4,
                         AminoAcidSequence.ALPHABET,
-                        v.getGermlineSequence().size() / 3),
+                        v.getGermlineSequenceNt().size() / 3),
                 v.getRegion(SegmentRegionType.FR4AA)
         );
     }

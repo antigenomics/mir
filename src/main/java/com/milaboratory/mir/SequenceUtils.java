@@ -1,13 +1,30 @@
 package com.milaboratory.mir;
 
+import com.milaboratory.core.Range;
 import com.milaboratory.core.sequence.AminoAcidSequence;
-import com.milaboratory.core.sequence.GeneticCode;
 import com.milaboratory.core.sequence.NucleotideSequence;
 import com.milaboratory.core.sequence.Sequence;
 
 public final class SequenceUtils {
     private SequenceUtils() {
 
+    }
+
+    // TODO: can be moved to milib
+    public static Range stickToBoundaries(Range range, Range parentRange) {
+        return new Range(stickToBoundaries(range.getFrom(), parentRange),
+                stickToBoundaries(range.getTo(), parentRange));
+    }
+
+    // TODO: can be moved to milib
+    public static Range stickToBoundaries(int from, int to, Range parentRange) {
+        return new Range(stickToBoundaries(from, parentRange),
+                stickToBoundaries(to, parentRange));
+    }
+
+    // TODO: can be moved to milib
+    public static int stickToBoundaries(int pos, Range parentRange) {
+        return Math.max(Math.min(pos, parentRange.getTo()), parentRange.getFrom());
     }
 
     public static <S extends Sequence<S>> S getSequenceRangeSafe(S seq, int from, int to) {

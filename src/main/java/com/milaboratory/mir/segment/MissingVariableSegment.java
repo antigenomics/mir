@@ -28,8 +28,13 @@ public class MissingVariableSegment implements VariableSegment {
     }
 
     @Override
-    public NucleotideSequence getGermlineSequence() {
+    public NucleotideSequence getGermlineSequenceNt() {
         return NucleotideSequence.EMPTY;
+    }
+
+    @Override
+    public AminoAcidSequence getGermlineSequenceAa() {
+        return AminoAcidSequence.EMPTY;
     }
 
     @Override
