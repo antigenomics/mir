@@ -1,11 +1,19 @@
 package com.milaboratory.mir.segment;
 
+import com.milaboratory.core.sequence.AminoAcidSequence;
 import com.milaboratory.core.sequence.NucleotideSequence;
 import com.milaboratory.mir.SequenceUtils;
+import com.milaboratory.mir.mappers.markup.ArrayBasedSequenceRegionMarkup;
+import com.milaboratory.mir.mappers.markup.PrecomputedSequenceRegionMarkup;
+import com.milaboratory.mir.mappers.markup.SequenceRegionMarkup;
+import com.milaboratory.mir.mappers.markup.SequenceRegionMarkupUtils;
+import com.milaboratory.mir.structure.AntigenReceptorRegionType;
 
 public class JoiningSegmentImpl implements JoiningSegment {
     private final String id;
     private final NucleotideSequence germline, cdr3Part, cdr3PartWithP;
+    private final PrecomputedSequenceRegionMarkup<NucleotideSequence, AntigenReceptorRegionType> regionMarkupNt;
+    private final PrecomputedSequenceRegionMarkup<AminoAcidSequence, AntigenReceptorRegionType> regionMarkupAa;
     private final int referencePoint;
     private final boolean majorAllele;
 
@@ -20,6 +28,14 @@ public class JoiningSegmentImpl implements JoiningSegment {
                 referencePoint + 4); // J reference point is the 0-base coordinate of first base before Phe/Trp
         this.cdr3PartWithP = cdr3Part.getReverseComplement().concatenate(cdr3Part);
         this.majorAllele = majorAllele;
+
+        this.regionMarkupNt = new ArrayBasedSequenceRegionMarkup<>(
+                germline,
+                new int[]{-1, referencePoint, germline.size()}, // mark start as incomplete
+                AntigenReceptorRegionType.class
+        ).asPrecomputed();
+        this.regionMarkupAa = SequenceRegionMarkupUtils.translate(regionMarkupNt,
+                true); // trim 5' in CDR3
     }
 
     @Override
@@ -55,12 +71,22 @@ public class JoiningSegmentImpl implements JoiningSegment {
     }
 
     @Override
-    public NucleotideSequence getFullGermline() {
+    public NucleotideSequence getGermlineSequence() {
         return germline;
     }
 
     public int getReferencePoint() {
         return referencePoint;
+    }
+
+    @Override
+    public SequenceRegionMarkup<AminoAcidSequence, AntigenReceptorRegionType> getRegionMarkupAa() {
+        return regionMarkupAa;
+    }
+
+    @Override
+    public SequenceRegionMarkup<NucleotideSequence, AntigenReceptorRegionType> getRegionMarkupNt() {
+        return regionMarkupNt;
     }
 
     @Override

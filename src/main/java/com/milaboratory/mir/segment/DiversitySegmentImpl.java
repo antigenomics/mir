@@ -52,7 +52,7 @@ public class DiversitySegmentImpl implements DiversitySegment {
 
 
     @Override
-    public NucleotideSequence getFullGermline() {
+    public NucleotideSequence getGermlineSequence() {
         return cdr3Part;
     }
 

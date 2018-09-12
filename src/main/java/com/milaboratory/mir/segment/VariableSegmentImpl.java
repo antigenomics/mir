@@ -1,13 +1,21 @@
 package com.milaboratory.mir.segment;
 
+import com.milaboratory.core.sequence.AminoAcidSequence;
 import com.milaboratory.core.sequence.NucleotideSequence;
 import com.milaboratory.mir.SequenceUtils;
+import com.milaboratory.mir.mappers.markup.ArrayBasedSequenceRegionMarkup;
+import com.milaboratory.mir.mappers.markup.PrecomputedSequenceRegionMarkup;
+import com.milaboratory.mir.mappers.markup.SequenceRegionMarkup;
+import com.milaboratory.mir.mappers.markup.SequenceRegionMarkupUtils;
+import com.milaboratory.mir.structure.AntigenReceptorRegionType;
 
 public class VariableSegmentImpl implements VariableSegment {
     private final String id;
     private final NucleotideSequence germline,
             cdr3Part, cdr3PartWithP;
-    private final int cdr1Start, cdr1End, cdr2Start, cdr2End, referencePoint;
+    private final int referencePoint;
+    private final PrecomputedSequenceRegionMarkup<NucleotideSequence, AntigenReceptorRegionType> regionMarkupNt;
+    private final PrecomputedSequenceRegionMarkup<AminoAcidSequence, AntigenReceptorRegionType> regionMarkupAa;
     private final boolean majorAllele;
 
     // todo: store cdr1-2 nt&aa
@@ -18,16 +26,20 @@ public class VariableSegmentImpl implements VariableSegment {
                                boolean majorAllele) {
         this.id = id;
         this.germline = germline;
-        this.cdr1Start = cdr1Start;
-        this.cdr1End = cdr1End;
-        this.cdr2Start = cdr2Start;
-        this.cdr2End = cdr2End;
         this.referencePoint = referencePoint;
         this.majorAllele = majorAllele;
 
         this.cdr3Part = germline.getRange(referencePoint - 3, // V reference point = 0-based coord of point directly after Cys codon
                 germline.size());
         this.cdr3PartWithP = cdr3Part.concatenate(cdr3Part.getReverseComplement());
+
+        this.regionMarkupNt = new ArrayBasedSequenceRegionMarkup<>(
+                germline,
+                new int[]{0, cdr1Start, cdr1End, cdr2Start, cdr2End, referencePoint, -1}, // mark end as incomplete
+                AntigenReceptorRegionType.class
+        ).asPrecomputed();
+        this.regionMarkupAa = SequenceRegionMarkupUtils.translate(regionMarkupNt,
+                false); // trim 3' in CDR3
     }
 
     @Override
@@ -57,28 +69,23 @@ public class VariableSegmentImpl implements VariableSegment {
     }
 
     @Override
-    public NucleotideSequence getFullGermline() {
+    public NucleotideSequence getGermlineSequence() {
         return germline;
     }
 
-    public int getCdr1Start() {
-        return cdr1Start;
-    }
-
-    public int getCdr1End() {
-        return cdr1End;
-    }
-
-    public int getCdr2Start() {
-        return cdr2Start;
-    }
-
-    public int getCdr2End() {
-        return cdr2End;
-    }
-
+    @Override
     public int getReferencePoint() {
         return referencePoint;
+    }
+
+    @Override
+    public SequenceRegionMarkup<AminoAcidSequence, AntigenReceptorRegionType> getRegionMarkupAa() {
+        return regionMarkupAa;
+    }
+
+    @Override
+    public SequenceRegionMarkup<NucleotideSequence, AntigenReceptorRegionType> getRegionMarkupNt() {
+        return regionMarkupNt;
     }
 
     @Override

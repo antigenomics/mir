@@ -4,4 +4,6 @@ public interface AntigenReceptor {
     AntigenReceptorChain getFirstChain();
 
     AntigenReceptorChain getSecondChain();
+
+    AntigenReceptorType getAntigenReceptorType();
 }

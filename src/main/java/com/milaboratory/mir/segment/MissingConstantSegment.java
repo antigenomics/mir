@@ -24,7 +24,7 @@ public class MissingConstantSegment implements ConstantSegment {
     }
 
     @Override
-    public NucleotideSequence getSequence() {
+    public NucleotideSequence getGermlineSequence() {
         return NucleotideSequence.EMPTY;
     }
 }

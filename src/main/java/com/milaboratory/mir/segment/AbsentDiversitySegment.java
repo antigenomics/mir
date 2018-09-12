@@ -24,7 +24,7 @@ public final class AbsentDiversitySegment implements DiversitySegment {
     }
 
     @Override
-    public NucleotideSequence getFullGermline() {
+    public NucleotideSequence getGermlineSequence() {
         return NucleotideSequence.EMPTY;
     }
 

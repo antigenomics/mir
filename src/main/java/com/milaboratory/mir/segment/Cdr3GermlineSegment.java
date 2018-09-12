@@ -6,6 +6,4 @@ public interface Cdr3GermlineSegment extends Segment {
     NucleotideSequence getCdr3Part();
 
     NucleotideSequence getCdr3PartWithP();
-
-    NucleotideSequence getFullGermline();
 }

@@ -1,7 +1,6 @@
 package com.milaboratory.mir.mappers.markup;
 
-import com.milaboratory.core.sequence.Alphabet;
-import com.milaboratory.core.sequence.Sequence;
+import com.milaboratory.core.sequence.*;
 
 import java.util.Objects;
 
@@ -19,6 +18,9 @@ public class SequenceRegion<S extends Sequence<S>, E extends Enum<E>> {
     public SequenceRegion(E regionType, S sequence,
                           int start, int end,
                           boolean incomplete) {
+        if (sequence.size() != end - start) {
+            throw new IllegalArgumentException("Region boundaries do not match sequence length");
+        }
         this.start = start;
         this.end = end;
         this.regionType = regionType;
@@ -32,6 +34,10 @@ public class SequenceRegion<S extends Sequence<S>, E extends Enum<E>> {
 
     public int getEnd() {
         return end;
+    }
+
+    public int getSize() {
+        return sequence.size();
     }
 
     public E getRegionType() {

@@ -24,7 +24,7 @@ public class MissingJoiningSegment implements JoiningSegment {
     }
 
     @Override
-    public NucleotideSequence getFullGermline() {
+    public NucleotideSequence getGermlineSequence() {
         return NucleotideSequence.EMPTY;
     }
 
