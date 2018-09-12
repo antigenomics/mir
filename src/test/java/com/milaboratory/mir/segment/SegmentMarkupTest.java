@@ -43,7 +43,8 @@ public class SegmentMarkupTest {
         );
 
         Assert.assertEquals(
-                SequenceRegion.empty(AntigenReceptorRegionType.FR4, NucleotideSequence.ALPHABET),
+                SequenceRegion.empty(AntigenReceptorRegionType.FR4, NucleotideSequence.ALPHABET,
+                        v.getGermlineSequence().size()),
                 v.getRegion(SegmentRegionType.FR4NT)
         );
 
@@ -73,7 +74,9 @@ public class SegmentMarkupTest {
         );
 
         Assert.assertEquals(
-                SequenceRegion.empty(AntigenReceptorRegionType.FR4, AminoAcidSequence.ALPHABET),
+                SequenceRegion.empty(AntigenReceptorRegionType.FR4,
+                        AminoAcidSequence.ALPHABET,
+                        v.getGermlineSequence().size() / 3),
                 v.getRegion(SegmentRegionType.FR4AA)
         );
     }
@@ -85,23 +88,23 @@ public class SegmentMarkupTest {
                 .getJ("TRAJ50*01");
 
         Assert.assertEquals(
-                SequenceRegion.empty(AntigenReceptorRegionType.FR1, NucleotideSequence.ALPHABET),
+                SequenceRegion.empty(AntigenReceptorRegionType.FR1, NucleotideSequence.ALPHABET, 0),
                 j.getRegion(SegmentRegionType.FR1NT)
         );
         Assert.assertEquals(
-                SequenceRegion.empty(AntigenReceptorRegionType.CDR1, NucleotideSequence.ALPHABET),
+                SequenceRegion.empty(AntigenReceptorRegionType.CDR1, NucleotideSequence.ALPHABET, 0),
                 j.getRegion(SegmentRegionType.CDR1NT)
         );
         Assert.assertEquals(
-                SequenceRegion.empty(AntigenReceptorRegionType.FR2, NucleotideSequence.ALPHABET),
+                SequenceRegion.empty(AntigenReceptorRegionType.FR2, NucleotideSequence.ALPHABET, 0),
                 j.getRegion(SegmentRegionType.FR2NT)
         );
         Assert.assertEquals(
-                SequenceRegion.empty(AntigenReceptorRegionType.CDR2, NucleotideSequence.ALPHABET),
+                SequenceRegion.empty(AntigenReceptorRegionType.CDR2, NucleotideSequence.ALPHABET, 0),
                 j.getRegion(SegmentRegionType.CDR2NT)
         );
         Assert.assertEquals(
-                SequenceRegion.empty(AntigenReceptorRegionType.FR3, NucleotideSequence.ALPHABET),
+                SequenceRegion.empty(AntigenReceptorRegionType.FR3, NucleotideSequence.ALPHABET, 0),
                 j.getRegion(SegmentRegionType.FR3NT)
         );
         matchSequence(
@@ -114,23 +117,23 @@ public class SegmentMarkupTest {
         );
 
         Assert.assertEquals(
-                SequenceRegion.empty(AntigenReceptorRegionType.FR1, AminoAcidSequence.ALPHABET),
+                SequenceRegion.empty(AntigenReceptorRegionType.FR1, AminoAcidSequence.ALPHABET, 0),
                 j.getRegion(SegmentRegionType.FR1AA)
         );
         Assert.assertEquals(
-                SequenceRegion.empty(AntigenReceptorRegionType.CDR1, AminoAcidSequence.ALPHABET),
+                SequenceRegion.empty(AntigenReceptorRegionType.CDR1, AminoAcidSequence.ALPHABET, 0),
                 j.getRegion(SegmentRegionType.CDR1AA)
         );
         Assert.assertEquals(
-                SequenceRegion.empty(AntigenReceptorRegionType.FR2, AminoAcidSequence.ALPHABET),
+                SequenceRegion.empty(AntigenReceptorRegionType.FR2, AminoAcidSequence.ALPHABET, 0),
                 j.getRegion(SegmentRegionType.FR2AA)
         );
         Assert.assertEquals(
-                SequenceRegion.empty(AntigenReceptorRegionType.CDR2, AminoAcidSequence.ALPHABET),
+                SequenceRegion.empty(AntigenReceptorRegionType.CDR2, AminoAcidSequence.ALPHABET, 0),
                 j.getRegion(SegmentRegionType.CDR2AA)
         );
         Assert.assertEquals(
-                SequenceRegion.empty(AntigenReceptorRegionType.FR3, AminoAcidSequence.ALPHABET),
+                SequenceRegion.empty(AntigenReceptorRegionType.FR3, AminoAcidSequence.ALPHABET, 0),
                 j.getRegion(SegmentRegionType.FR3AA)
         );
         matchSequence(
@@ -142,7 +145,6 @@ public class SegmentMarkupTest {
                 j.getRegion(SegmentRegionType.FR4AA)
         );
     }
-
 
 
     private static void matchSequence(String expected, SequenceRegion sequenceRegion) {

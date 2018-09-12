@@ -13,8 +13,8 @@ public class HierarchicalModelFormulaTest {
         Assert.assertEquals("P(J|V)P(V)P(D|V,J)",
                 HierarchicalModelFormula.fromString("P(D|V,J) P(J |V) P( V )").toString());
 
-        Assert.assertEquals(new HashSet<>(Collections.singletonList("V")),
-                HierarchicalModelFormula.fromString("P(D|V,J) P(J |V) P( V )").getParentVariables("J"));
+        Assert.assertArrayEquals(new String[]{"V"},
+                HierarchicalModelFormula.fromString("P(D|V,J) P(J |V) P( V )").getParentVariables("J").toArray());
     }
 
 }

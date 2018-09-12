@@ -72,7 +72,10 @@ final class MigecSegmentLibraryParser {
                             int referencePoint = Integer.parseInt(splitLine[H.refPointColIndex]);
 
                             VariableSegment variableSegment = new VariableSegmentImpl(
-                                    id, seq, cdr1Start, cdr1End, cdr2Start, cdr2End, referencePoint, majorAllele
+                                    id, seq,
+                                    Math.max(0, cdr1Start), Math.max(0, cdr1End),
+                                    Math.max(0, cdr2Start), Math.max(0, cdr2End),
+                                    referencePoint, majorAllele
                             );
                             variableSegmentMap.put(id, variableSegment);
 
@@ -80,7 +83,10 @@ final class MigecSegmentLibraryParser {
                                 id = id.replaceAll("/DV", "DV");
                                 majorAlleleAliases.put(id, id.split("\\*")[0] + "*01");
                                 variableSegment = new VariableSegmentImpl(
-                                        id, seq, cdr1Start, cdr1End, cdr2Start, cdr2End, referencePoint, majorAllele
+                                        id, seq,
+                                        Math.max(0, cdr1Start), Math.max(0, cdr1End),
+                                        Math.max(0, cdr2Start), Math.max(0, cdr2End),
+                                        referencePoint, majorAllele
                                 );
                                 variableSegmentMap.put(id, variableSegment);
                             }

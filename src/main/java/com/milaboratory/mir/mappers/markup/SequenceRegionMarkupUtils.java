@@ -3,8 +3,8 @@ package com.milaboratory.mir.mappers.markup;
 import com.milaboratory.core.sequence.AminoAcidSequence;
 import com.milaboratory.core.sequence.NucleotideSequence;
 import com.milaboratory.mir.SequenceUtils;
+import com.milaboratory.mir.structure.AntigenReceptorRegionType;
 
-import java.util.Collection;
 import java.util.EnumMap;
 
 public final class SequenceRegionMarkupUtils {
@@ -19,9 +19,10 @@ public final class SequenceRegionMarkupUtils {
                 region.getStart(), region.getEnd());
 
         return result.isEmpty() ?
-                SequenceRegion.empty(region.getRegionType(), AminoAcidSequence.ALPHABET) :
+                SequenceRegion.empty(region.getRegionType(), AminoAcidSequence.ALPHABET,
+                        result.getStart()) :
                 new SequenceRegion<>(region.getRegionType(), result.getSequence(),
-                        result.getStart(), result.getEnd(), region.isIncomplete());
+                        result.getStart(), result.getEnd());
     }
 
     public static <E extends Enum<E>> PrecomputedSequenceRegionMarkup<AminoAcidSequence, E> translate(
@@ -30,10 +31,9 @@ public final class SequenceRegionMarkupUtils {
         var regionMap = new EnumMap<E, SequenceRegion<AminoAcidSequence, E>>(regionMarkup.regionTypeClass);
         var regions = regionMarkup.getAllRegions().values();
 
-        int i = regions.size() > 1 ? 0 : (trimFivePrime ? -1 : regions.size());
         for (SequenceRegion<NucleotideSequence, E> region : regions) {
             regionMap.put(region.getRegionType(), translate(region,
-                    ++i < regions.size(),
+                    regions.size() == 1 ? trimFivePrime : region.getStart() == 0,
                     regionMarkup.fullSequence));
         }
 

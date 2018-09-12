@@ -17,7 +17,7 @@ public class PrecomputedSequenceRegionMarkup<S extends Sequence<S>, E extends En
         S fullSequence = alphabet.getEmptySequence();
         var regionMap = new EnumMap<E, SequenceRegion<S, E>>(regionTypeClass);
         for (E regionType : regionTypeClass.getEnumConstants()) {
-            regionMap.put(regionType, SequenceRegion.empty(regionType, alphabet));
+            regionMap.put(regionType, SequenceRegion.empty(regionType, alphabet, 0));
         }
         return new PrecomputedSequenceRegionMarkup<>(fullSequence,
                 regionMap, regionTypeClass);

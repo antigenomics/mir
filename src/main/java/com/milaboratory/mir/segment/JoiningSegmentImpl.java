@@ -31,13 +31,8 @@ public class JoiningSegmentImpl implements JoiningSegment {
 
         this.regionMarkupNt = new ArrayBasedSequenceRegionMarkup<>(
                 germline,
-                new int[]{-1, //fr1
-                        -1, //cdr1
-                        -1, //fr2
-                        -1, //cdr2
-                        -1, //fr3
-                        -1, //cdr3
-                        cdr3End, germline.size()}, // mark start as incomplete
+                new int[]{0, 0, 0, 0, 0, // fr1 - fr3 missing
+                        0, cdr3End, germline.size()}, // cdr3-fr4 markup
                 AntigenReceptorRegionType.class
         ).asPrecomputed();
         this.regionMarkupAa = SequenceRegionMarkupUtils.translate(regionMarkupNt,

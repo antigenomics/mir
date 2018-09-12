@@ -40,16 +40,16 @@ public final class SequenceUtils {
             end -= offset;
         }
 
-        return start == end ? Translation.EMPTY :
-                new Translation(start / 3, end / 3,
+        int startAa = start / 3;
+
+        return start == end ? new Translation(startAa, startAa, AminoAcidSequence.EMPTY) :
+                new Translation(startAa, end / 3,
                         AminoAcidSequence.translate(sequence.getRange(start, end)));
     }
 
     public static final class Translation {
         private final int start, end;
         private final AminoAcidSequence sequence;
-
-        public static Translation EMPTY = new Translation(-1, -1, AminoAcidSequence.EMPTY);
 
         public Translation(int start, int end, AminoAcidSequence sequence) {
             this.start = start;

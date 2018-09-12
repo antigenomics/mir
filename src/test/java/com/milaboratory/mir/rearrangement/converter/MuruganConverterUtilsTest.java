@@ -17,7 +17,7 @@ public class MuruganConverterUtilsTest {
         var converter = MuruganConverterUtils.getConverter(mdl, segmLib);
         var rearrMdl = converter.getRearrangementModel();
 
-        long start = 0, end = 0;
+        long start, end;
 
         start = System.currentTimeMillis();
         for (int i = 0; i < 1000000; i++) {

@@ -18,8 +18,6 @@ public class VariableSegmentImpl implements VariableSegment {
     private final PrecomputedSequenceRegionMarkup<AminoAcidSequence, AntigenReceptorRegionType> regionMarkupAa;
     private final boolean majorAllele;
 
-    // todo: store cdr1-2 nt&aa
-
     public VariableSegmentImpl(String id,
                                NucleotideSequence germline,
                                int cdr1Start, int cdr1End, int cdr2Start, int cdr2End, int referencePoint,
@@ -34,7 +32,8 @@ public class VariableSegmentImpl implements VariableSegment {
 
         this.regionMarkupNt = new ArrayBasedSequenceRegionMarkup<>(
                 germline,
-                new int[]{0, cdr1Start, cdr1End, cdr2Start, cdr2End, cdr3Start, -1, -1}, // mark end as incomplete
+                new int[]{0, cdr1Start, cdr1End, cdr2Start, cdr2End, cdr3Start, // fr1-cdr3
+                        germline.size(), germline.size()}, // fr4 missing
                 AntigenReceptorRegionType.class
         ).asPrecomputed();
         this.regionMarkupAa = SequenceRegionMarkupUtils.translate(regionMarkupNt,

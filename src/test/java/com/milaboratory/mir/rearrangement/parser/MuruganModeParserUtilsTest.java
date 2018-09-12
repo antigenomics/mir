@@ -13,7 +13,7 @@ public class MuruganModeParserUtilsTest {
     public void getResourceStreamTest() throws IOException {
         getResourceStreamTest(Species.Human, Gene.TRB);
         getResourceStreamTest(Species.Human, Gene.TRA);
-        getResourceStreamTest(Species.Human, Gene.IGH);
+//        getResourceStreamTest(Species.Human, Gene.IGH);
         getResourceStreamTest(Species.Mouse, Gene.TRB);
     }
 
@@ -27,7 +27,7 @@ public class MuruganModeParserUtilsTest {
     public void loadFromResourceTest() throws IOException {
         MuruganModeParserUtils.getModelFromResources(Species.Human, Gene.TRB);
         MuruganModeParserUtils.getModelFromResources(Species.Human, Gene.TRA);
-        MuruganModeParserUtils.getModelFromResources(Species.Human, Gene.IGH);
+//        MuruganModeParserUtils.getModelFromResources(Species.Human, Gene.IGH);
         MuruganModeParserUtils.getModelFromResources(Species.Mouse, Gene.TRB);
     }
 }

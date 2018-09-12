@@ -7,22 +7,19 @@ import java.util.Objects;
 public class SequenceRegion<S extends Sequence<S>, E extends Enum<E>>
         implements Comparable<SequenceRegion<S, E>> {
     public static <S extends Sequence<S>, E extends Enum<E>> SequenceRegion<S, E> empty(E regionType,
-                                                                                        Alphabet<S> alphabet) {
-        return new SequenceRegion<>(regionType, alphabet.getEmptySequence(), -1, -1, true);
+                                                                                        Alphabet<S> alphabet,
+                                                                                        int position) {
+        return new SequenceRegion<>(regionType, alphabet.getEmptySequence(), position, position);
     }
 
     private final E regionType;
     private final S sequence;
     private final int start, end;
-    private final boolean incomplete;
 
     public SequenceRegion(E regionType, S sequence,
-                          int start, int end,
-                          boolean incomplete) {
-        if (start <= -1 || end <= -1) {
-            if (start + end != -2) {
-                throw new IllegalArgumentException("Negative start/end only allowed when start=end=-1.");
-            }
+                          int start, int end) {
+        if (start < 0 || start > end) {
+            throw new IllegalArgumentException("Bad start/end.");
         }
         if (sequence.size() != end - start) {
             throw new IllegalArgumentException("Region boundaries do not match sequence length");
@@ -31,7 +28,6 @@ public class SequenceRegion<S extends Sequence<S>, E extends Enum<E>>
         this.end = end;
         this.regionType = regionType;
         this.sequence = sequence;
-        this.incomplete = incomplete;
     }
 
     public int getStart() {
@@ -52,10 +48,6 @@ public class SequenceRegion<S extends Sequence<S>, E extends Enum<E>>
 
     public S getSequence() {
         return sequence;
-    }
-
-    public boolean isIncomplete() {
-        return incomplete;
     }
 
     public boolean isEmpty() {
@@ -80,7 +72,7 @@ public class SequenceRegion<S extends Sequence<S>, E extends Enum<E>>
 
     @Override
     public String toString() {
-        return regionType + "\t" + start + "\t" + end + "\t" + sequence + "\t" + incomplete;
+        return regionType + "\t" + start + "\t" + end + "\t" + sequence;
     }
 
     @Override
