@@ -1,6 +1,10 @@
 package com.milaboratory.mir.segment;
 
+import com.milaboratory.core.sequence.AminoAcidSequence;
 import com.milaboratory.core.sequence.NucleotideSequence;
+import com.milaboratory.mir.mappers.markup.PrecomputedSequenceRegionMarkup;
+import com.milaboratory.mir.mappers.markup.SequenceRegionMarkup;
+import com.milaboratory.mir.structure.AntigenReceptorRegionType;
 
 public class MissingVariableSegment implements VariableSegment {
     public static MissingVariableSegment INSTANCE = new MissingVariableSegment();
@@ -41,5 +45,20 @@ public class MissingVariableSegment implements VariableSegment {
     @Override
     public boolean isMajorAllele() {
         return true;
+    }
+
+    @Override
+    public int getReferencePoint() {
+        return -1;
+    }
+
+    @Override
+    public SequenceRegionMarkup<AminoAcidSequence, AntigenReceptorRegionType> getRegionMarkupAa() {
+        return PrecomputedSequenceRegionMarkup.empty(AminoAcidSequence.ALPHABET, AntigenReceptorRegionType.class);
+    }
+
+    @Override
+    public SequenceRegionMarkup<NucleotideSequence, AntigenReceptorRegionType> getRegionMarkupNt() {
+        return PrecomputedSequenceRegionMarkup.empty(NucleotideSequence.ALPHABET, AntigenReceptorRegionType.class);
     }
 }
