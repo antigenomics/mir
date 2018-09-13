@@ -13,65 +13,52 @@ public final class SequenceRegionMarkupUtils {
 
     }
 
-    public static <S extends Sequence<S>, E extends Enum<E>> PrecomputedSequenceRegionMarkup<S, E> realign(
-            PrecomputedSequenceRegionMarkup<S, E> queryRegionMarkup, S targetSequence, Alignment<S> alignment) {
-        if (!alignment.getSequence1().equals(queryRegionMarkup.getFullSequence())) {
-            throw new IllegalArgumentException("Sequence in region markup and alignment don't match");
+    public static <S extends Sequence<S>> int targetToQueryPosition(int pos, Alignment<S> alignment) {
+        if (pos <= alignment.getSequence1Range().getFrom()) {
+            return alignment.getSequence2Range().getFrom();
+        } else if (pos >= alignment.getSequence1Range().getTo()) {
+            return alignment.getSequence2Range().getTo();
+        } else {
+            int newPos = alignment.convertToSeq2Position(pos);
+            return newPos < 0 ? 2 - newPos : newPos;
         }
-        var regionMap = new EnumMap<E, SequenceRegion<S, E>>(queryRegionMarkup.regionTypeClass);
-        var regions = queryRegionMarkup.getAllRegions().values();
-
-        for (SequenceRegion<S, E> region : regions) {
-            regionMap.put(region.getRegionType(), realign(region, targetSequence, alignment));
-        }
-
-        return new PrecomputedSequenceRegionMarkup<>(
-                targetSequence,
-                regionMap,
-                queryRegionMarkup.getRegionTypeClass()
-        );
     }
 
-    public static <S extends Sequence<S>, E extends Enum<E>> SequenceRegion<S, E> realign(
-            SequenceRegion<S, E> queryRegion, S targetSequence, Alignment<S> alignment
+    public static <E extends Enum<E>> PrecomputedSequenceRegionMarkup<AminoAcidSequence, E>
+    translateWithAnchor(
+            PrecomputedSequenceRegionMarkup<NucleotideSequence, E> regionMarkup, int anchor
     ) {
-        var range = SequenceUtils.stickToBoundaries(
-                queryRegion.getStart(),
-                queryRegion.getEnd(),
-                alignment.getSequence1Range());
-
-        return new SequenceRegion<>(queryRegion.getRegionType(),
-                range.isEmpty() ? targetSequence.getAlphabet().getEmptySequence() : targetSequence.getRange(range),
-                alignment.convertToSeq2Range(range));
-    }
-
-    public static <E extends Enum<E>> SequenceRegion<AminoAcidSequence, E> translate(
-            SequenceRegion<NucleotideSequence, E> region, boolean trimFivePrime,
-            NucleotideSequence parent) {
-        var result = SequenceUtils.translateWithTrimming(parent, trimFivePrime,
-                region.getStart(), region.getEnd());
-
-        return result.isEmpty() ?
-                SequenceRegion.empty(region.getRegionType(), AminoAcidSequence.ALPHABET,
-                        result.getStart()) :
-                new SequenceRegion<>(region.getRegionType(), result.getSequence(),
-                        result.getStart(), result.getEnd());
-    }
-
-    public static <E extends Enum<E>> PrecomputedSequenceRegionMarkup<AminoAcidSequence, E> translate(
-            PrecomputedSequenceRegionMarkup<NucleotideSequence, E> regionMarkup, boolean trimFivePrime
-    ) {
-        var regionMap = new EnumMap<E, SequenceRegion<AminoAcidSequence, E>>(regionMarkup.regionTypeClass);
+        int offset = anchor % 3;
+        var sequence = regionMarkup.getFullSequence();
+        int size = ((sequence.size() - offset) / 3) * 3; // also trim incomplete codon at the end
+        var trimmedSequence = sequence.getRange(offset, offset + size);
         var regions = regionMarkup.getAllRegions().values();
-
+        var regionMap = new EnumMap<E, SequenceRegion<AminoAcidSequence, E>>(regionMarkup.regionTypeClass);
         for (SequenceRegion<NucleotideSequence, E> region : regions) {
-            regionMap.put(region.getRegionType(), translate(region,
-                    regions.size() == 1 ? trimFivePrime : region.getStart() == 0,
-                    regionMarkup.fullSequence));
-        }
+            int start = region.getStart() - offset;
+            if (start < 0) {
+                start = 0;
+            }
+            int end = region.getEnd() - offset;
+            if (end < 0) {
+                end = 0;
+            } else if (end > size) {
+                end = size;
+            }
+            start /= 3;
+            end /= 3;
 
+            regionMap.put(region.getRegionType(),
+                    start >= end ?
+                            SequenceRegion.empty(region.getRegionType(),
+                                    AminoAcidSequence.ALPHABET,
+                                    start) :
+                            new SequenceRegion<>(region.getRegionType(),
+                                    AminoAcidSequence.translateFromLeft(trimmedSequence.getRange(start * 3, end * 3)),
+                                    start, end));
+        }
         return new PrecomputedSequenceRegionMarkup<>(
-                SequenceUtils.translateWithTrimming(regionMarkup.getFullSequence(), trimFivePrime).getSequence(),
+                AminoAcidSequence.translateFromLeft(trimmedSequence),
                 regionMap,
                 regionMarkup.getRegionTypeClass()
         );

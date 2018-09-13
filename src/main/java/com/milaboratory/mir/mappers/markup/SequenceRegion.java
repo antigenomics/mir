@@ -7,6 +7,14 @@ import java.util.Objects;
 
 public final class SequenceRegion<S extends Sequence<S>, E extends Enum<E>>
         implements Comparable<SequenceRegion<S, E>> {
+    public static <S extends Sequence<S>, E extends Enum<E>> SequenceRegion<S, E> cutFrom(E regionType,
+                                                                                          S sequence,
+                                                                                          int start, int end) {
+        return new SequenceRegion<>(regionType,
+                start < end ? sequence.getRange(start, end) : sequence.getAlphabet().getEmptySequence(),
+                start, end);
+    }
+
     public static <S extends Sequence<S>, E extends Enum<E>> SequenceRegion<S, E> empty(E regionType,
                                                                                         Alphabet<S> alphabet,
                                                                                         int position) {
@@ -27,12 +35,29 @@ public final class SequenceRegion<S extends Sequence<S>, E extends Enum<E>>
             throw new IllegalArgumentException("Bad start/end.");
         }
         if (sequence.size() != end - start) {
-            throw new IllegalArgumentException("Region boundaries do not match sequence length");
+            throw new IllegalArgumentException("Region boundaries do not match sequence length: " +
+                    sequence.size() + " vs [" + start + "," + end + "]");
         }
         this.start = start;
         this.end = end;
         this.regionType = regionType;
         this.sequence = sequence;
+    }
+
+    public boolean touches(SequenceRegion other) {
+        return other.start == end || other.end == start;
+    }
+
+    public boolean overlaps(SequenceRegion other) {
+        return !(other.start >= end || start >= other.end);
+    }
+
+    public boolean before(SequenceRegion other) {
+        return end <= other.start;
+    }
+
+    public boolean tightBefore(SequenceRegion other) {
+        return end == other.start;
     }
 
     public int getStart() {
@@ -59,7 +84,7 @@ public final class SequenceRegion<S extends Sequence<S>, E extends Enum<E>>
         return sequence.size() == 0;
     }
 
-    public Range getRange() {
+    public Range asRange() {
         return new Range(start, end);
     }
 

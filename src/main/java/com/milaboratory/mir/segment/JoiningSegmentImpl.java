@@ -5,14 +5,12 @@ import com.milaboratory.core.sequence.NucleotideSequence;
 import com.milaboratory.mir.SequenceUtils;
 import com.milaboratory.mir.mappers.markup.ArrayBasedSequenceRegionMarkup;
 import com.milaboratory.mir.mappers.markup.PrecomputedSequenceRegionMarkup;
-import com.milaboratory.mir.mappers.markup.SequenceRegionMarkup;
 import com.milaboratory.mir.mappers.markup.SequenceRegionMarkupUtils;
 import com.milaboratory.mir.structure.AntigenReceptorRegionType;
 
 public class JoiningSegmentImpl implements JoiningSegment {
     private final String id;
     private final NucleotideSequence germlineNt, cdr3Part, cdr3PartWithP;
-    private final AminoAcidSequence germlineAa;
     private final PrecomputedSequenceRegionMarkup<NucleotideSequence, AntigenReceptorRegionType> regionMarkupNt;
     private final PrecomputedSequenceRegionMarkup<AminoAcidSequence, AntigenReceptorRegionType> regionMarkupAa;
     private final int referencePoint;
@@ -26,8 +24,6 @@ public class JoiningSegmentImpl implements JoiningSegment {
         this.germlineNt = germlineNt;
         this.referencePoint = referencePoint;
         int cdr3End = referencePoint + 4; // J reference point is the 0-base coordinate of first base before Phe/Trp
-        int offset = cdr3End % 3;
-        this.germlineAa = AminoAcidSequence.translateFromLeft(germlineNt.getRange(offset, germlineNt.size()));
         this.cdr3Part = germlineNt.getRange(0, cdr3End);
         this.cdr3PartWithP = cdr3Part.getReverseComplement().concatenate(cdr3Part);
         this.majorAllele = majorAllele;
@@ -38,8 +34,7 @@ public class JoiningSegmentImpl implements JoiningSegment {
                         0, cdr3End, germlineNt.size()}, // cdr3-fr4 markup
                 AntigenReceptorRegionType.class
         ).asPrecomputed();
-        this.regionMarkupAa = SequenceRegionMarkupUtils.translate(regionMarkupNt,
-                true); // trim 5' in CDR3
+        this.regionMarkupAa = SequenceRegionMarkupUtils.translateWithAnchor(regionMarkupNt, cdr3End);
     }
 
     @Override
@@ -81,7 +76,7 @@ public class JoiningSegmentImpl implements JoiningSegment {
 
     @Override
     public AminoAcidSequence getGermlineSequenceAa() {
-        return germlineAa;
+        return regionMarkupAa.getFullSequence();
     }
 
     public int getReferencePoint() {
@@ -89,12 +84,12 @@ public class JoiningSegmentImpl implements JoiningSegment {
     }
 
     @Override
-    public SequenceRegionMarkup<AminoAcidSequence, AntigenReceptorRegionType> getRegionMarkupAa() {
+    public PrecomputedSequenceRegionMarkup<AminoAcidSequence, AntigenReceptorRegionType> getRegionMarkupAa() {
         return regionMarkupAa;
     }
 
     @Override
-    public SequenceRegionMarkup<NucleotideSequence, AntigenReceptorRegionType> getRegionMarkupNt() {
+    public PrecomputedSequenceRegionMarkup<NucleotideSequence, AntigenReceptorRegionType> getRegionMarkupNt() {
         return regionMarkupNt;
     }
 

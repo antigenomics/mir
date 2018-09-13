@@ -7,18 +7,18 @@ import org.junit.Test;
 public class RandomMarkupTests {
     @Test
     public void createTest() {
-        MarkupGenerator.randomTest(x -> { }, 1000);
+        MarkupGenerator.randomTest(x -> { }, 10000);
     }
 
     @Test
     public void asPrecomputedTest1() {
-        MarkupGenerator.randomTest(ArrayBasedSequenceRegionMarkup::asPrecomputed, 1000);
+        MarkupGenerator.randomTest(ArrayBasedSequenceRegionMarkup::asPrecomputed, 10000);
     }
 
     @Test
     public void asPrecomputedTest2() {
         MarkupGenerator.randomTest(x -> {
             Assert.assertEquals(x, x.asPrecomputed().asArrayBased());
-        }, 1000);
+        }, 10000);
     }
 }

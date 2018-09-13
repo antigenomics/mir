@@ -5,14 +5,12 @@ import com.milaboratory.core.sequence.NucleotideSequence;
 import com.milaboratory.mir.SequenceUtils;
 import com.milaboratory.mir.mappers.markup.ArrayBasedSequenceRegionMarkup;
 import com.milaboratory.mir.mappers.markup.PrecomputedSequenceRegionMarkup;
-import com.milaboratory.mir.mappers.markup.SequenceRegionMarkup;
 import com.milaboratory.mir.mappers.markup.SequenceRegionMarkupUtils;
 import com.milaboratory.mir.structure.AntigenReceptorRegionType;
 
 public class VariableSegmentImpl implements VariableSegment {
     private final String id;
     private final NucleotideSequence germlineNt, cdr3Part, cdr3PartWithP;
-    private final AminoAcidSequence germlineAa;
     private final int referencePoint;
     private final PrecomputedSequenceRegionMarkup<NucleotideSequence, AntigenReceptorRegionType> regionMarkupNt;
     private final PrecomputedSequenceRegionMarkup<AminoAcidSequence, AntigenReceptorRegionType> regionMarkupAa;
@@ -27,8 +25,6 @@ public class VariableSegmentImpl implements VariableSegment {
         this.referencePoint = referencePoint;
         this.majorAllele = majorAllele;
         int cdr3Start = referencePoint - 3; // V reference point = 0-based coord of point directly after Cys codon
-        int offset = germlineNt.size() % 3;
-        this.germlineAa = AminoAcidSequence.translateFromLeft(germlineNt.getRange(0, germlineNt.size() - offset));
         this.cdr3Part = germlineNt.getRange(cdr3Start, germlineNt.size());
         this.cdr3PartWithP = cdr3Part.concatenate(cdr3Part.getReverseComplement());
 
@@ -38,8 +34,7 @@ public class VariableSegmentImpl implements VariableSegment {
                         germlineNt.size(), germlineNt.size()}, // fr4 missing
                 AntigenReceptorRegionType.class
         ).asPrecomputed();
-        this.regionMarkupAa = SequenceRegionMarkupUtils.translate(regionMarkupNt,
-                false); // trim 3' in CDR3
+        this.regionMarkupAa = SequenceRegionMarkupUtils.translateWithAnchor(regionMarkupNt, cdr3Start);
     }
 
     @Override
@@ -75,7 +70,7 @@ public class VariableSegmentImpl implements VariableSegment {
 
     @Override
     public AminoAcidSequence getGermlineSequenceAa() {
-        return germlineAa;
+        return regionMarkupAa.getFullSequence();
     }
 
     @Override
@@ -84,12 +79,12 @@ public class VariableSegmentImpl implements VariableSegment {
     }
 
     @Override
-    public SequenceRegionMarkup<AminoAcidSequence, AntigenReceptorRegionType> getRegionMarkupAa() {
+    public PrecomputedSequenceRegionMarkup<AminoAcidSequence, AntigenReceptorRegionType> getRegionMarkupAa() {
         return regionMarkupAa;
     }
 
     @Override
-    public SequenceRegionMarkup<NucleotideSequence, AntigenReceptorRegionType> getRegionMarkupNt() {
+    public PrecomputedSequenceRegionMarkup<NucleotideSequence, AntigenReceptorRegionType> getRegionMarkupNt() {
         return regionMarkupNt;
     }
 

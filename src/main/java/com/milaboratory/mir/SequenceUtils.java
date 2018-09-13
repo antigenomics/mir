@@ -4,6 +4,7 @@ import com.milaboratory.core.Range;
 import com.milaboratory.core.sequence.AminoAcidSequence;
 import com.milaboratory.core.sequence.NucleotideSequence;
 import com.milaboratory.core.sequence.Sequence;
+import com.milaboratory.mir.mappers.markup.PrecomputedSequenceRegionMarkup;
 
 public final class SequenceUtils {
     private SequenceUtils() {
@@ -41,11 +42,6 @@ public final class SequenceUtils {
             sb.append(seq.codeAt(i));
         }
         return sb.createAndDestroy();
-    }
-
-    public static Translation translateWithTrimming(NucleotideSequence sequence,
-                                                    boolean trimFivePrime) {
-        return translateWithTrimming(sequence, trimFivePrime, 0, sequence.size());
     }
 
     public static Translation translateWithTrimming(NucleotideSequence sequence,

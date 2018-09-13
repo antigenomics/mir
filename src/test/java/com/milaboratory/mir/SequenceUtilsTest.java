@@ -26,20 +26,4 @@ public class SequenceUtilsTest {
         Assert.assertEquals(new NucleotideSequence("A"), SequenceUtils.getReverse(new NucleotideSequence("A")));
         Assert.assertEquals(NucleotideSequence.EMPTY, SequenceUtils.getReverse(new NucleotideSequence("")));
     }
-
-    @Test
-    public void translateWithTrimming() {
-        System.out.println(SequenceUtils.translateWithTrimming(
-                new NucleotideSequence("GATGCTGAAATCACCCAGAGCCCAAGACACAAGATCACAGAGACAGGAAGGCAGGTGACCTTGGCGTGTCACCAGACT" +
-                        "TGGAACCACAACAATATGTTCTGGTATCGACAAGACCTGGGACATGGGCTGAGGCTGATCCATTACTCATATGGTGTT" +
-                        "CAAGACACTAACAAAGGAGAAGTCTCAGATGGCTACAGTGTCTCTAGATCAAACACAGAGGACCTCCCCCTCACTCTG" +
-                        "GAGTCTGCTGCCTCCTCCCAGACATCTGTATATTTCTGCGCCAGCAGTGAGTC"),
-                false, 273 - 3, 287
-        ).toString());
-
-        System.out.println(SequenceUtils.translateWithTrimming(
-                new NucleotideSequence("CTCCTATAATTCACCCCTCCACTTTGGGAATGGGACCAGGCTCACTGTGACAG"),
-                true, 0, 21+4
-        ).toString());
-    }
 }

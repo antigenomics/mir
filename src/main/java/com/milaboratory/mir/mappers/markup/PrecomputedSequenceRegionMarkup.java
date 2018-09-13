@@ -1,15 +1,16 @@
 package com.milaboratory.mir.mappers.markup;
 
+import com.milaboratory.core.alignment.Alignment;
 import com.milaboratory.core.sequence.Alphabet;
 import com.milaboratory.core.sequence.Sequence;
 
-import java.util.Collection;
 import java.util.EnumMap;
 import java.util.Objects;
 
 public final class PrecomputedSequenceRegionMarkup<S extends Sequence<S>, E extends Enum<E>>
-        extends SequenceRegionMarkup<S, E> {
+        extends SequenceRegionMarkup<S, E, PrecomputedSequenceRegionMarkup<S, E>> {
     private final EnumMap<E, SequenceRegion<S, E>> regionMap;
+    private final int start, end;
 
     public static <S extends Sequence<S>, E extends Enum<E>> PrecomputedSequenceRegionMarkup<S, E> empty(
             Alphabet<S> alphabet,
@@ -20,30 +21,36 @@ public final class PrecomputedSequenceRegionMarkup<S extends Sequence<S>, E exte
             regionMap.put(regionType, SequenceRegion.empty(regionType, alphabet, 0));
         }
         return new PrecomputedSequenceRegionMarkup<>(fullSequence,
-                regionMap, regionTypeClass);
+                regionMap, regionTypeClass, true);
     }
 
     public PrecomputedSequenceRegionMarkup(S fullSequence,
                                            EnumMap<E, SequenceRegion<S, E>> regionMap,
                                            Class<E> regionTypeClass) {
-        super(fullSequence, regionTypeClass);
-        this.regionMap = regionMap;
+        this(fullSequence, regionMap, regionTypeClass, false);
     }
 
-    public PrecomputedSequenceRegionMarkup(S fullSequence,
-                                           Collection<SequenceRegion<S, E>> regions,
-                                           Class<E> regionTypeClass) {
+    PrecomputedSequenceRegionMarkup(S fullSequence,
+                                    EnumMap<E, SequenceRegion<S, E>> regionMap,
+                                    Class<E> regionTypeClass,
+                                    boolean unsafe) {
         super(fullSequence, regionTypeClass);
-        this.regionMap = new EnumMap<>(regionTypeClass);
         if (regionMap.size() != regionTypeClass.getEnumConstants().length) {
-            throw new IllegalArgumentException("Region map doesn't contain all regions");
+            throw new IllegalArgumentException("Bad markup - wrong number of regions: " + regionMap);
         }
-        for (SequenceRegion<S, E> region : regions) {
-            if (regionMap.containsKey(region.getRegionType())) {
-                throw new IllegalArgumentException("Region map doesn't contain all regions");
+        this.regionMap = unsafe ? regionMap : new EnumMap<>(regionMap);
+        SequenceRegion<S, E> previous = null;
+        for (SequenceRegion<S, E> region : regionMap.values()) {
+            if (previous == null || previous.getEnd() == region.getStart()) {
+                previous = region;
+            } else {
+                throw new IllegalArgumentException("Regions not tightly before each other:\n" +
+                        previous + "\n" + region);
             }
-            regionMap.put(region.getRegionType(), region);
         }
+        E[] regionTypes = regionTypeClass.getEnumConstants();
+        this.start = regionMap.get(regionTypes[0]).getStart();
+        this.end = regionMap.get(regionTypes[regionTypes.length - 1]).getStart();
     }
 
     @Override
@@ -57,11 +64,40 @@ public final class PrecomputedSequenceRegionMarkup<S extends Sequence<S>, E exte
     }
 
     @Override
-    public ArrayBasedSequenceRegionMarkup<S, E> concatenate(SequenceRegionMarkup<S, E> other) {
-        // todo: maybe better impl
-        return asArrayBased().concatenate(other);
+    public <M2 extends SequenceRegionMarkup<S, E, M2>> PrecomputedSequenceRegionMarkup<S, E> concatenate(M2 other) {
+        // todo: better impl?
+        return asArrayBased().concatenate(other).asPrecomputed();
     }
 
+    @Override
+    public PrecomputedSequenceRegionMarkup<S, E> realign(S querySequence, Alignment<S> alignment) {
+        if (!Objects.equals(alignment.getSequence1(), fullSequence)) {
+            throw new IllegalArgumentException("Cannot realign - alignment was performed for another sequence");
+        }
+
+        var newRegionMap = new EnumMap<E, SequenceRegion<S, E>>(regionTypeClass);
+
+        for (SequenceRegion<S, E> region : regionMap.values()) {
+            int start = SequenceRegionMarkupUtils.targetToQueryPosition(region.getStart(), alignment),
+                    end = SequenceRegionMarkupUtils.targetToQueryPosition(region.getEnd(), alignment);
+            newRegionMap.put(region.getRegionType(),
+                    SequenceRegion.cutFrom(region.getRegionType(), querySequence, start, end));
+        }
+
+        return new PrecomputedSequenceRegionMarkup<>(querySequence, newRegionMap, regionTypeClass, true);
+    }
+
+    @Override
+    public int getStart() {
+        return start;
+    }
+
+    @Override
+    public int getEnd() {
+        return end;
+    }
+
+    @Override
     public ArrayBasedSequenceRegionMarkup<S, E> asArrayBased() {
         int n = regionTypeClass.getEnumConstants().length;
         int[] markup = new int[n + 1];
@@ -72,7 +108,12 @@ public final class PrecomputedSequenceRegionMarkup<S extends Sequence<S>, E exte
                 markup[i + 1] = sequenceRegion.getEnd();
             }
         }
-        return new ArrayBasedSequenceRegionMarkup<>(fullSequence, markup, regionTypeClass);
+        return new ArrayBasedSequenceRegionMarkup<>(fullSequence, markup, regionTypeClass, true);
+    }
+
+    @Override
+    public PrecomputedSequenceRegionMarkup<S, E> asPrecomputed() {
+        return this;
     }
 
     @Override
