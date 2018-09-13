@@ -4,25 +4,27 @@ import com.milaboratory.core.mutations.Mutations;
 import com.milaboratory.core.sequence.Alphabet;
 import com.milaboratory.core.sequence.Sequence;
 import com.milaboratory.core.tree.SequenceTreeMap;
+import com.milaboratory.mir.mappers.SequenceMapper;
 import com.milaboratory.mir.mappers.SequenceProvider;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-public final class StmSearcher<T, Q, S extends Sequence<S>> {
+public final class StmMapper<T, Q, S extends Sequence<S>>
+        implements SequenceMapper<Q, T, S, StmMapperHit<Q, T, S>> {
     private final SequenceTreeMap<S, List<T>> stm;
     private final SequenceProvider<T, S> targetSequenceProvider;
     private final SequenceProvider<Q, S> querySequenceProvider;
     private final SequenceSearchScope searchScope;
     private final ExplicitAlignmentScoring<S> scoring;
 
-    public StmSearcher(Iterable<T> clonotypes,
-                       SequenceProvider<T, S> targetSequenceProvider,
-                       SequenceProvider<Q, S> querySequenceProvider,
-                       Alphabet<S> alphabet,
-                       SequenceSearchScope searchScope,
-                       ExplicitAlignmentScoring<S> scoring) {
+    public StmMapper(Iterable<T> clonotypes,
+                     SequenceProvider<T, S> targetSequenceProvider,
+                     SequenceProvider<Q, S> querySequenceProvider,
+                     Alphabet<S> alphabet,
+                     SequenceSearchScope searchScope,
+                     ExplicitAlignmentScoring<S> scoring) {
         this.stm = new SequenceTreeMap<>(alphabet);
         this.targetSequenceProvider = targetSequenceProvider;
         this.querySequenceProvider = querySequenceProvider;
@@ -40,7 +42,8 @@ public final class StmSearcher<T, Q, S extends Sequence<S>> {
         group.add(obj);
     }
 
-    public List<StmHit<Q, T, S>> search(Q query) {
+    @Override
+    public StmMapperHitList<Q, T, S> map(Q query) {
         var querySeq = querySequenceProvider.getSequence(query);
 
         // 'search scope' iterator
@@ -87,10 +90,10 @@ public final class StmSearcher<T, Q, S extends Sequence<S>> {
         }
 
         // flatten results
-        var hits = new ArrayList<StmHit<Q, T, S>>();
+        var hits = new ArrayList<StmMapperHit<Q, T, S>>();
         for (var groupHit : groupHitBuffer.values()) {
             for (var target : groupHit.group) {
-                hits.add(new StmHit<>(query, target,
+                hits.add(new StmMapperHit<>(query, target,
                         groupHit.targetSequence,
                         groupHit.alignmentScore,
                         groupHit.mutations)
@@ -98,7 +101,17 @@ public final class StmSearcher<T, Q, S extends Sequence<S>> {
             }
         }
 
-        return hits;
+        return new StmMapperHitList<>(hits, true);
+    }
+
+    @Override
+    public SequenceProvider<Q, S> getQuerySequenceProvider() {
+        return querySequenceProvider;
+    }
+
+    @Override
+    public SequenceProvider<T, S> getTargetSequenceProvider() {
+        return targetSequenceProvider;
     }
 
     private static final class StmGroupHit<T, S extends Sequence<S>> {

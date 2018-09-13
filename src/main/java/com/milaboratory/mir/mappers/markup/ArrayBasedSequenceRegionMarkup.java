@@ -51,7 +51,7 @@ public final class ArrayBasedSequenceRegionMarkup<S extends Sequence<S>, E exten
 
     @Override
     // todo: incorrect, rewrite all
-    public ArrayBasedSequenceRegionMarkup<S, E> merge(SequenceRegionMarkup<S, E> other) {
+    public ArrayBasedSequenceRegionMarkup<S, E> concatenate(SequenceRegionMarkup<S, E> other) {
         if (other instanceof ArrayBasedSequenceRegionMarkup) {
             var otherConv = (ArrayBasedSequenceRegionMarkup<S, E>) other;
 
@@ -68,9 +68,9 @@ public final class ArrayBasedSequenceRegionMarkup<S extends Sequence<S>, E exten
 
             return new ArrayBasedSequenceRegionMarkup<>(fullSequence, newMarkup, regionTypeClass);
         } else if (other instanceof PrecomputedSequenceRegionMarkup) {
-            return merge(((PrecomputedSequenceRegionMarkup<S, E>) other).asArrayBased());
+            return concatenate(((PrecomputedSequenceRegionMarkup<S, E>) other).asArrayBased());
         } else {
-            throw new IllegalArgumentException("Don't know how to merge with " + other.getClass());
+            throw new IllegalArgumentException("Don't know how to concatenate with " + other.getClass());
         }
     }
 

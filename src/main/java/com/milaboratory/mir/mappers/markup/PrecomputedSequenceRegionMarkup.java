@@ -57,9 +57,9 @@ public final class PrecomputedSequenceRegionMarkup<S extends Sequence<S>, E exte
     }
 
     @Override
-    public ArrayBasedSequenceRegionMarkup<S, E> merge(SequenceRegionMarkup<S, E> other) {
+    public ArrayBasedSequenceRegionMarkup<S, E> concatenate(SequenceRegionMarkup<S, E> other) {
         // todo: maybe better impl
-        return asArrayBased().merge(other);
+        return asArrayBased().concatenate(other);
     }
 
     public ArrayBasedSequenceRegionMarkup<S, E> asArrayBased() {

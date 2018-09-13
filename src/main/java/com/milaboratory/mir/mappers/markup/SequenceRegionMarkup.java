@@ -1,11 +1,13 @@
 package com.milaboratory.mir.mappers.markup;
 
+import com.milaboratory.core.alignment.Alignment;
 import com.milaboratory.core.sequence.Sequence;
 
 import java.util.EnumMap;
 import java.util.stream.Collectors;
 
-public abstract class SequenceRegionMarkup<S extends Sequence<S>, E extends Enum<E>> {
+public abstract class SequenceRegionMarkup<S extends Sequence<S>, E extends Enum<E>,
+        M extends SequenceRegionMarkup<S, E, M>> {
     protected final S fullSequence;
     protected final Class<E> regionTypeClass;
 
@@ -26,13 +28,9 @@ public abstract class SequenceRegionMarkup<S extends Sequence<S>, E extends Enum
 
     public abstract EnumMap<E, SequenceRegion<S, E>> getAllRegions();
 
-    public abstract SequenceRegionMarkup<S, E> merge(SequenceRegionMarkup<S, E> other);
+    public abstract <M2 extends SequenceRegionMarkup<S, E, M2>> M concatenate(M2 other);
 
-    public static <S extends Sequence<S>, E extends Enum<E>> SequenceRegionMarkup<S, E> merge(
-            SequenceRegionMarkup<S, E> first,
-            SequenceRegionMarkup<S, E> second) {
-        return first.merge(second);
-    }
+    public abstract M realign(S querySequence, Alignment<S> alignment);
 
     @Override
     public String toString() {
