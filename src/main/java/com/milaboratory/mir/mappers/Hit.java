@@ -1,36 +1,14 @@
 package com.milaboratory.mir.mappers;
 
-import com.milaboratory.core.mutations.Mutations;
-import com.milaboratory.core.sequence.Sequence;
+public interface Hit<Q, T> extends Comparable<Hit<Q, T>> {
+    Q getQuery();
 
-public class Hit<Q, T, S extends Sequence<S>> {
-    private final Q query;
-    private final T target;
-    private final double alignmentScore;
-    private final Mutations<S> mutations;
+    T getTarget();
 
-    public Hit(Q query, T target,
-               double alignmentScore,
-               Mutations<S> mutations) {
-        this.query = query;
-        this.target = target;
-        this.alignmentScore = alignmentScore;
-        this.mutations = mutations;
-    }
+    float getScore();
 
-    public Q getQuery() {
-        return query;
-    }
-
-    public T getTarget() {
-        return target;
-    }
-
-    public double getAlignmentScore() {
-        return alignmentScore;
-    }
-
-    public Mutations<S> getMutations() {
-        return mutations;
+    @Override
+    default int compareTo(Hit<Q, T> o) {
+        return Float.compare(getScore(), o.getScore());
     }
 }

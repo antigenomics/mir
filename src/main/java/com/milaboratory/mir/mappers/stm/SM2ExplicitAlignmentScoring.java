@@ -9,14 +9,14 @@ import com.milaboratory.core.sequence.AminoAcidSequence;
 import com.milaboratory.core.sequence.Sequence;
 
 public final class SM2ExplicitAlignmentScoring<S extends Sequence<S>> implements ExplicitAlignmentScoring<S> {
-    private final double[][] substitutionMatrix;
-    private final double gapFactor;
+    private final float[][] substitutionMatrix;
+    private final float gapFactor;
 
     public static final SM2ExplicitAlignmentScoring<AminoAcidSequence> SM2_AA_BLOSUM62;
 
     static {
         int N = AminoAcidSequence.ALPHABET.size();
-        double[][] sm = new double[N][N];
+        float[][] sm = new float[N][N];
         LinearGapAlignmentScoring<AminoAcidSequence> s =
                 LinearGapAlignmentScoring.getAminoAcidBLASTScoring(BLASTMatrix.BLOSUM62);
         int maxScore = 0;
@@ -32,8 +32,8 @@ public final class SM2ExplicitAlignmentScoring<S extends Sequence<S>> implements
                 AminoAcidSequence.ALPHABET);
     }
 
-    public SM2ExplicitAlignmentScoring(double[][] substitutionMatrix,
-                                       double gapFactor,
+    public SM2ExplicitAlignmentScoring(float[][] substitutionMatrix,
+                                       float gapFactor,
                                        Alphabet<S> alphabet) {
         assert substitutionMatrix.length == alphabet.size();
         assert substitutionMatrix[0].length == alphabet.size();
@@ -44,7 +44,7 @@ public final class SM2ExplicitAlignmentScoring<S extends Sequence<S>> implements
     }
 
     @Override
-    public double computeScore(S query, Mutations<S> mutations) {
+    public float computeScore(S query, Mutations<S> mutations) {
         float queryScore = 0;
         for (int i = 0; i < query.size(); i++) {
             byte base = query.codeAt(i);
@@ -92,11 +92,15 @@ public final class SM2ExplicitAlignmentScoring<S extends Sequence<S>> implements
         return score - Math.max(queryScore, targetScore) + gapFactor * indels;
     }
 
-    public double[][] getSubstitutionMatrix() {
-        return substitutionMatrix;
+    public float[][] getSubstitutionMatrix() {
+        float[][] sp = new float[substitutionMatrix.length][];
+        for (int i = 0; i < substitutionMatrix.length; i++) {
+            sp[i] = substitutionMatrix[i].clone();
+        }
+        return sp;
     }
 
-    public double getGapFactor() {
+    public float getGapFactor() {
         return gapFactor;
     }
 }

@@ -2,6 +2,8 @@ package com.milaboratory.mir.mappers;
 
 import com.milaboratory.core.sequence.Sequence;
 
+import java.util.Objects;
+
 public final class ObjectWithSequence<T, S extends Sequence<S>> {
     private final T object;
     private final S sequence;
@@ -22,5 +24,19 @@ public final class ObjectWithSequence<T, S extends Sequence<S>> {
 
     public S getSequence() {
         return sequence;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        ObjectWithSequence<?, ?> that = (ObjectWithSequence<?, ?>) o;
+        return Objects.equals(object, that.object) &&
+                Objects.equals(sequence, that.sequence);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(object, sequence);
     }
 }

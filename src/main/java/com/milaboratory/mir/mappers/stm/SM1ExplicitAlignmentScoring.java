@@ -9,15 +9,15 @@ import com.milaboratory.core.sequence.AminoAcidSequence;
 import com.milaboratory.core.sequence.Sequence;
 
 public final class SM1ExplicitAlignmentScoring<S extends Sequence<S>> implements ExplicitAlignmentScoring<S> {
-    private final double[][] substitutionPenalties;
-    private final double[] gapPenalties;
-    private final double gapFactor;
+    private final float[][] substitutionPenalties;
+    private final float[] gapPenalties;
+    private final float gapFactor;
 
     public static final SM1ExplicitAlignmentScoring<AminoAcidSequence> SM1_AA_BLOSUM62;
 
     static {
         int N = AminoAcidSequence.ALPHABET.size();
-        double[][] sm = new double[N][N];
+        float[][] sm = new float[N][N];
         LinearGapAlignmentScoring<AminoAcidSequence> s =
                 LinearGapAlignmentScoring.getAminoAcidBLASTScoring(BLASTMatrix.BLOSUM62);
         int maxScore = 0;
@@ -33,16 +33,16 @@ public final class SM1ExplicitAlignmentScoring<S extends Sequence<S>> implements
                 AminoAcidSequence.ALPHABET);
     }
 
-    public SM1ExplicitAlignmentScoring(double[][] substitutionMatrix,
-                                       double gapFactor,
+    public SM1ExplicitAlignmentScoring(float[][] substitutionMatrix,
+                                       float gapFactor,
                                        Alphabet<S> alphabet) {
         int N = alphabet.size();
         assert substitutionMatrix.length == alphabet.size();
         assert substitutionMatrix[0].length == alphabet.size();
         assert gapFactor <= 0;
 
-        this.substitutionPenalties = new double[N][N];
-        this.gapPenalties = new double[N];
+        this.substitutionPenalties = new float[N][N];
+        this.gapPenalties = new float[N];
 
         for (int i = 0; i < N; i++) {
             gapPenalties[i] = substitutionMatrix[i][i];
@@ -55,7 +55,7 @@ public final class SM1ExplicitAlignmentScoring<S extends Sequence<S>> implements
     }
 
     @Override
-    public double computeScore(S query, Mutations<S> mutations) {
+    public float computeScore(S query, Mutations<S> mutations) {
         float score = 0;
         int indels = 0;
 
@@ -77,15 +77,19 @@ public final class SM1ExplicitAlignmentScoring<S extends Sequence<S>> implements
         return score + indels * gapFactor;
     }
 
-    public double[][] getSubstitutionPenalties() {
-        return substitutionPenalties;
+    public float[][] getSubstitutionPenalties() {
+        float[][] sp = new float[substitutionPenalties.length][];
+        for (int i = 0; i < substitutionPenalties.length; i++) {
+            sp[i] = substitutionPenalties[i].clone();
+        }
+        return sp;
     }
 
-    public double[] getGapPenalties() {
-        return gapPenalties;
+    public float[] getGapPenalties() {
+        return gapPenalties.clone();
     }
 
-    public double getGapFactor() {
+    public float getGapFactor() {
         return gapFactor;
     }
 }

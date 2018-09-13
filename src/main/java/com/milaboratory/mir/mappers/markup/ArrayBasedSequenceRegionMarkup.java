@@ -50,6 +50,7 @@ public final class ArrayBasedSequenceRegionMarkup<S extends Sequence<S>, E exten
     }
 
     @Override
+    // todo: incorrect, rewrite all
     public ArrayBasedSequenceRegionMarkup<S, E> merge(SequenceRegionMarkup<S, E> other) {
         if (other instanceof ArrayBasedSequenceRegionMarkup) {
             var otherConv = (ArrayBasedSequenceRegionMarkup<S, E>) other;
@@ -78,8 +79,7 @@ public final class ArrayBasedSequenceRegionMarkup<S extends Sequence<S>, E exten
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         ArrayBasedSequenceRegionMarkup<?, ?> that = (ArrayBasedSequenceRegionMarkup<?, ?>) o;
-        //System.out.println(Arrays.toString(markup));
-        //System.out.println(Arrays.toString(that.markup));
+
         return Arrays.equals(markup, that.markup) &&
                 Objects.equals(fullSequence, that.fullSequence) &&
                 Objects.equals(regionTypeClass, that.regionTypeClass);

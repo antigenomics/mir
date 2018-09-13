@@ -11,7 +11,7 @@ public final class DummyExplicitAlignmentScoring<S extends Sequence<S>> implemen
     }
 
     @Override
-    public double computeScore(S query, Mutations<S> mutations) {
+    public float computeScore(S query, Mutations<S> mutations) {
         return -mutations.size();
     }
 }

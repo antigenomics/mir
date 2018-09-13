@@ -3,12 +3,10 @@ package com.milaboratory.mir.mappers.simple;
 import com.milaboratory.core.alignment.Aligner;
 import com.milaboratory.core.alignment.AlignmentScoring;
 import com.milaboratory.core.sequence.Sequence;
-import com.milaboratory.mir.mappers.Hit;
-import com.milaboratory.mir.mappers.HitWithAlignment;
+import com.milaboratory.mir.mappers.HitWithAlignmentImpl;
 import com.milaboratory.mir.mappers.ObjectWithSequence;
 import com.milaboratory.mir.mappers.SequenceProvider;
 
-import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -34,16 +32,16 @@ public class SimpleExhaustiveMapper<Q, T, S extends Sequence<S>> implements Simp
 
     @SuppressWarnings("Optional")
     @Override
-    public HitWithAlignment<Q, T, S> map(Q query) {
+    public HitWithAlignmentImpl<Q, T, S> map(Q query) {
         return targets.stream()
                 .map(
-                        x -> new HitWithAlignment<>(query,
+                        x -> new HitWithAlignmentImpl<>(query,
                                 x.getObject(),
                                 Aligner.alignLocal(alignmentScoring,
                                         querySequenceProvider.getSequence(query),
                                         x.getSequence()))
                 )
-                .max(Comparator.comparingDouble(Hit::getAlignmentScore))
+                .max(HitWithAlignmentImpl::compareTo)
                 .get();
     }
 }
