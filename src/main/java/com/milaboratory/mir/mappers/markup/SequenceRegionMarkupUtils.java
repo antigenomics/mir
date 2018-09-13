@@ -63,4 +63,12 @@ public final class SequenceRegionMarkupUtils {
                 regionMarkup.getRegionTypeClass()
         );
     }
+
+    public static <E extends Enum<E>> ArrayBasedSequenceRegionMarkup<AminoAcidSequence, E>
+    translateWithAnchor(
+            ArrayBasedSequenceRegionMarkup<NucleotideSequence, E> regionMarkup, int anchor
+    ) {
+        // todo: better impl
+        return translateWithAnchor(regionMarkup.asPrecomputed(), anchor).asArrayBased();
+    }
 }

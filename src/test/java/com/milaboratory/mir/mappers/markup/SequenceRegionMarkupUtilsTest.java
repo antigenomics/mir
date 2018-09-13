@@ -66,35 +66,40 @@ public class SequenceRegionMarkupUtilsTest {
 
     @Test
     public void translateMarkupTest1() {
-        var regionMap1 = new EnumMap<DummyRegion, SequenceRegion<NucleotideSequence, DummyRegion>>(DummyRegion.class);
-        regionMap1.put(DummyRegion.R1, new SequenceRegion<>(DummyRegion.R1,
+        var regionMap = new EnumMap<DummyRegion, SequenceRegion<NucleotideSequence, DummyRegion>>(DummyRegion.class);
+        regionMap.put(DummyRegion.R1, new SequenceRegion<>(DummyRegion.R1,
                 new NucleotideSequence("GTGGATGATTCACAGTTGCCTAAGGATCGATTTTCTGCAGAGAGGCTCAAAGGAGTAGACTCCACTCTCAAGATC" +
                         "CAGCCTGCAAAGCTTGAGGACTCGGCCGTGTATCTC"), 162, 276 - 3));
-        regionMap1.put(DummyRegion.R2, new SequenceRegion<>(DummyRegion.R2,
+        regionMap.put(DummyRegion.R2, new SequenceRegion<>(DummyRegion.R2,
                 new NucleotideSequence("TGTGCCAGCAGCTTAGA"), 276 - 3, 290));
-        regionMap1.put(DummyRegion.R3, SequenceRegion.empty(DummyRegion.R3, NucleotideSequence.ALPHABET, 290));
-        regionMap1.put(DummyRegion.R4, SequenceRegion.empty(DummyRegion.R4, NucleotideSequence.ALPHABET, 290));
-        var markup1 = new PrecomputedSequenceRegionMarkup<>(parent, regionMap1, DummyRegion.class);
+        regionMap.put(DummyRegion.R3, SequenceRegion.empty(DummyRegion.R3, NucleotideSequence.ALPHABET, 290));
+        regionMap.put(DummyRegion.R4, SequenceRegion.empty(DummyRegion.R4, NucleotideSequence.ALPHABET, 290));
+        var markup = new PrecomputedSequenceRegionMarkup<>(parent, regionMap, DummyRegion.class);
+        var transl = SequenceRegionMarkupUtils.translateWithAnchor(markup, 273);
+        Assert.assertEquals(new AminoAcidSequence("CASSL"), transl.getRegion(DummyRegion.R2).getSequence());
+        System.out.println(transl);
 
-        var transl1 = SequenceRegionMarkupUtils.translateWithAnchor(markup1, 273);
-        Assert.assertEquals(new AminoAcidSequence("CASSL"), transl1.getRegion(DummyRegion.R2).getSequence());
-        System.out.println(transl1);
+        var markup2 = markup.asArrayBased();
+        var transl2 = SequenceRegionMarkupUtils.translateWithAnchor(markup2, 273);
+        Assert.assertEquals(new AminoAcidSequence("CASSL"), transl2.getRegion(DummyRegion.R2).getSequence());
     }
 
     @Test
     public void translateMarkupTest2() {
-        var regionMap2 = new EnumMap<DummyRegion, SequenceRegion<NucleotideSequence, DummyRegion>>(DummyRegion.class);
-        regionMap2.put(DummyRegion.R1, SequenceRegion.empty(DummyRegion.R1, NucleotideSequence.ALPHABET, 290));
-        regionMap2.put(DummyRegion.R2, SequenceRegion.empty(DummyRegion.R2, NucleotideSequence.ALPHABET, 290));
-        regionMap2.put(DummyRegion.R3, new SequenceRegion<>(DummyRegion.R3,
+        var regionMap = new EnumMap<DummyRegion, SequenceRegion<NucleotideSequence, DummyRegion>>(DummyRegion.class);
+        regionMap.put(DummyRegion.R1, SequenceRegion.empty(DummyRegion.R1, NucleotideSequence.ALPHABET, 290));
+        regionMap.put(DummyRegion.R2, SequenceRegion.empty(DummyRegion.R2, NucleotideSequence.ALPHABET, 290));
+        regionMap.put(DummyRegion.R3, new SequenceRegion<>(DummyRegion.R3,
                 new NucleotideSequence("CTCCTACAATGAGCAGTTCTTC"), 290, 290 + 22));
-        regionMap2.put(DummyRegion.R4, new SequenceRegion<>(DummyRegion.R4,
+        regionMap.put(DummyRegion.R4, new SequenceRegion<>(DummyRegion.R4,
                 new NucleotideSequence("GGGCCAGGGACACGGCTCACCGTGCTAG"), 290 + 22, 290 + 22 + 28));
-        var markup2 = new PrecomputedSequenceRegionMarkup<>(parent, regionMap2, DummyRegion.class);
+        var markup = new PrecomputedSequenceRegionMarkup<>(parent, regionMap, DummyRegion.class);
+        var transl = SequenceRegionMarkupUtils.translateWithAnchor(markup, 273);
+        Assert.assertEquals(new AminoAcidSequence("DSYNEQFF"), transl.getRegion(DummyRegion.R3).getSequence());
+        System.out.println(transl);
 
+        var markup2 = markup.asArrayBased();
         var transl2 = SequenceRegionMarkupUtils.translateWithAnchor(markup2, 273);
         Assert.assertEquals(new AminoAcidSequence("DSYNEQFF"), transl2.getRegion(DummyRegion.R3).getSequence());
-        System.out.println(transl2);
-
     }
 }
