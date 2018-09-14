@@ -24,4 +24,8 @@ public class TestUtils {
             }
         };
     }
+
+    public static InputStream streamFrom(String path) {
+        return streamSupplierFrom(path).get();
+    }
 }
