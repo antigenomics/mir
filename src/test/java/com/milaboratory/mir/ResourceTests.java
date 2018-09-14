@@ -9,7 +9,7 @@ public class ResourceTests {
     public void testTestResources() throws IOException {
         TestUtils.testStream(CommonUtils.getResourceAsStream("samples/trad_sample.txt"));
         TestUtils.testStream(CommonUtils.getResourceAsStream("samples/trad_sample.txt.gz"));
-        TestUtils.testStream(CommonUtils.getResourceAsStream("samples/1ao7_al.pdb"));
+        TestUtils.testStream(CommonUtils.getResourceAsStream("structures/1ao7_al.pdb"));
         //todo
     }
 
