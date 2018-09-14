@@ -44,6 +44,10 @@ public final class SequenceRegion<S extends Sequence<S>, E extends Enum<E>>
         this.sequence = sequence;
     }
 
+    public boolean contains(int pos) {
+        return pos >= start && pos < end;
+    }
+
     public boolean touches(SequenceRegion other) {
         return other.start == end || other.end == start;
     }

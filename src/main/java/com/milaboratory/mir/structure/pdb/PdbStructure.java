@@ -33,6 +33,7 @@ public class PdbStructure {
 
     @Override
     public String toString() {
-        return chains.values().stream().map(PdbChain::toString).collect(Collectors.joining("\n"));
+        return chains.values().stream()
+                .map(PdbChain::toString).collect(Collectors.joining("\n"));
     }
 }
