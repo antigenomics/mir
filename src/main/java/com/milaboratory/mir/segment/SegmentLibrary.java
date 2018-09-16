@@ -1,5 +1,7 @@
 package com.milaboratory.mir.segment;
 
+import java.util.Collection;
+
 public interface SegmentLibrary {
     VariableSegment getV(String id);
 
@@ -16,6 +18,22 @@ public interface SegmentLibrary {
     DiversitySegment getDMajor(String id);
 
     ConstantSegment getCMajor(String id);
+
+    Collection<VariableSegment> getAllV();
+
+    Collection<JoiningSegment> getAllJ();
+
+    Collection<DiversitySegment> getAllD();
+
+    Collection<ConstantSegment> getAllC();
+
+    Collection<VariableSegment> getAllVMajor();
+
+    Collection<JoiningSegment> getAllJMajor();
+
+    Collection<DiversitySegment> getAllDMajor();
+
+    Collection<ConstantSegment> getAllCMajor();
 
     Species getSpecies();
 

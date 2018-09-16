@@ -6,7 +6,7 @@ import com.milaboratory.mir.mappers.markup.PrecomputedSequenceRegionMarkup;
 import com.milaboratory.mir.mappers.markup.SequenceRegion;
 import com.milaboratory.mir.structure.AntigenReceptorRegionType;
 
-public interface SegmentWithMarkup {
+public interface SegmentWithMarkup extends Segment {
     int getReferencePoint();
 
     PrecomputedSequenceRegionMarkup<AminoAcidSequence, AntigenReceptorRegionType> getRegionMarkupAa();

@@ -1,5 +1,7 @@
 package com.milaboratory.mir.segment;
 
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -7,7 +9,7 @@ import java.util.stream.Collectors;
 public class SegmentLibraryImpl implements SegmentLibrary {
     private final Species species;
     private final Gene gene;
-    private final Map<String, VariableSegment> variableSegmentMap, variableSegmentMajorAlleleMap ;
+    private final Map<String, VariableSegment> variableSegmentMap, variableSegmentMajorAlleleMap;
     private final Map<String, DiversitySegment> diversitySegmentMap, diversitySegmentMajorAlleleMap;
     private final Map<String, JoiningSegment> joiningSegmentMap, joiningSegmentMajorAlleleMap;
     private final Map<String, ConstantSegment> constantSegmentMap, constantSegmentMajorAlleleMap;
@@ -39,7 +41,7 @@ public class SegmentLibraryImpl implements SegmentLibrary {
     }
 
     private static <T extends Segment> Map<String, T> createConversions(Map<String, T> allSegments,
-                                                              Map<String, String> majorAlleles) {
+                                                                        Map<String, String> majorAlleles) {
         var conversions = new HashMap<String, T>();
         allSegments.forEach((k, v) -> {
                     var majorId = majorAlleles.get(k);
@@ -104,6 +106,46 @@ public class SegmentLibraryImpl implements SegmentLibrary {
     @Override
     public ConstantSegment getCMajor(String id) {
         return constantSegmentMajorAlleleMap.getOrDefault(id, MissingConstantSegment.INSTANCE);
+    }
+
+    @Override
+    public Collection<VariableSegment> getAllV() {
+        return Collections.unmodifiableCollection(variableSegmentMap.values());
+    }
+
+    @Override
+    public Collection<JoiningSegment> getAllJ() {
+        return Collections.unmodifiableCollection(joiningSegmentMap.values());
+    }
+
+    @Override
+    public Collection<DiversitySegment> getAllD() {
+        return Collections.unmodifiableCollection(diversitySegmentMap.values());
+    }
+
+    @Override
+    public Collection<ConstantSegment> getAllC() {
+        return Collections.unmodifiableCollection(constantSegmentMap.values());
+    }
+
+    @Override
+    public Collection<VariableSegment> getAllVMajor() {
+        return Collections.unmodifiableCollection(variableSegmentMajorAlleleMap.values());
+    }
+
+    @Override
+    public Collection<JoiningSegment> getAllJMajor() {
+        return Collections.unmodifiableCollection(joiningSegmentMajorAlleleMap.values());
+    }
+
+    @Override
+    public Collection<DiversitySegment> getAllDMajor() {
+        return Collections.unmodifiableCollection(diversitySegmentMajorAlleleMap.values());
+    }
+
+    @Override
+    public Collection<ConstantSegment> getAllCMajor() {
+        return Collections.unmodifiableCollection(constantSegmentMajorAlleleMap.values());
     }
 
     @Override
