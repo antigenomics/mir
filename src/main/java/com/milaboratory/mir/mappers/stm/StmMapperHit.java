@@ -5,16 +5,14 @@ import com.milaboratory.core.mutations.Mutations;
 import com.milaboratory.core.sequence.Sequence;
 import com.milaboratory.mir.mappers.HitWithAlignment;
 
-public final class StmMapperHit<Q, T, S extends Sequence<S>> implements HitWithAlignment<Q, T, S> {
-    private final Q query;
+public final class StmMapperHit<T, S extends Sequence<S>> implements HitWithAlignment<T, S> {
     private final T target;
     private final float alignmentScore;
     private final S targetSequence;
     private final Mutations<S> mutations;
 
-    public StmMapperHit(Q query, T target, S targetSequence,
+    public StmMapperHit(T target, S targetSequence,
                         float alignmentScore, Mutations<S> mutations) {
-        this.query = query;
         this.target = target;
         this.targetSequence = targetSequence;
         this.alignmentScore = alignmentScore;
@@ -25,11 +23,6 @@ public final class StmMapperHit<Q, T, S extends Sequence<S>> implements HitWithA
         return new Alignment<>(
                 targetSequence, mutations, alignmentScore
         );
-    }
-
-    @Override
-    public Q getQuery() {
-        return query;
     }
 
     @Override

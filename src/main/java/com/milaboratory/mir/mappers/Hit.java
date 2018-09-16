@@ -1,14 +1,12 @@
 package com.milaboratory.mir.mappers;
 
-public interface Hit<Q, T> extends Comparable<Hit<Q, T>> {
-    Q getQuery();
-
+public interface Hit<T> extends Comparable<Hit<T>> {
     T getTarget();
 
     float getScore();
 
     @Override
-    default int compareTo(Hit<Q, T> o) {
+    default int compareTo(Hit<T> o) {
         return Float.compare(getScore(), o.getScore());
     }
 }

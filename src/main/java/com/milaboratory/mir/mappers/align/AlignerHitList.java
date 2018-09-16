@@ -6,13 +6,13 @@ import com.milaboratory.mir.mappers.HitWithAlignmentImpl;
 
 import java.util.List;
 
-public final class AlignerHitList<Q, T, S extends Sequence<S>>
-        extends HitList<HitWithAlignmentImpl<Q, T, S>> {
-    public AlignerHitList(List<HitWithAlignmentImpl<Q, T, S>> hits) {
+public final class AlignerHitList<T, S extends Sequence<S>>
+        extends HitList<HitWithAlignmentImpl<T, S>> {
+    public AlignerHitList(List<HitWithAlignmentImpl<T, S>> hits) {
         super(hits);
     }
 
-    AlignerHitList(List<HitWithAlignmentImpl<Q, T, S>> hits, boolean unsafe) {
+    AlignerHitList(List<HitWithAlignmentImpl<T, S>> hits, boolean unsafe) {
         super(hits, unsafe);
     }
 }

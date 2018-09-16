@@ -11,23 +11,20 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-public final class StmMapper<T, Q, S extends Sequence<S>>
-        implements SequenceMapper<Q, T, S, StmMapperHit<Q, T, S>> {
+public final class StmMapper<T, S extends Sequence<S>>
+        implements SequenceMapper<T, S> {
     private final SequenceTreeMap<S, List<T>> stm;
-    private final SequenceProvider<T, S> targetSequenceProvider;
-    private final SequenceProvider<Q, S> querySequenceProvider;
+    private final SequenceProvider<T, S> sequenceProvider;
     private final SequenceSearchScope searchScope;
     private final ExplicitAlignmentScoring<S> scoring;
 
     public StmMapper(Iterable<T> clonotypes,
-                     SequenceProvider<T, S> targetSequenceProvider,
-                     SequenceProvider<Q, S> querySequenceProvider,
+                     SequenceProvider<T, S> sequenceProvider,
                      Alphabet<S> alphabet,
                      SequenceSearchScope searchScope,
                      ExplicitAlignmentScoring<S> scoring) {
         this.stm = new SequenceTreeMap<>(alphabet);
-        this.targetSequenceProvider = targetSequenceProvider;
-        this.querySequenceProvider = querySequenceProvider;
+        this.sequenceProvider = sequenceProvider;
         // for stream use stream::iterator; N/A for parallel streams
         clonotypes.forEach(this::put);
         this.searchScope = searchScope;
@@ -35,19 +32,17 @@ public final class StmMapper<T, Q, S extends Sequence<S>>
     }
 
     private void put(T obj) {
-        var group = stm.get(targetSequenceProvider.getSequence(obj));
+        var group = stm.get(sequenceProvider.getSequence(obj));
         if (group == null) {
-            stm.put(targetSequenceProvider.getSequence(obj), group = new ArrayList<>());
+            stm.put(sequenceProvider.getSequence(obj), group = new ArrayList<>());
         }
         group.add(obj);
     }
 
     @Override
-    public StmMapperHitList<Q, T, S> map(Q query) {
-        var querySeq = querySequenceProvider.getSequence(query);
-
+    public StmMapperHitList<T, S> map(S query) {
         // 'search scope' iterator
-        var ni = stm.getNeighborhoodIterator(querySeq,
+        var ni = stm.getNeighborhoodIterator(query,
                 searchScope.getTreeSearchParameters());
 
         // buffer for choosing best match
@@ -57,7 +52,7 @@ public final class StmMapper<T, Q, S extends Sequence<S>>
         List<T> group;
 
         while ((group = ni.next()) != null) { // until no more alignments found within 'search scope'
-            var targetSequence = targetSequenceProvider.getSequence(group.get(0));
+            var targetSequence = sequenceProvider.getSequence(group.get(0));
             var mutations = ni.getCurrentMutations();
 
             // need this workaround as it is not possible to implement (ins+dels) <= X scope with tree searcher
@@ -73,7 +68,7 @@ public final class StmMapper<T, Q, S extends Sequence<S>>
             float alignmentScore;
             if (previousGroupHit == null) {
                 // introduce a hit if we don't have any previous alignments with this sequence
-                alignmentScore = scoring.computeScore(querySeq, mutations);
+                alignmentScore = scoring.computeScore(query, mutations);
                 groupHitBuffer.put(targetSequence, new StmGroupHit<>(group,
                         targetSequence, alignmentScore, mutations));
             } else if ( // exhaustive search - don't take first hit but try to compare scores
@@ -82,7 +77,7 @@ public final class StmMapper<T, Q, S extends Sequence<S>>
                             !(searchScope.isGreedy() &&
                                     previousGroupHit.mutations.size() < mutations.size()) &&
                             // now compute alignment score and replace if its better than previous
-                            (alignmentScore = scoring.computeScore(querySeq, mutations)) > previousGroupHit.alignmentScore
+                            (alignmentScore = scoring.computeScore(query, mutations)) > previousGroupHit.alignmentScore
             ) {
                 groupHitBuffer.put(targetSequence, new StmGroupHit<>(group,
                         targetSequence, alignmentScore, mutations));
@@ -90,10 +85,10 @@ public final class StmMapper<T, Q, S extends Sequence<S>>
         }
 
         // flatten results
-        var hits = new ArrayList<StmMapperHit<Q, T, S>>();
+        var hits = new ArrayList<StmMapperHit<T, S>>();
         for (var groupHit : groupHitBuffer.values()) {
             for (var target : groupHit.group) {
-                hits.add(new StmMapperHit<>(query, target,
+                hits.add(new StmMapperHit<>(target,
                         groupHit.targetSequence,
                         groupHit.alignmentScore,
                         groupHit.mutations)
@@ -105,13 +100,13 @@ public final class StmMapper<T, Q, S extends Sequence<S>>
     }
 
     @Override
-    public SequenceProvider<Q, S> getQuerySequenceProvider() {
-        return querySequenceProvider;
+    public Alphabet<S> getAlphabet() {
+        return stm.alphabet;
     }
 
     @Override
-    public SequenceProvider<T, S> getTargetSequenceProvider() {
-        return targetSequenceProvider;
+    public SequenceProvider<T, S> getSequenceProvider() {
+        return sequenceProvider;
     }
 
     private static final class StmGroupHit<T, S extends Sequence<S>> {
