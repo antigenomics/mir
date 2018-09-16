@@ -128,6 +128,30 @@ public final class ArrayBasedSequenceRegionMarkup<S extends Sequence<S>, E exten
     }
 
     @Override
+    public ArrayBasedSequenceRegionMarkup<S, E> padLeft(S sequence) {
+        if (sequence.size() == 0) {
+            return this;
+        }
+
+        int[] newMarkup = markup.clone();
+        for (int i = 0; i < markup.length; i++) {
+            newMarkup[i] += sequence.size();
+        }
+        return new ArrayBasedSequenceRegionMarkup<>(sequence.concatenate(fullSequence),
+                newMarkup, regionTypeClass, true);
+    }
+
+    @Override
+    public ArrayBasedSequenceRegionMarkup<S, E> padRight(S sequence) {
+        if (sequence.size() == 0) {
+            return this;
+        }
+
+        return new ArrayBasedSequenceRegionMarkup<>(fullSequence.concatenate(sequence),
+                markup, regionTypeClass, true);
+    }
+
+    @Override
     public int getStart() {
         return markup[0];
     }

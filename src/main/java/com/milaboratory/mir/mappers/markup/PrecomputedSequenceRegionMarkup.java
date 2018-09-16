@@ -38,6 +38,7 @@ public final class PrecomputedSequenceRegionMarkup<S extends Sequence<S>, E exte
         if (regionMap.size() != regionTypeClass.getEnumConstants().length) {
             throw new IllegalArgumentException("Bad markup - wrong number of regions: " + regionMap);
         }
+        // todo: wrap all in unsafe to speed up in non-debug mode
         this.regionMap = unsafe ? regionMap : new EnumMap<>(regionMap);
         SequenceRegion<S, E> previous = null;
         for (SequenceRegion<S, E> region : regionMap.values()) {
@@ -85,6 +86,33 @@ public final class PrecomputedSequenceRegionMarkup<S extends Sequence<S>, E exte
         }
 
         return new PrecomputedSequenceRegionMarkup<>(querySequence, newRegionMap, regionTypeClass, true);
+    }
+
+    @Override
+    public PrecomputedSequenceRegionMarkup<S, E> padLeft(S sequence) {
+        if (sequence.size() == 0) {
+            return this;
+        }
+
+        var newRegionMap = new EnumMap<E, SequenceRegion<S, E>>(regionTypeClass);
+
+        for (SequenceRegion<S, E> region : regionMap.values()) {
+            newRegionMap.put(region.getRegionType(),
+                    region.shift(sequence.size()));
+        }
+
+        return new PrecomputedSequenceRegionMarkup<>(sequence.concatenate(fullSequence),
+                newRegionMap, regionTypeClass, true);
+    }
+
+    @Override
+    public PrecomputedSequenceRegionMarkup<S, E> padRight(S sequence) {
+        if (sequence.size() == 0) {
+            return this;
+        }
+
+        return new PrecomputedSequenceRegionMarkup<>(fullSequence.concatenate(sequence),
+                regionMap, regionTypeClass, true);
     }
 
     @Override

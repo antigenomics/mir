@@ -33,6 +33,10 @@ public abstract class SequenceRegionMarkup<S extends Sequence<S>, E extends Enum
 
     public abstract M realign(S querySequence, Alignment<S> alignment);
 
+    public abstract M padLeft(S sequence);
+
+    public abstract M padRight(S sequence);
+
     public abstract int getStart();
 
     public abstract int getEnd();

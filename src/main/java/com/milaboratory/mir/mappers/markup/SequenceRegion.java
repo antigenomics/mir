@@ -84,6 +84,10 @@ public final class SequenceRegion<S extends Sequence<S>, E extends Enum<E>>
         return sequence;
     }
 
+    public SequenceRegion<S, E> shift(int offset) {
+        return new SequenceRegion<>(regionType, sequence, start + offset, end + offset);
+    }
+
     public boolean isEmpty() {
         return sequence.size() == 0;
     }
