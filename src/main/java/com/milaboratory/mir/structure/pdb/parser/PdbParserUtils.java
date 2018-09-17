@@ -3,8 +3,7 @@ package com.milaboratory.mir.structure.pdb.parser;
 import com.milaboratory.mir.structure.pdb.*;
 
 import java.io.*;
-import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.*;
 
 public class PdbParserUtils {
     private static final PdbFieldCache<AtomName> atomNameCache = new PdbFieldCache<>(AtomName::new);
@@ -13,34 +12,59 @@ public class PdbParserUtils {
 
     private static final int PDB_LINE_SZ = 80;
 
-    public static PdbStructure parseStructure(InputStream stream) throws IOException {
-        var atoms = new ArrayList<Atom>();
-        try (BufferedReader br = new BufferedReader(new InputStreamReader(stream))) {
-            String line;
-            while ((line = br.readLine()) != null) {
-                if (getAtomType(line) != null) {
-                    atoms.add(parseAtom(line));
-                }
-            }
-        }
-        return new PdbStructure(atoms);
-    }
-
-    public static void writeStructure(PdbStructure structure, PrintWriter pw) {
-        structure.getChains()
+    public static void writeStructure(Structure structure, PrintWriter pw) {
+        structure
+                .getChains()
                 .stream()
+                .flatMap(x -> x.getResidues().stream())
+                .flatMap(x -> x.getAtoms().stream())
                 .sorted()
-                .flatMap(
-                        pdbChain -> pdbChain.getAtoms()
-                                .stream()
-                                .sorted()
-                )
                 .forEach(PdbParserUtils::writeAtom);
         pw.write("END");
         pw.close();
     }
 
-    public static Atom parseAtom(String line) {
+    public static Structure parseStructure(String id, InputStream stream) throws IOException {
+        return new Structure(id, parseStructureMap(stream));
+    }
+
+    private static Map<Character, Map<Short, List<RawAtom>>> parseStructureMap(InputStream stream) throws IOException {
+        var atomMap = new HashMap<Character, Map<Short, List<RawAtom>>>();
+        short newIndex = -1;
+        short previousAaId = -1;
+        char previousChain = ' ';
+        try (BufferedReader br = new BufferedReader(new InputStreamReader(stream))) {
+            String line;
+            while ((line = br.readLine()) != null) {
+                if (getAtomType(line) != null) {
+                    var atom = parseAtom(line);
+                    if (atom.getChainIdentifier() != previousChain) {
+                        newIndex = -1;
+                        previousAaId = -1;
+                        previousChain = atom.getChainIdentifier();
+                    }
+                    if (atom.getResidueSequenceNumber() > previousAaId) {
+                        newIndex++;
+                        previousAaId = atom.getResidueSequenceNumber();
+                    }
+                    if (atom.getResidueSequenceNumber() == previousAaId &&
+                            atom.getResidueInsertionCode() != ' ') {
+                        newIndex++;
+                    }
+
+                    atom.shiftedResidueSequenceNumber = newIndex;
+
+                    atomMap
+                            .computeIfAbsent(atom.getChainIdentifier(), x -> new HashMap<>())
+                            .computeIfAbsent(atom.shiftedResidueSequenceNumber, x -> new ArrayList<>())
+                            .add(atom);
+                }
+            }
+        }
+        return atomMap;
+    }
+
+    public static RawAtom parseAtom(String line) {
         AtomType atomType = getAtomType(line);
 
         if (atomType == null) {
@@ -49,7 +73,7 @@ public class PdbParserUtils {
 
         line = new String(padRight(line.trim(), PDB_LINE_SZ));
 
-        return new Atom(
+        return new RawAtom(
                 atomType,
                 Short.parseShort(line.substring(6, 11).trim()),
                 atomNameCache.createField(line.substring(12, 16)),
@@ -67,9 +91,9 @@ public class PdbParserUtils {
         );
     }
 
-    private static float parseFloat(String string) {
-        return string.isEmpty() ? Float.NaN : Float.parseFloat(string);
-    }
+    /////
+    ///// OUTPUT
+    /////
 
     public static String writeAtom(Atom atom) {
         return atom.getAtomType().getId() +
@@ -83,14 +107,22 @@ public class PdbParserUtils {
                 String.valueOf(writeShort(atom.getResidueSequenceNumber(), 4)) +
                 atom.getResidueInsertionCode() +
                 "   " +
-                String.valueOf(writeFloat(atom.getX(), 8, 3)) +
-                String.valueOf(writeFloat(atom.getY(), 8, 3)) +
-                String.valueOf(writeFloat(atom.getZ(), 8, 3)) +
+                String.valueOf(writeFloat(atom.getCoordinates().getX(), 8, 3)) +
+                String.valueOf(writeFloat(atom.getCoordinates().getY(), 8, 3)) +
+                String.valueOf(writeFloat(atom.getCoordinates().getZ(), 8, 3)) +
                 String.valueOf(writeFloat(atom.getOccupancy(), 6, 2)) +
                 String.valueOf(writeFloat(atom.getTemperatureFactor(), 6, 2)) +
                 //     0123456789
                 /* */ "          " +
                 atom.getElementSymbolWithCharge();
+    }
+
+    /////
+    ///// TEXT UTILITIES
+    /////
+
+    private static float parseFloat(String string) {
+        return string.isEmpty() ? Float.NaN : Float.parseFloat(string);
     }
 
     private static AtomType getAtomType(String line) {

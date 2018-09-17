@@ -1,120 +1,31 @@
 package com.milaboratory.mir.structure.pdb;
 
-import com.milaboratory.mir.structure.pdb.parser.PdbParserUtils;
+import com.milaboratory.mir.structure.pdb.geometry.CoordinateSet;
+import com.milaboratory.mir.structure.pdb.geometry.Coordinates;
+import com.milaboratory.mir.structure.pdb.parser.*;
 
-public class Atom implements Comparable<Atom> {
-    private final AtomType atomType;
-    private final short atomSerialNumber;
-    private final AtomName atomName;
-    private final char alternativeLocationIdentifier;
-    private final ResidueName residueName;
-    private final char chainIdentifier;
-    private final short residueSequenceNumber;
-    private final char residueInsertionCode;
-    private final float x, y, z;
-    private final float occupancy;
-    private final float temperatureFactor;
-    private final ElementSymbolWithCharge elementSymbolWithCharge;
+public interface Atom<T extends Atom<T>> extends Comparable<T>, CoordinateSet<T> {
+    AtomType getAtomType();
 
-    public Atom(AtomType atomType,
-                short atomSerialNumber,
-                AtomName atomName,
-                char alternativeLocationIdentifier,
-                ResidueName residueName,
-                char chainIdentifier,
-                short residueSequenceNumber,
-                char residueInsertionCode,
-                float x, float y, float z,
-                float occupancy,
-                float temperatureFactor,
-                ElementSymbolWithCharge elementSymbolWithCharge) {
-        this.atomType = atomType;
-        this.atomSerialNumber = atomSerialNumber;
-        this.atomName = atomName;
-        this.alternativeLocationIdentifier = alternativeLocationIdentifier;
-        this.residueName = residueName;
-        this.chainIdentifier = chainIdentifier;
-        this.residueSequenceNumber = residueSequenceNumber;
-        this.residueInsertionCode = residueInsertionCode;
-        this.x = x;
-        this.y = y;
-        this.z = z;
-        this.occupancy = occupancy;
-        this.temperatureFactor = temperatureFactor;
-        this.elementSymbolWithCharge = elementSymbolWithCharge;
-    }
+    short getAtomSerialNumber();
 
-    public AtomType getAtomType() {
-        return atomType;
-    }
+    AtomName getAtomName();
 
-    public short getAtomSerialNumber() {
-        return atomSerialNumber;
-    }
+    char getAlternativeLocationIdentifier();
 
-    public AtomName getAtomName() {
-        return atomName;
-    }
+    ResidueName getResidueName();
 
-    public char getAlternativeLocationIdentifier() {
-        return alternativeLocationIdentifier;
-    }
+    char getChainIdentifier();
 
-    public ResidueName getResidueName() {
-        return residueName;
-    }
+    short getResidueSequenceNumber();
 
-    public char getChainIdentifier() {
-        return chainIdentifier;
-    }
+    char getResidueInsertionCode();
 
-    public short getResidueSequenceNumber() {
-        return residueSequenceNumber;
-    }
+    float getOccupancy();
 
-    public char getResidueInsertionCode() {
-        return residueInsertionCode;
-    }
+    float getTemperatureFactor();
 
-    public float getX() {
-        return x;
-    }
+    Coordinates getCoordinates();
 
-    public float getY() {
-        return y;
-    }
-
-    public float getZ() {
-        return z;
-    }
-
-    public float getOccupancy() {
-        return occupancy;
-    }
-
-    public float getTemperatureFactor() {
-        return temperatureFactor;
-    }
-
-    public ElementSymbolWithCharge getElementSymbolWithCharge() {
-        return elementSymbolWithCharge;
-    }
-
-    @Override
-    public String toString() {
-        return PdbParserUtils.writeAtom(this);
-    }
-
-    @Override
-    public int compareTo(Atom o) {
-        var res = Character.compare(chainIdentifier, o.chainIdentifier);
-        if (res != 0) {
-            return res;
-        }
-        res = Short.compare(residueSequenceNumber, o.residueSequenceNumber);
-        if (res != 0) {
-            return res;
-        }
-        return Short.compare(atomSerialNumber, o.atomSerialNumber);
-    }
+    ElementSymbolWithCharge getElementSymbolWithCharge();
 }

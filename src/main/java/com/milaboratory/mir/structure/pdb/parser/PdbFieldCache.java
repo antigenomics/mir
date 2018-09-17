@@ -1,4 +1,4 @@
-package com.milaboratory.mir.structure.pdb;
+package com.milaboratory.mir.structure.pdb.parser;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;

@@ -1,0 +1,102 @@
+package com.milaboratory.mir.mappers.markup;
+
+import com.milaboratory.core.alignment.AffineGapAlignmentScoring;
+import com.milaboratory.core.alignment.BLASTMatrix;
+import com.milaboratory.core.sequence.AminoAcidSequence;
+import com.milaboratory.mir.mappers.align.SimpleExhaustiveMapperFactory;
+import com.milaboratory.mir.segment.Gene;
+import com.milaboratory.mir.segment.Species;
+import com.milaboratory.mir.segment.parser.MigecSegmentLibraryUtils;
+import org.junit.Assert;
+import org.junit.Test;
+
+import static com.milaboratory.mir.structure.AntigenReceptorRegionType.*;
+
+public class ReceptorMarkupRealignerAaTest {
+    @Test
+    public void test1() {
+        var lib = MigecSegmentLibraryUtils.getLibraryFromResources(Species.Human, Gene.TRA);
+
+        var seq = new AminoAcidSequence(
+                "KEVEQNSGPLSVPEGAIASLNCTYSDRGSQSFFWYRQYSGKSPELIMSIYSNGDKEDGRFTAQLNKASQYVSLLIRDSQP" +
+                        "SDSATYLCAVTTDSWGKLQFGAGTQVVVTPDIQNPDPAVYQLRDSKSSDKSVCLFTDFDSQTNVSQSKDSDVYITDKTVL" +
+                        "DMRSMDFKSNSAVAWSNKSDFACANAFNNSIIPEDTFFPSPESS");
+
+        var realigner = new ReceptorMarkupRealignerAa(
+                lib, new SimpleExhaustiveMapperFactory<>(
+                AffineGapAlignmentScoring.getAminoAcidBLASTScoring(BLASTMatrix.BLOSUM62)
+        ), true
+        );
+
+        var res = realigner.recomputeMarkup(seq);
+        Assert.assertTrue(res.isPresent());
+        var resUnboxed = res.get();
+        System.out.println(resUnboxed);
+
+        Assert.assertEquals(
+                new SequenceRegion<>(FR1, new AminoAcidSequence("KEVEQNSGPLSVPEGAIASLNCTYS"), 0, 25),
+                resUnboxed.getRegion(FR1));
+        Assert.assertEquals(
+                new SequenceRegion<>(CDR1, new AminoAcidSequence("DRGSQS"), 25, 31),
+                resUnboxed.getRegion(CDR1));
+        Assert.assertEquals(
+                new SequenceRegion<>(FR2, new AminoAcidSequence("FFWYRQYSGKSPELIMS"), 31, 48),
+                resUnboxed.getRegion(FR2));
+        Assert.assertEquals(
+                new SequenceRegion<>(CDR2, new AminoAcidSequence("IYSNGD"), 48, 54),
+                resUnboxed.getRegion(CDR2));
+        Assert.assertEquals(
+                new SequenceRegion<>(FR3, new AminoAcidSequence("KEDGRFTAQLNKASQYVSLLIRDSQPSDSATYL"), 54, 87),
+                resUnboxed.getRegion(FR3));
+        Assert.assertEquals(
+                new SequenceRegion<>(CDR3, new AminoAcidSequence("CAVTTDSWGKLQF"), 87, 100),
+                resUnboxed.getRegion(CDR3));
+        Assert.assertEquals(
+                new SequenceRegion<>(FR4, new AminoAcidSequence("GAGTQVVVTP"), 100, 110),
+                resUnboxed.getRegion(FR4));
+    }
+
+    @Test
+    public void test2() {
+        var lib = MigecSegmentLibraryUtils.getLibraryFromResources(Species.Human, Gene.TRB);
+
+        var seq = new AminoAcidSequence(
+                "NAGVTQTPKFQVLKTGQSMTLQCAQDMNHEYMSWYRQDPGMGLRLIHYSVGAGITDQGEVPNGYNVSRSTTEDFPLRLLS" +
+                        "AAPSQTSVYFCASRPGLAGGRPEQYFGPGTRLTVTEDLKNVFPPEVAVFEPSEAEISHTQKATLVCLATGFYPDHVELSW" +
+                        "WVNGKEVHSGVSTDPQPLKEQPALNDSRYALSSRLRVSATFWQNPRNHFRCQVQFYGLSENDEWTQDRAKPVTQIVSAEA" +
+                        "WGRAD");
+
+        var realigner = new ReceptorMarkupRealignerAa(
+                lib, new SimpleExhaustiveMapperFactory<>(
+                AffineGapAlignmentScoring.getAminoAcidBLASTScoring(BLASTMatrix.BLOSUM62)
+        ), true
+        );
+
+        var res = realigner.recomputeMarkup(seq);
+        Assert.assertTrue(res.isPresent());
+        var resUnboxed = res.get();
+        System.out.println(resUnboxed);
+
+        Assert.assertEquals(
+                new SequenceRegion<>(FR1, new AminoAcidSequence("NAGVTQTPKFQVLKTGQSMTLQCAQD"), 0, 26),
+                resUnboxed.getRegion(FR1));
+        Assert.assertEquals(
+                new SequenceRegion<>(CDR1, new AminoAcidSequence("MNHEY"), 26, 31),
+                resUnboxed.getRegion(CDR1));
+        Assert.assertEquals(
+                new SequenceRegion<>(FR2, new AminoAcidSequence("MSWYRQDPGMGLRLIHY"), 31, 48),
+                resUnboxed.getRegion(FR2));
+        Assert.assertEquals(
+                new SequenceRegion<>(CDR2, new AminoAcidSequence("SVGAGI"), 48, 54),
+                resUnboxed.getRegion(CDR2));
+        Assert.assertEquals(
+                new SequenceRegion<>(FR3, new AminoAcidSequence("TDQGEVPNGYNVSRSTTEDFPLRLLSAAPSQTSVYF"), 54, 90),
+                resUnboxed.getRegion(FR3));
+        Assert.assertEquals(
+                new SequenceRegion<>(CDR3, new AminoAcidSequence("CASRPGLAGGRPEQYF"), 90, 106),
+                resUnboxed.getRegion(CDR3));
+        Assert.assertEquals(
+                new SequenceRegion<>(FR4, new AminoAcidSequence("GPGTRLTVT"), 106, 115),
+                resUnboxed.getRegion(FR4));
+    }
+}

@@ -1,9 +1,10 @@
-package com.milaboratory.mir.structure.pdb;
+package com.milaboratory.mir.structure.pdb.old;
 
 import com.milaboratory.core.Range;
 import com.milaboratory.core.sequence.AminoAcidAlphabet;
 import com.milaboratory.core.sequence.AminoAcidSequence;
 import com.milaboratory.mir.mappers.markup.SequenceRegion;
+import com.milaboratory.mir.structure.pdb.parser.RawAtom;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -11,24 +12,24 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class PdbChain implements Comparable<PdbChain> {
+public class OldPdbChain implements Comparable<OldPdbChain> {
     private final char chainName;
-    private final List<Atom> atoms;
+    private final List<RawAtom> atoms;
     private final AminoAcidSequence sequence;
     private final Range pdbNumberingRange;
 
-    public PdbChain(char chainName, List<Atom> atoms) {
+    public OldPdbChain(char chainName, List<RawAtom> atoms) {
         this(chainName, atoms, false);
     }
 
-    PdbChain(char chainName, List<Atom> atoms, boolean unsafe) {
+    OldPdbChain(char chainName, List<RawAtom> atoms, boolean unsafe) {
         this.chainName = chainName;
         if (atoms.isEmpty()) {
             throw new IllegalArgumentException("No atoms provided for chain");
         }
         this.atoms = Collections.unmodifiableList(unsafe ? atoms : new ArrayList<>(atoms));
         int minResidue = Integer.MAX_VALUE, maxResidue = Integer.MIN_VALUE;
-        for (Atom atom : atoms) {
+        for (RawAtom atom : atoms) {
             short residueSequenceNumber = atom.getResidueSequenceNumber();
             minResidue = Math.min(minResidue, residueSequenceNumber);
             maxResidue = Math.max(maxResidue, residueSequenceNumber);
@@ -36,7 +37,7 @@ public class PdbChain implements Comparable<PdbChain> {
         this.pdbNumberingRange = new Range(minResidue, maxResidue + 1);
         byte[] aas = new byte[pdbNumberingRange.length()];
         Arrays.fill(aas, AminoAcidAlphabet.X);
-        for (Atom atom : atoms) {
+        for (RawAtom atom : atoms) {
             short residueSequenceNumber = atom.getResidueSequenceNumber();
             byte code = atom.getResidueName().getCode();
             aas[residueSequenceNumber - minResidue] = code;
@@ -65,7 +66,7 @@ public class PdbChain implements Comparable<PdbChain> {
         return pdbNumberingRange;
     }
 
-    public List<Atom> getAtoms() {
+    public List<RawAtom> getAtoms() {
         return atoms;
     }
 
@@ -73,12 +74,12 @@ public class PdbChain implements Comparable<PdbChain> {
     public String toString() {
         return chainName + ":\n" +
                 sequence + " " + pdbNumberingRange + "\n" +
-                atoms.stream().limit(10).map(Atom::toString).collect(Collectors.joining("\n")) +
+                atoms.stream().limit(10).map(RawAtom::toString).collect(Collectors.joining("\n")) +
                 (atoms.size() > 10 ? "\n..." : "");
     }
 
     @Override
-    public int compareTo(PdbChain o) {
+    public int compareTo(OldPdbChain o) {
         return Character.compare(chainName, o.chainName);
     }
 

@@ -1,4 +1,4 @@
-package com.milaboratory.mir.structure.pdb;
+package com.milaboratory.mir.structure.pdb.parser;
 
 import com.milaboratory.core.sequence.AminoAcidAlphabet;
 import com.milaboratory.core.sequence.AminoAcidSequence;

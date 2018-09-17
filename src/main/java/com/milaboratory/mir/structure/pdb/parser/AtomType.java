@@ -1,4 +1,4 @@
-package com.milaboratory.mir.structure.pdb;
+package com.milaboratory.mir.structure.pdb.parser;
 
 public enum AtomType {
     ATOM("ATOM  "), TER("TER   ");

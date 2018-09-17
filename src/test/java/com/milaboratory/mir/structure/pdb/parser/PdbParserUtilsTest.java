@@ -1,7 +1,6 @@
 package com.milaboratory.mir.structure.pdb.parser;
 
 import com.milaboratory.mir.TestUtils;
-import com.milaboratory.mir.structure.pdb.Atom;
 import org.biojava.nbio.structure.io.PDBFileParser;
 import org.junit.Assert;
 import org.junit.Test;
@@ -12,7 +11,7 @@ public class PdbParserUtilsTest {
     @Test
     public void parseAtomTest() {
         var line = "TER    5680      ASP E 246                                                      ";
-        Atom atom = PdbParserUtils.parseAtom(line);
+        RawAtom atom = PdbParserUtils.parseAtom(line);
 
         String actual = PdbParserUtils.writeAtom(atom);
         System.out.println(actual);
@@ -22,7 +21,7 @@ public class PdbParserUtilsTest {
     @Test
     public void parseAtomTest2() {
         var line = "ATOM   5631  OE2 GLU E 240     114.615 292.086  -9.668  1.00 65.69           O1-";
-        Atom atom = PdbParserUtils.parseAtom(line);
+        RawAtom atom = PdbParserUtils.parseAtom(line);
 
         String actual = PdbParserUtils.writeAtom(atom);
         System.out.println(actual);
@@ -32,7 +31,7 @@ public class PdbParserUtilsTest {
     @Test
     public void parseStructureTest() throws IOException {
         var stream = TestUtils.streamFrom("structures/1ao7_al.pdb");
-        var struct = PdbParserUtils.parseStructure(stream);
+        var struct = PdbParserUtils.parseStructure("1ao7_al", stream);
         System.out.println(struct);
     }
 
@@ -43,7 +42,7 @@ public class PdbParserUtilsTest {
 
         start = System.currentTimeMillis();
         for (int i = 0; i < 100; i++) {
-            PdbParserUtils.parseStructure(streamProvider.get());
+            PdbParserUtils.parseStructure("1ao7_al", streamProvider.get());
         }
         end = System.currentTimeMillis();
         System.out.println("We read 100 structures in " + (end - start) + "ms");

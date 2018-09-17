@@ -20,7 +20,7 @@ public class MigecSegmentLibraryUtils {
 
     }
 
-    public static SegmentLibraryImpl getLibraryFromResources(Species species, Gene gene) throws IOException {
+    public static SegmentLibraryImpl getLibraryFromResources(Species species, Gene gene) {
         return resourceLibraryCache.computeIfAbsent(
                 new SpeciesGene(species, gene),
                 x -> {

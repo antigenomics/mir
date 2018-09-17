@@ -65,7 +65,7 @@ public final class ArrayBasedSequenceRegionMarkup<S extends Sequence<S>, E exten
             throw new IllegalArgumentException("Cannot concatenate markups computed for different sequences.");
         }
 
-        if (other.getStart() > getStart() || other.getEnd() < getEnd()) {
+        if (other.getStart() < getStart() || other.getEnd() < getEnd()) {
             throw new IllegalArgumentException("Cannot concatenate: " +
                     "embedded markups / other markup comes before this one.");
         }
