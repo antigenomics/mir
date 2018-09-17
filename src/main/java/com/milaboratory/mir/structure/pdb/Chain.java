@@ -1,9 +1,7 @@
 package com.milaboratory.mir.structure.pdb;
 
 import com.milaboratory.core.Range;
-import com.milaboratory.core.sequence.AminoAcidAlphabet;
 import com.milaboratory.core.sequence.AminoAcidSequence;
-import com.milaboratory.mir.CommonUtils;
 import com.milaboratory.mir.mappers.markup.SequenceRegion;
 import com.milaboratory.mir.structure.pdb.geometry.CoordinateSet;
 import com.milaboratory.mir.structure.pdb.geometry.CoordinateTransformation;
@@ -14,29 +12,28 @@ import java.util.stream.Collectors;
 
 public class Chain implements Comparable<Chain>, CoordinateSet<Chain> {
     private final char chainIdentifier;
-    private final Map<Short, Residue> residues;
+    private final List<Residue> residues;
     private final AminoAcidSequence sequence;
-    private final Range pdbNumberingRange;
+    private final Range originalRange;
 
-    public Chain(char chainIdentifier, Map<Short, List<RawAtom>> residueMap) {
+    Chain(char chainIdentifier, Map<Short, List<RawAtom>> residueMap) {
         if (residueMap.isEmpty()) {
             throw new IllegalArgumentException("Empty residue map");
         }
         this.chainIdentifier = chainIdentifier;
-        this.residues = CommonUtils.map2map(
-                residueMap,
-                Map.Entry::getKey,
-                x -> new Residue(this, x.getValue())
-        );
-        this.pdbNumberingRange = getRange(residues.values());
-        this.sequence = getSequence(residues.values(), pdbNumberingRange);
+        this.residues = new ArrayList<>(residueMap.size());
+        for (short i = 0; i < residueMap.size(); i++) {
+            residues.add(new Residue(this, residueMap.get(i)));
+        }
+        this.sequence = getSequence(residues);
+        this.originalRange = new Range(0, residueMap.size());
     }
 
-    Chain(Chain toCopy, Map<Short, Residue> newResidues) {
+    Chain(Chain toCopy, List<Residue> newResidues) {
         this.chainIdentifier = toCopy.chainIdentifier;
         this.residues = newResidues;
-        this.pdbNumberingRange = getRange(residues.values());
-        this.sequence = getSequence(newResidues.values(), pdbNumberingRange);
+        this.originalRange = getRange(newResidues);
+        this.sequence = getSequence(newResidues);
     }
 
     private static Range getRange(Collection<Residue> residues) {
@@ -48,24 +45,21 @@ public class Chain implements Comparable<Chain>, CoordinateSet<Chain> {
         return new Range(minResidue, maxResidue + 1);
     }
 
-    private static AminoAcidSequence getSequence(Collection<Residue> residues, Range pdbNumberingRange) {
-        byte[] aas = new byte[pdbNumberingRange.length()];
-        Arrays.fill(aas, AminoAcidAlphabet.X);
-        for (Residue residue : residues) {
-            short residueSequenceNumber = residue.getResidueSequenceNumber();
-            byte code = residue.getResidueName().getCode();
-            aas[residueSequenceNumber - pdbNumberingRange.getFrom()] = code;
+    public static AminoAcidSequence getSequence(List<Residue> residues) {
+        byte[] aas = new byte[residues.size()];
+        for (int i = 0; i < aas.length; i++) {
+            aas[i] = residues.get(i).getResidueName().getCode();
         }
         return new AminoAcidSequence(aas);
     }
 
-    public <E extends Enum<E>> ChainRegion<E> getRegion(SequenceRegion<AminoAcidSequence, E> region) {
+    public <E extends Enum<E>> ChainRegion<E> extractRegion(SequenceRegion<AminoAcidSequence, E> region) {
         return new ChainRegion<>(
                 this,
-                residues.values().stream().filter(x -> {
-                    int pos = x.getResidueSequenceNumber() - pdbNumberingRange.getFrom();
-                    return region.contains(pos);
-                }).collect(Collectors.toMap(Residue::getResidueSequenceNumber, x -> x)),
+                residues
+                        .stream()
+                        .filter(x -> region.contains(x.getResidueSequenceNumber()))
+                        .collect(Collectors.toList()),
                 region);
     }
 
@@ -73,30 +67,22 @@ public class Chain implements Comparable<Chain>, CoordinateSet<Chain> {
         return chainIdentifier;
     }
 
-    public Residue getResidue(short index) {
-        var res = residues.get(index);
-        if (res == null) {
-            throw new IllegalArgumentException("Residue is not present in structure");
-        }
-        return res;
+    public Residue getResidue(int index) {
+        return residues.get(index);
     }
 
-    public Set<Short> getResidueIndices() {
-        return Collections.unmodifiableSet(residues.keySet());
+    public Range getOriginalRange() {
+        return originalRange;
     }
 
-    public Collection<Residue> getResidues() {
-        return Collections.unmodifiableCollection(residues.values());
+    public List<Residue> getResidues() {
+        return Collections.unmodifiableList(residues);
     }
 
     @Override
     public Chain applyTransformation(CoordinateTransformation transformation) {
-        return new Chain(this,
-                CommonUtils.map2map(
-                        residues,
-                        Map.Entry::getKey,
-                        x -> x.getValue().applyTransformation(transformation)
-                ));
+        return new Chain(this, residues.stream()
+                .map(x -> x.applyTransformation(transformation)).collect(Collectors.toList()));
     }
 
     @Override
@@ -108,16 +94,10 @@ public class Chain implements Comparable<Chain>, CoordinateSet<Chain> {
         return sequence;
     }
 
-    public Range getPdbNumberingRange() {
-        return pdbNumberingRange;
-    }
-
     @Override
     public String toString() {
         return "Chain " + chainIdentifier + ":\n" +
-                residues
-                        .values()
-                        .stream()
+                residues.stream()
                         .limit(3)
                         .map(Residue::toString).collect(Collectors.joining("\n")) + "\n...";
     }

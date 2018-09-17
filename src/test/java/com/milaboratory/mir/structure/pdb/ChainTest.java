@@ -19,17 +19,17 @@ import java.io.IOException;
 
 import static com.milaboratory.mir.structure.AntigenReceptorRegionType.CDR3;
 
-public class PdbChainTest {
+public class ChainTest {
     private final Structure struct = PdbParserUtils
             .parseStructure("1ao7_al", TestUtils.streamFrom("structures/1ao7_al.pdb"));
 
-    public PdbChainTest() throws IOException {
+    public ChainTest() throws IOException {
     }
 
     @Test
-    public void getRegionTest1() throws IOException {
+    public void getRegionTest1() {
         var region = struct.getChain('A')
-                .getRegion(new SequenceRegion<>(DummyRegion.R1,
+                .extractRegion(new SequenceRegion<>(DummyRegion.R1,
                         new AminoAcidSequence("GSHSMRY"),
                         0, 7));
         System.out.println(region);
@@ -46,10 +46,8 @@ public class PdbChainTest {
         ), true
         );
 
-        var res = realigner.recomputeMarkup(struct.getChain('E').getSequence());
-
-        System.out.println(struct.getChain('E').getSequence());
-        System.out.println(res);
+        var chain = struct.getChain('E');
+        var res = realigner.recomputeMarkup(chain.getSequence());
 
         Assert.assertTrue(res.isPresent());
         var resUnboxed = res.get();
@@ -57,6 +55,6 @@ public class PdbChainTest {
 
         Assert.assertEquals(
                 new AminoAcidSequence("CASRPGLAGGRPEQYF"),
-                struct.getChain('A').getRegion(resUnboxed.getRegion(CDR3)).getSequence());
+                chain.extractRegion(resUnboxed.getRegion(CDR3)).getSequence());
     }
 }

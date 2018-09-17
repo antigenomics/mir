@@ -16,7 +16,7 @@ public final class Residue implements Comparable<Residue>, CoordinateSet<Residue
     private final char residueInsertionCode;
     private final List<AtomImpl> atoms;
 
-    public Residue(Chain parent, List<RawAtom> rawAtoms) {
+    Residue(Chain parent, List<RawAtom> rawAtoms) {
         if (rawAtoms.isEmpty()) {
             throw new IllegalArgumentException("Empty atom list");
         }
@@ -27,7 +27,7 @@ public final class Residue implements Comparable<Residue>, CoordinateSet<Residue
         this.residueInsertionCode = ' '; //firstAtom.getResidueInsertionCode(); get rid of this BS!
         this.atoms = rawAtoms.stream().map(
                 x -> {
-                    if(x.getChainIdentifier() != getChainIdentifier()) {
+                    if (x.getChainIdentifier() != getChainIdentifier()) {
                         throw new IllegalArgumentException("Wrong chain identifier " + x);
                     }
                     if (x.getResidueName() != residueName) {
@@ -53,7 +53,8 @@ public final class Residue implements Comparable<Residue>, CoordinateSet<Residue
     }
 
     public Residue(Chain parent, ResidueName residueName,
-                   short residueSequenceNumber, char residueInsertionCode, List<AtomImpl> atoms) {
+                   short residueSequenceNumber, char residueInsertionCode,
+                   List<AtomImpl> atoms) {
         this.parent = parent;
         this.residueName = residueName;
         this.residueSequenceNumber = residueSequenceNumber;
