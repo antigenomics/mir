@@ -19,6 +19,11 @@ public class DistributionSampler<T> implements Generator<T> {
             public T generate() {
                 throw new UnsupportedOperationException("Cannot sample from dummy distribution.");
             }
+
+            @Override
+            public boolean isDummy() {
+                return true;
+            }
         };
     }
 
@@ -58,5 +63,9 @@ public class DistributionSampler<T> implements Generator<T> {
         }
 
         return sortedDistributionEntries.get(0).getValue();
+    }
+
+    public boolean isDummy() {
+        return false;
     }
 }

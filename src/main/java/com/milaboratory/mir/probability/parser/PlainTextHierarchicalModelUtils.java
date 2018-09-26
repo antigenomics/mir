@@ -14,6 +14,13 @@ public final class PlainTextHierarchicalModelUtils {
             REGEX_CONDITIONAL_SEPARATOR = "\\|",
             VARIABLE_SEPARATOR = ",";
 
+    public static Map<String, Double> normalize(Map<String, Double> probabilityMap) {
+        var sum = probabilityMap.values().stream().mapToDouble(x -> x).sum();
+        return map2map(probabilityMap,
+                Map.Entry::getKey,
+                x -> x.getValue() / sum);
+    }
+
     /////////// WORKING WITH CONDITIONAL PROBABILITIES //////////
 
     public static Map<String, Map<String, Double>> embed1Conditional(Map<String, Double> probabilityMap) {

@@ -7,7 +7,7 @@ public class Distribution<T> {
     private final boolean isDummy;
 
     public Distribution(Distribution<T> toCopy, boolean fromAccumulator) {
-        if (toCopy == null || toCopy.isDummy) {
+        if (toCopy == null || toCopy.isDummy) { // todo: remove dummy at all
             this.distributionMap = DistributionMap.getDummy();
             this.distributionSampler = DistributionSampler.getDummy();
             this.distributionAccumulator = DistributionAccumulator.getDummy();
@@ -54,5 +54,9 @@ public class Distribution<T> {
 
     public DistributionAccumulator<T> getDistributionAccumulator() {
         return distributionAccumulator;
+    }
+
+    public boolean isDummy() {
+        return isDummy;
     }
 }

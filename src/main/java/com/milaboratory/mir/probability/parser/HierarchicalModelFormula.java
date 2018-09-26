@@ -75,7 +75,7 @@ public final class HierarchicalModelFormula implements Serializable {
         graph.forEach((v, vc) -> {
             variables.add(v);
             if (vc.isEmpty()) {
-                this.blockNames.add(v);
+                //this.blockNames.add(v);
                 for (String vj : v.split(VARIABLE_SEPARATOR)) {
                     if (jointVariables.contains(vj)) {
                         throw new IllegalArgumentException("Bad block '" +
@@ -85,10 +85,11 @@ public final class HierarchicalModelFormula implements Serializable {
                     jointVariables.add(vj);
                 }
             } else {
-                this.blockNames.add(v + CONDITIONAL_SEPARATOR +
-                        String.join(VARIABLE_SEPARATOR, vc));
+                //this.blockNames.add(v + CONDITIONAL_SEPARATOR +
+                //        String.join(VARIABLE_SEPARATOR, vc));
                 variables.addAll(vc);
             }
+            this.blockNames.add(createSubFormula(Collections.singletonList(v), vc));
         });
 
         for (String variable : variables) {
@@ -97,6 +98,11 @@ public final class HierarchicalModelFormula implements Serializable {
                         " '" + variable + "'");
             }
         }
+    }
+
+    public static String createSubFormula(List<String> variables, List<String> conditionals) {
+        return String.join(VARIABLE_SEPARATOR, variables) +
+                (conditionals.isEmpty() ? "" : CONDITIONAL_SEPARATOR + String.join(VARIABLE_SEPARATOR, conditionals));
     }
 
     public List<String> getParentVariables(String variable) {
@@ -115,15 +121,11 @@ public final class HierarchicalModelFormula implements Serializable {
         return variables.contains(variable);
     }
 
-    private static boolean isConditional(String blockName) {
-        return blockName.contains(CONDITIONAL_SEPARATOR);
-    }
-
     public String findBlockName(String variable) {
         for (String blockName : blockNames) {
-            if (isConditional(blockName) ?
-                    blockName.toLowerCase().startsWith(variable) :
-                    blockName.toLowerCase().contains(variable)) {
+            if (blockName.contains(CONDITIONAL_SEPARATOR) ?
+                    blockName.startsWith(variable) :
+                    blockName.contains(variable)) {
                 return blockName;
             }
         }
@@ -136,6 +138,10 @@ public final class HierarchicalModelFormula implements Serializable {
             throw new IllegalArgumentException("No distribution for variable '" + variable + "' is found in formula.");
         }
         return res;
+    }
+
+    public BlockNameInfo getBlockInfo(String variable) {
+        return BlockNameInfo.fromBlockName(getBlockName(variable));
     }
 
     public Set<String> getVariables() {

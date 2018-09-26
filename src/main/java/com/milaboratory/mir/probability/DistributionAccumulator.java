@@ -22,6 +22,11 @@ public abstract class DistributionAccumulator<T> {
             public DistributionAccumulator<T> createCleanInstance() {
                 throw new UnsupportedOperationException("Cannot reinstantize dummy accumulator");
             }
+
+            @Override
+            public boolean isDummy() {
+                return true;
+            }
         };
     }
 
@@ -61,5 +66,9 @@ public abstract class DistributionAccumulator<T> {
 
     public void addPseudocount() {
         addPseudocount(1d / values().size());
+    }
+
+    public boolean isDummy() {
+        return false;
     }
 }

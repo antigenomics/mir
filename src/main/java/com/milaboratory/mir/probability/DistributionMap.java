@@ -89,4 +89,8 @@ public class DistributionMap<T> {
         }
         return p;
     }
+
+    public boolean isDummy() {
+        return probabilities.isEmpty();
+    }
 }
