@@ -30,7 +30,7 @@ public class PlainTextHierarchicalModel {
         return formula;
     }
 
-    Map<String, Map<String, Double>> getProbabilities() {
+    public Map<String, Map<String, Double>> getProbabilities() {
         return Collections.unmodifiableMap(probabilities);
     }
 

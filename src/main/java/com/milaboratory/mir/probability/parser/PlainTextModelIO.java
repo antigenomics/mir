@@ -1,7 +1,6 @@
 package com.milaboratory.mir.probability.parser;
 
 import java.io.*;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 

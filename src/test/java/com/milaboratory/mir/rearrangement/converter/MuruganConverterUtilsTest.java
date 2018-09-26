@@ -12,8 +12,8 @@ import java.io.IOException;
 public class MuruganConverterUtilsTest {
     @Test
     public void test() throws IOException {
-        var mdl = MuruganModeParserUtils.getModelFromResources(Species.Human, Gene.TRB);
-        var segmLib = MigecSegmentLibraryUtils.getLibraryFromResources(Species.Human, Gene.TRB);
+        var mdl = MuruganModeParserUtils.getModelFromResources(Species.Human, Gene.IGH);
+        var segmLib = MigecSegmentLibraryUtils.getLibraryFromResources(Species.Human, Gene.IGH);
         var converter = MuruganConverterUtils.getConverter(mdl, segmLib);
         var rearrMdl = converter.getRearrangementModel();
 

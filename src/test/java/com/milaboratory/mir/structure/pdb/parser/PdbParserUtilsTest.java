@@ -35,7 +35,8 @@ public class PdbParserUtilsTest {
         System.out.println(struct);
     }
 
-    @Test
+    // todo
+    //@Test
     public void parseStructSpeedTest() throws IOException {
         var streamProvider = TestUtils.streamSupplierFrom("structures/1ao7_al.pdb");
         long start, end;

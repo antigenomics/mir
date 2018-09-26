@@ -11,8 +11,15 @@ public class MuruganModel extends PlainTextHierarchicalModel {
     private final Species species;
     private final Gene gene;
 
-    public MuruganModel(HierarchicalModelFormula formula,
-                        Map<String, Map<String, Double>> probabilities,
+    public MuruganModel(PlainTextHierarchicalModel plainTextHierarchicalModel,
+                        Species species, Gene gene) {
+        super(plainTextHierarchicalModel.getProbabilities());
+        this.species = species;
+        this.gene = gene;
+    }
+
+    public MuruganModel(Map<String, Map<String, Double>> probabilities,
+                        HierarchicalModelFormula formula,
                         Species species, Gene gene) {
         super(probabilities, formula);
         this.species = species;

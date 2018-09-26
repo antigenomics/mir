@@ -5,13 +5,24 @@ import com.milaboratory.mir.segment.Species;
 import org.junit.Test;
 
 import java.io.IOException;
+import java.util.Arrays;
 
 public class MigecSegmentLibraryUtilsTest {
     @Test
     public void testRes() throws IOException {
-        System.out.println(MigecSegmentLibraryUtils.getLibraryFromResources(Species.Human, Gene.TRA));
-        System.out.println(MigecSegmentLibraryUtils.getLibraryFromResources(Species.Human, Gene.TRB));
-        System.out.println(MigecSegmentLibraryUtils.getLibraryFromResources(Species.Mouse, Gene.TRA));
-        System.out.println(MigecSegmentLibraryUtils.getLibraryFromResources(Species.Mouse, Gene.TRB));
+        for (Species s : Arrays.asList(Species.Human,
+                Species.Mouse)) {
+            for (Gene g : Arrays.asList(
+                    Gene.TRA,
+                    Gene.TRB,
+                    Gene.IGH,
+                    Gene.IGK,
+                    Gene.IGL,
+                    //Gene.TRG, todo: fix mouse no TRGJ
+                    Gene.TRD
+            )) {
+                System.out.println(MigecSegmentLibraryUtils.getLibraryFromResources(s, g));
+            }
+        }
     }
 }

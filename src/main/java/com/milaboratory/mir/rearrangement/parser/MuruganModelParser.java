@@ -1,5 +1,6 @@
 package com.milaboratory.mir.rearrangement.parser;
 
+import com.milaboratory.mir.probability.parser.PlainTextHierarchicalModel;
 import com.milaboratory.mir.probability.parser.PlainTextHierarchicalModelUtils;
 import com.milaboratory.mir.segment.Gene;
 import com.milaboratory.mir.segment.Species;
@@ -22,7 +23,10 @@ public final class MuruganModelParser {
         var probabilities = readProbabilities(marginals, formula, valueIndexMap,
                 true,
                 true);
-        return new MuruganModel(formula, probabilities, species, gene);
+        var innerModel = new PlainTextHierarchicalModel(probabilities,formula);
+
+        return new MuruganModel(innerModel.fortify(), // required as sometimes model is incomplete
+                species, gene);
     }
 
     private static Map<String, Map<Integer, String>> readValueIndexMap(InputStream paramsInputStream,

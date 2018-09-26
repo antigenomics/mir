@@ -11,9 +11,9 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.text.ParseException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.function.Consumer;
 
 final class MigecSegmentLibraryParser {
     private static final String SEP = "\t";
@@ -60,6 +60,10 @@ final class MigecSegmentLibraryParser {
                     SegmentType segmentType = SegmentType.byAlias(splitLine[H.segmentColIndex]);
                     String id = splitLine[H.idColIndex];
                     NucleotideSequence seq = new NucleotideSequence(splitLine[H.sequenceColIndex]);
+
+                    if (seq.containsWildcards())
+                        continue; // todo: add warning
+
                     majorAlleleAliases.put(id, id.split("\\*")[0] + "*01");
                     boolean majorAllele = id.endsWith("*01");
 
@@ -71,24 +75,20 @@ final class MigecSegmentLibraryParser {
                             int cdr2End = Integer.parseInt(splitLine[H.cdr2EndColIndex]);
                             int referencePoint = Integer.parseInt(splitLine[H.refPointColIndex]);
 
-                            VariableSegment variableSegment = new VariableSegmentImpl(
-                                    id, seq,
-                                    Math.max(0, cdr1Start), Math.max(0, cdr1End),
-                                    Math.max(0, cdr2Start), Math.max(0, cdr2End),
-                                    referencePoint, majorAllele
+                            Consumer<String> putV = id1 -> variableSegmentMap.put(id1,
+                                    new VariableSegmentImpl(
+                                            id1, seq,
+                                            Math.max(0, cdr1Start), Math.max(0, cdr1End),
+                                            Math.max(0, cdr2Start), Math.max(0, cdr2End),
+                                            referencePoint, majorAllele)
                             );
-                            variableSegmentMap.put(id, variableSegment);
+
+                            putV.accept(id);
 
                             if (fixDV && id.contains("/DV")) { // account for MIXCR naming convention
                                 id = id.replaceAll("/DV", "DV");
                                 majorAlleleAliases.put(id, id.split("\\*")[0] + "*01");
-                                variableSegment = new VariableSegmentImpl(
-                                        id, seq,
-                                        Math.max(0, cdr1Start), Math.max(0, cdr1End),
-                                        Math.max(0, cdr2Start), Math.max(0, cdr2End),
-                                        referencePoint, majorAllele
-                                );
-                                variableSegmentMap.put(id, variableSegment);
+                                putV.accept(id);
                             }
                             break;
 
