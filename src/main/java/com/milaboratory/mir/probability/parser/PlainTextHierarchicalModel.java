@@ -3,6 +3,10 @@ package com.milaboratory.mir.probability.parser;
 import com.milaboratory.mir.CommonUtils;
 import com.milaboratory.mir.StringArrayIndexer;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.*;
 
 import static com.milaboratory.mir.probability.parser.PlainTextHierarchicalModelUtils.*;
@@ -11,8 +15,12 @@ public class PlainTextHierarchicalModel {
     private final HierarchicalModelFormula formula;
     private final Map<String, Map<String, Double>> probabilities;
 
-    public PlainTextHierarchicalModel(HierarchicalModelFormula formula,
-                                      Map<String, Map<String, Double>> probabilities) {
+    public PlainTextHierarchicalModel(Map<String, Map<String, Double>> probabilities) {
+        this(probabilities, new HierarchicalModelFormula(new ArrayList<>(probabilities.keySet())));
+    }
+
+    public PlainTextHierarchicalModel(Map<String, Map<String, Double>> probabilities,
+                                      HierarchicalModelFormula formula) {
         this.formula = formula;
         this.probabilities = new HashMap<>();
         probabilities.forEach((key, value) -> this.probabilities.put(key, Collections.unmodifiableMap(value)));
@@ -22,9 +30,9 @@ public class PlainTextHierarchicalModel {
         return formula;
     }
 
-    //public Map<String, Map<String, Double>> getProbabilities() {
-    //    return Collections.unmodifiableMap(probabilities);
-    //}
+    Map<String, Map<String, Double>> getProbabilities() {
+        return Collections.unmodifiableMap(probabilities);
+    }
 
     public Set<String> listValues(String variableName) {
         var blockInfo = formula.getBlockInfo(variableName);
@@ -117,8 +125,9 @@ public class PlainTextHierarchicalModel {
             throw new IllegalArgumentException("Difference in number of (parent) variables " +
                     "between provided value lists and block formula.");
         }
-        return probabilities.get(blockName).get(HierarchicalModelFormula.createSubFormula(values,
-                parentValues));
+        return probabilities
+                .get(blockName)
+                .get(HierarchicalModelFormula.createSubFormula(values, parentValues));
     }
 
     public Map<String, Double> computeMarginal(String variableName) {
@@ -223,7 +232,7 @@ public class PlainTextHierarchicalModel {
             }
         }
 
-        return new PlainTextHierarchicalModel(formula, newProbabilities);
+        return new PlainTextHierarchicalModel(newProbabilities, formula);
     }
 
     private List<String> combine(Collection<String> first, Collection<String> second) {
@@ -237,5 +246,15 @@ public class PlainTextHierarchicalModel {
             }
         }
         return combinations;
+    }
+
+    public static PlainTextHierarchicalModel fromString(String model) throws IOException {
+        return PlainTextModelIO.readModel(new ByteArrayInputStream(model.getBytes()));
+    }
+
+    public static String toString(PlainTextHierarchicalModel model) {
+        var os = new ByteArrayOutputStream();
+        PlainTextModelIO.writeModel(model, os);
+        return os.toString();
     }
 }
