@@ -1,29 +1,36 @@
 package com.milaboratory.mir.rearrangement.converter;
 
-import com.milaboratory.mir.rearrangement.RearrangementTemplate;
-import com.milaboratory.mir.rearrangement.parser.MuruganModeParserUtils;
 import com.milaboratory.mir.segment.Gene;
 import com.milaboratory.mir.segment.Species;
-import com.milaboratory.mir.segment.parser.MigecSegmentLibraryUtils;
 import org.junit.Test;
 
 import java.io.IOException;
 
+import static com.milaboratory.mir.rearrangement.converter.MuruganConverterUtils.*;
+import static com.milaboratory.mir.rearrangement.parser.MuruganModeParserUtils.getModelFromResources;
+import static com.milaboratory.mir.segment.parser.MigecSegmentLibraryUtils.getLibraryFromResources;
+
 public class MuruganConverterUtilsTest {
     @Test
-    public void test() throws IOException {
-        var mdl = MuruganModeParserUtils.getModelFromResources(Species.Human, Gene.IGH);
-        var segmLib = MigecSegmentLibraryUtils.getLibraryFromResources(Species.Human, Gene.IGH);
-        var converter = MuruganConverterUtils.getConverter(mdl, segmLib);
-        var rearrMdl = converter.getRearrangementModel();
+    public void createTest() throws IOException {
+        getConverter(
+                getModelFromResources(Species.Human, Gene.TRA),
+                getLibraryFromResources(Species.Human, Gene.TRA)
+        );
 
-        long start, end;
+        getConverter(
+                getModelFromResources(Species.Human, Gene.TRB),
+                getLibraryFromResources(Species.Human, Gene.TRB)
+        );
 
-        start = System.currentTimeMillis();
-        for (int i = 0; i < 1000000; i++) {
-            ((RearrangementTemplate) rearrMdl.generate()).toRearrangement().getCdr3();
-        }
-        end = System.currentTimeMillis();
-        System.out.println((end - start) + "ms");
+        getConverter(
+                getModelFromResources(Species.Human, Gene.IGH),
+                getLibraryFromResources(Species.Human, Gene.IGH)
+        );
+
+        getConverter(
+                getModelFromResources(Species.Mouse, Gene.TRB),
+                getLibraryFromResources(Species.Mouse, Gene.TRB)
+        );
     }
 }

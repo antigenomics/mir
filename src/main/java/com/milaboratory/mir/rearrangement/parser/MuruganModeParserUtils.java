@@ -81,9 +81,14 @@ public final class MuruganModeParserUtils {
 
     public static MuruganModel getModelFromResources(Species species, Gene gene) throws IOException {
         MuruganModelStream muruganModelStream = getResourceStream(species, gene);
-        return MuruganModelParser.load(muruganModelStream.getParams(),
-                muruganModelStream.getMarginals(),
-                getFormula(gene), species, gene);
+
+        try {
+            return MuruganModelParser.load(muruganModelStream.getParams(),
+                    muruganModelStream.getMarginals(),
+                    getFormula(gene), species, gene);
+        } catch (Exception e) {
+            throw new RuntimeException("Unable to load Murugan model for " + species + " " + gene, e);
+        }
     }
 
     public static MuruganModel getModelFromPath(String paramsPath, String marginalsPath,

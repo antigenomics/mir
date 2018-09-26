@@ -30,4 +30,9 @@ public class MuruganModeParserUtilsTest {
         MuruganModeParserUtils.getModelFromResources(Species.Human, Gene.IGH);
         MuruganModeParserUtils.getModelFromResources(Species.Mouse, Gene.TRB);
     }
+
+    @Test(expected = RuntimeException.class)
+    public void loadFromResourceTest1() throws IOException {
+        MuruganModeParserUtils.getModelFromResources(Species.Mouse, Gene.TRA);
+    }
 }

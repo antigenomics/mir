@@ -9,7 +9,7 @@ import java.util.Arrays;
 
 public class MigecSegmentLibraryUtilsTest {
     @Test
-    public void testRes() throws IOException {
+    public void testRes() {
         for (Species s : Arrays.asList(Species.Human,
                 Species.Mouse)) {
             for (Gene g : Arrays.asList(
