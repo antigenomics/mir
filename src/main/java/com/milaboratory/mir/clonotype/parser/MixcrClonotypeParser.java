@@ -38,35 +38,35 @@ public class MixcrClonotypeParser extends AbstractClonotypeTableParser<ReadlessC
         //todo: perhaps read in if provided?
 
         List<SegmentCall<VariableSegment>> vCalls = new ArrayList<>();
-        ;
+
         for (String v : splitLine[headerInfo.vColIndex].split(",")) {
             String[] vInfo = v.split("\\(");
-            VariableSegment variableSegment = getV(vInfo[0], ???);
-            vCalls.add(SegmentCall.asCall(variableSegment));
+            var variableSegment = getV(vInfo[0], Float.parseFloat(vInfo[1].split("\\)")[0]));
+            vCalls.add(variableSegment);
         }
 
         List<SegmentCall<DiversitySegment>> dCalls = new ArrayList<>();
         if (headerInfo.dColIndex >= 0) {
             for (String d : splitLine[headerInfo.dColIndex].split(",")) {
                 String[] dInfo = d.split("\\(");
-                DiversitySegment diversitySegment = segmentLibrary.getOrCreateD(dInfo[0]);
-                dCalls.add(SegmentCall.asCall(diversitySegment));
+                var diversitySegment = getD(dInfo[0], Float.parseFloat(dInfo[1].split("\\)")[0]));
+                dCalls.add(diversitySegment);
             }
         }
 
         List<SegmentCall<JoiningSegment>> jCalls = new ArrayList<>();
         for (String j : splitLine[headerInfo.jColIndex].split(",")) {
             String[] jInfo = j.split("\\(");
-            JoiningSegment joiningSegment = segmentLibrary.getOrCreateJ(jInfo[0]);
-            jCalls.add(SegmentCall.asCall(joiningSegment));
+            var joiningSegment = getJ(jInfo[0], Float.parseFloat(jInfo[1].split("\\)")[0]));
+            jCalls.add(joiningSegment);
         }
 
         List<SegmentCall<ConstantSegment>> cCalls = new ArrayList<>();
         if (headerInfo.cColIndex >= 0) {
             for (String c : splitLine[headerInfo.cColIndex].split(",")) {
                 String[] cInfo = c.split("\\(");
-                ConstantSegment constantSegment = segmentLibrary.getOrCreateC(cInfo[0]);
-                cCalls.add(SegmentCall.asCall(constantSegment));
+                var constantSegment = getC(cInfo[0], Float.parseFloat(cInfo[1].split("\\)")[0]));
+                cCalls.add(constantSegment);
             }
         }
 
@@ -91,7 +91,7 @@ public class MixcrClonotypeParser extends AbstractClonotypeTableParser<ReadlessC
         if (headerInfo.vEndColIndex >= 0) {
             vEnd = Integer.parseInt(splitLine[headerInfo.vEndColIndex]);
         } else {
-            if (!vCalls.get(0).getSegment().isDummy()) {
+            if (!vCalls.get(0).getSegment().isMissingInLibrary()) {
                 vEnd = Integer.parseInt(refPoints[refPointsColInfo.CDR3Begin]) +
                         vCalls.get(0).getSegment().getCdr3Part().size();
             }
@@ -106,7 +106,7 @@ public class MixcrClonotypeParser extends AbstractClonotypeTableParser<ReadlessC
             jStart = Integer.parseInt(refPoints[refPointsColInfo.CDR3Begin]) +
                     Integer.parseInt(splitLine[headerInfo.jStartColIndex]);
         } else {
-            if (!jCalls.get(0).getSegment().isDummy() && jTrim != -1) {
+            if (!jCalls.get(0).getSegment().isMissingInLibrary() && jTrim != -1) {
                 jStart = cdr3Nt.size() - jCalls.get(0).getSegment().getCdr3Part().size();
             }
         }
