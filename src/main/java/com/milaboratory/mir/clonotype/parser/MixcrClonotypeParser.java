@@ -4,9 +4,9 @@ import com.milaboratory.core.sequence.AminoAcidSequence;
 import com.milaboratory.core.sequence.NucleotideSequence;
 import com.milaboratory.mir.StringArrayIndexer;
 import com.milaboratory.mir.clonotype.ClonotypeCall;
-import com.milaboratory.mir.clonotype.JunctionMarkup;
-import com.milaboratory.mir.clonotype.ReadlessClonotypeImpl;
-import com.milaboratory.mir.clonotype.SegmentTrimming;
+import com.milaboratory.mir.clonotype.rearrangement.JunctionMarkup;
+import com.milaboratory.mir.clonotype.rearrangement.ReadlessClonotypeImpl;
+import com.milaboratory.mir.clonotype.rearrangement.SegmentTrimming;
 import com.milaboratory.mir.segment.*;
 
 import java.util.ArrayList;
@@ -19,8 +19,9 @@ public class MixcrClonotypeParser extends AbstractClonotypeTableParser<ReadlessC
     private final AtomicInteger idCounter = new AtomicInteger();
 
     public MixcrClonotypeParser(String[] header,
-                                   SegmentLibrary segmentLibrary) {
-        super(header, segmentLibrary);
+                                SegmentLibrary segmentLibrary,
+                                boolean majorAlleles) {
+        super(header, segmentLibrary, majorAlleles);
         this.headerInfo = new HeaderInfo(header);
         this.refPointsColInfo = new RefPointColInfo();
     }
@@ -34,12 +35,13 @@ public class MixcrClonotypeParser extends AbstractClonotypeTableParser<ReadlessC
         NucleotideSequence cdr3Nt = new NucleotideSequence(splitLine[headerInfo.cdr3NtColIndex]);
 
         AminoAcidSequence cdr3Aa = new AminoAcidSequence(splitLine[headerInfo.cdr3AaColIndex]);
-         //todo: perhaps read in if provided?
+        //todo: perhaps read in if provided?
 
-        List<SegmentCall<VariableSegment>> vCalls = new ArrayList<>();;
+        List<SegmentCall<VariableSegment>> vCalls = new ArrayList<>();
+        ;
         for (String v : splitLine[headerInfo.vColIndex].split(",")) {
             String[] vInfo = v.split("\\(");
-            VariableSegment variableSegment = segmentLibrary.getOrCreateV(vInfo[0]);
+            VariableSegment variableSegment = getV(vInfo[0], ???);
             vCalls.add(SegmentCall.asCall(variableSegment));
         }
 
@@ -89,7 +91,7 @@ public class MixcrClonotypeParser extends AbstractClonotypeTableParser<ReadlessC
         if (headerInfo.vEndColIndex >= 0) {
             vEnd = Integer.parseInt(splitLine[headerInfo.vEndColIndex]);
         } else {
-            if (!vCalls.get(0).getSegment().isDummy()){
+            if (!vCalls.get(0).getSegment().isDummy()) {
                 vEnd = Integer.parseInt(refPoints[refPointsColInfo.CDR3Begin]) +
                         vCalls.get(0).getSegment().getCdr3Part().size();
             }
@@ -104,7 +106,7 @@ public class MixcrClonotypeParser extends AbstractClonotypeTableParser<ReadlessC
             jStart = Integer.parseInt(refPoints[refPointsColInfo.CDR3Begin]) +
                     Integer.parseInt(splitLine[headerInfo.jStartColIndex]);
         } else {
-            if (!jCalls.get(0).getSegment().isDummy() && jTrim != -1){
+            if (!jCalls.get(0).getSegment().isDummy() && jTrim != -1) {
                 jStart = cdr3Nt.size() - jCalls.get(0).getSegment().getCdr3Part().size();
             }
         }
@@ -118,7 +120,7 @@ public class MixcrClonotypeParser extends AbstractClonotypeTableParser<ReadlessC
     }
 
 
-    private static class RefPointColInfo{
+    private static class RefPointColInfo {
         final int V5UTRBeginTrimmed, V5UTREnd, L1Begin,
                 L1End, VIntronBegin, VIntronEnd, L2Begin,
                 L2End, FR1Begin, FR1End, CDR1Begin,
@@ -127,7 +129,8 @@ public class MixcrClonotypeParser extends AbstractClonotypeTableParser<ReadlessC
                 VEndTrimmed, DBeginTrimmed, DEndTrimmed, JBeginTrimmed,
                 CDR3End, FR4Begin, FR4End,
                 CBegin, CExon1End, Num3V, Num5D, Num3D, Num3J;
-        RefPointColInfo(){                        //
+
+        RefPointColInfo() {                        //
             this.V5UTRBeginTrimmed = 0;
             this.V5UTREnd = 1;
             this.L1Begin = 1;
