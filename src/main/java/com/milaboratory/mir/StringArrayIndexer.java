@@ -50,6 +50,10 @@ public class StringArrayIndexer {
         return res;
     }
 
+    public int getIndexOf(String[] names) {
+        return getIndexOf(names, true);
+    }
+
     public int getIndexOf(String[] names, boolean strict) {
         for (String name : names) {
             int res = getIndexOf(name, false);
@@ -93,6 +97,10 @@ public class StringArrayIndexer {
                     "missing column '" + Arrays.toString(names) + "'");
         }
         return -1;
+    }
+
+    public int getIndexOfS(String[] names) {
+        return getIndexOfS(names, true);
     }
 
     public boolean isIgnoreCase() {
