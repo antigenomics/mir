@@ -104,7 +104,8 @@ public class MixcrClonotypeParser extends AbstractClonotypeTableParser<ReadlessC
         }
         SegmentTrimming segmentTrimming = new SegmentTrimming(vTrim, jTrim, dTrim5, dTrim3);
 
-        return new ClonotypeCall<>(id, count, freq,
+        return new ClonotypeCall<>(id, // todo: add clone ID
+                count, freq,
                 new ReadlessClonotypeImpl(cdr3Nt,
                         vCalls, dCalls, jCalls, cCalls,
                         segmentTrimming, junctionMarkup,
@@ -159,31 +160,25 @@ public class MixcrClonotypeParser extends AbstractClonotypeTableParser<ReadlessC
     }
 
     private static class HeaderInfo {
-        final int countColIndex, freqColIndex,
+        final int cloneIdColIndex,
+                countColIndex, freqColIndex,
                 cdr3NtColIndex, cdr3AaColIndex,
                 vColIndex, dColIndex, jColIndex, cColIndex,
-                vTrimColIndex, dTrim5ColIndex, dTrim3ColIndex, jTrimColIndex,
-                vEndColIndex, dStartColIndex, dEndColIndex, jStartColIndex, refPointColIndex;
+                refPointColIndex;
 
         HeaderInfo(String[] header) {
             StringArrayIndexer headerParser = new StringArrayIndexer(header);
-            this.countColIndex = headerParser.getIndexOf("cloneCount");
-            this.freqColIndex = headerParser.getIndexOfS("cloneFraction");
-            this.cdr3NtColIndex = headerParser.getIndexOf("nSeqCDR3");
-            this.cdr3AaColIndex = headerParser.getIndexOf("aaSeqCDR3", false);
-            this.vColIndex = headerParser.getIndexOf("allVHitsWithScore", false);
-            this.dColIndex = headerParser.getIndexOf("allDHitsWithScore", false);
-            this.jColIndex = headerParser.getIndexOf("allJHitsWithScore", false);
-            this.cColIndex = headerParser.getIndexOf("allCHitsWithScore", false);
-            this.vTrimColIndex = headerParser.getIndexOf("positionOfVEndTrimmed", false);
-            this.dTrim5ColIndex = headerParser.getIndexOf("positionOfDBeginTrimmed", false);
-            this.dTrim3ColIndex = headerParser.getIndexOf("positionOfDEndTrimmed", false);
-            this.jTrimColIndex = headerParser.getIndexOf("positionOfJBeginTrimmed", false);
-            this.vEndColIndex = headerParser.getIndexOf("positionOfVEnd", false);
-            this.dStartColIndex = headerParser.getIndexOf("positionOfDBegin", false);
-            this.dEndColIndex = headerParser.getIndexOf("positionOfDEnd", false);
-            this.jStartColIndex = headerParser.getIndexOf("positionOfJBegin", false);
-            this.refPointColIndex = headerParser.getIndexOf("refPoints");
+            // todo: add clone ID
+            this.cloneIdColIndex = headerParser.getIndexOf(new String[]{"cloneId", "Clone ID"});
+            this.countColIndex = headerParser.getIndexOf(new String[]{"cloneCount", "Clone count"});
+            this.freqColIndex = headerParser.getIndexOfS(new String[]{"cloneFraction", "Clone fraction"});
+            this.cdr3NtColIndex = headerParser.getIndexOf(new String[]{"nSeqCDR3",  "N. Seq. CDR3"});
+            this.cdr3AaColIndex = headerParser.getIndexOf(new String[]{"aaSeqCDR3", "AA. Seq. CDR3"}, false);
+            this.vColIndex = headerParser.getIndexOf(new String[]{"allVHitsWithScore", "All V Hits With Score ", "All V hits"}, false);
+            this.dColIndex = headerParser.getIndexOf(new String[]{"allDHitsWithScore", "All D Hits With Score ", "All D hits"}, false);
+            this.jColIndex = headerParser.getIndexOf(new String[]{"allJHitsWithScore", "All J Hits With Score ", "All J hits"}, false);
+            this.cColIndex = headerParser.getIndexOf(new String[]{"allCHitsWithScore", "All C Hits With Score ", "All C hits"}, false);
+            this.refPointColIndex = headerParser.getIndexOf(new String[]{"Ref. points"});
         }
     }
 }
