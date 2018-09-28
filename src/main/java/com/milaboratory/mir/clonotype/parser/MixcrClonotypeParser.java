@@ -90,16 +90,16 @@ public class MixcrClonotypeParser extends AbstractClonotypeTableParser<ReadlessC
 
 
         int vTrim = 0, dTrim5 = 0, dTrim3 = 0, jTrim = 0;
-        if (!refPoints[refPointsColInfo.VEndTrimmed].isEmpty()) {
+        if (!refPoints[refPointsColInfo.Num3V].isEmpty()) {
             vTrim = Integer.parseInt(refPoints[refPointsColInfo.Num3V]);
         }
-        if (!refPoints[refPointsColInfo.DBeginTrimmed].isEmpty()) {
+        if (!refPoints[refPointsColInfo.Num5D].isEmpty()) {
             dTrim5 = Integer.parseInt(refPoints[refPointsColInfo.Num5D]);
         }
-        if (!refPoints[refPointsColInfo.DEndTrimmed].isEmpty()) {
+        if (!refPoints[refPointsColInfo.Num3D].isEmpty()) {
             dTrim3 = Integer.parseInt(refPoints[refPointsColInfo.Num3D]);
         }
-        if (!refPoints[refPointsColInfo.JBeginTrimmed].isEmpty()) {
+        if (!refPoints[refPointsColInfo.Num3J].isEmpty()) {
             jTrim = Integer.parseInt(refPoints[refPointsColInfo.Num3J]);
         }
         SegmentTrimming segmentTrimming = new SegmentTrimming(vTrim, jTrim, dTrim5, dTrim3);
