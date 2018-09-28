@@ -72,45 +72,37 @@ public class MixcrClonotypeParser extends AbstractClonotypeTableParser<ReadlessC
 
         String[] refPoints = splitLine[headerInfo.refPointColIndex].split(",")[0].split(":", -1);
 
-        int vTrim = -1, dTrim5 = -1, dTrim3 = -1, jTrim = -1;
+        int vEnd = -1, dStart = -1, dEnd = -1, jStart = -1;
+        int cdr3Start = Integer.parseInt(refPoints[refPointsColInfo.CDR3Begin]);
         if (!refPoints[refPointsColInfo.VEndTrimmed].isEmpty()) {
-            vTrim = Integer.parseInt(refPoints[refPointsColInfo.VEndTrimmed]);
+            vEnd = Integer.parseInt(refPoints[refPointsColInfo.VEndTrimmed]) - cdr3Start;
         }
         if (!refPoints[refPointsColInfo.DBeginTrimmed].isEmpty()) {
-            dTrim5 = Integer.parseInt(refPoints[refPointsColInfo.DBeginTrimmed]);
+            dStart = Integer.parseInt(refPoints[refPointsColInfo.DBeginTrimmed]) - cdr3Start;
         }
         if (!refPoints[refPointsColInfo.DEndTrimmed].isEmpty()) {
-            dTrim3 = Integer.parseInt(refPoints[refPointsColInfo.DEndTrimmed]);
+            dEnd = Integer.parseInt(refPoints[refPointsColInfo.DEndTrimmed]) - cdr3Start;
         }
         if (!refPoints[refPointsColInfo.JBeginTrimmed].isEmpty()) {
-            jTrim = Integer.parseInt(refPoints[refPointsColInfo.JBeginTrimmed]);
-        }
-        SegmentTrimming segmentTrimming = new SegmentTrimming(vTrim, jTrim, dTrim5, dTrim3);
-
-        int vEnd = -1, dStart = -1, dEnd = -1, jStart = -1;
-        if (headerInfo.vEndColIndex >= 0) {
-            vEnd = Integer.parseInt(splitLine[headerInfo.vEndColIndex]);
-        } else {
-            if (!vCalls.get(0).getSegment().isMissingInLibrary()) {
-                vEnd = Integer.parseInt(refPoints[refPointsColInfo.CDR3Begin]) +
-                        vCalls.get(0).getSegment().getCdr3Part().size();
-            }
-        }
-        if (headerInfo.dStartColIndex >= 0) {
-            dStart = Integer.parseInt(splitLine[headerInfo.dStartColIndex]);
-        }
-        if (headerInfo.dEndColIndex >= 0) {
-            dEnd = Integer.parseInt(splitLine[headerInfo.dEndColIndex]);
-        }
-        if (headerInfo.jStartColIndex >= 0) {
-            jStart = Integer.parseInt(refPoints[refPointsColInfo.CDR3Begin]) +
-                    Integer.parseInt(splitLine[headerInfo.jStartColIndex]);
-        } else {
-            if (!jCalls.get(0).getSegment().isMissingInLibrary() && jTrim != -1) {
-                jStart = cdr3Nt.size() - jCalls.get(0).getSegment().getCdr3Part().size();
-            }
+            jStart = Integer.parseInt(refPoints[refPointsColInfo.JBeginTrimmed]) - cdr3Start;
         }
         JunctionMarkup junctionMarkup = new JunctionMarkup(vEnd, jStart, dStart, dEnd);
+
+
+        int vTrim = 0, dTrim5 = 0, dTrim3 = 0, jTrim = 0;
+        if (!refPoints[refPointsColInfo.VEndTrimmed].isEmpty()) {
+            vTrim = Integer.parseInt(refPoints[refPointsColInfo.Num3V]);
+        }
+        if (!refPoints[refPointsColInfo.DBeginTrimmed].isEmpty()) {
+            dTrim5 = Integer.parseInt(refPoints[refPointsColInfo.Num5D]);
+        }
+        if (!refPoints[refPointsColInfo.DEndTrimmed].isEmpty()) {
+            dTrim3 = Integer.parseInt(refPoints[refPointsColInfo.Num3D]);
+        }
+        if (!refPoints[refPointsColInfo.JBeginTrimmed].isEmpty()) {
+            jTrim = Integer.parseInt(refPoints[refPointsColInfo.Num3J]);
+        }
+        SegmentTrimming segmentTrimming = new SegmentTrimming(vTrim, jTrim, dTrim5, dTrim3);
 
         return new ClonotypeCall<>(id, count, freq,
                 new ReadlessClonotypeImpl(cdr3Nt,
