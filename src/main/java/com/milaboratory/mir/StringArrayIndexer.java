@@ -50,6 +50,20 @@ public class StringArrayIndexer {
         return res;
     }
 
+    public int getIndexOf(String[] names, boolean strict) {
+        for (String name : names) {
+            int res = getIndexOf(name, false);
+            if (res > -1) {
+                return res;
+            }
+        }
+        if (strict) {
+            throw new RuntimeException("Failed to parse header, " +
+                    "missing column '" + Arrays.toString(names) + "'");
+        }
+        return -1;
+    }
+
     public int getIndexOfS(String name) {
         return getIndexOfS(name, true);
     }
@@ -63,6 +77,20 @@ public class StringArrayIndexer {
         if (strict) {
             throw new RuntimeException("Failed to parse header, " +
                     "missing column '" + name + "'");
+        }
+        return -1;
+    }
+
+    public int getIndexOfS(String[] names, boolean strict) {
+        for (String name : names) {
+            int res = getIndexOfS(name, false);
+            if (res > -1) {
+                return res;
+            }
+        }
+        if (strict) {
+            throw new RuntimeException("Failed to parse header, " +
+                    "missing column '" + Arrays.toString(names) + "'");
         }
         return -1;
     }
