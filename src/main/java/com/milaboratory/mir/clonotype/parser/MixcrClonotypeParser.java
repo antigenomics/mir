@@ -16,7 +16,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class MixcrClonotypeParser extends AbstractClonotypeTableParser<ReadlessClonotypeImpl> {
     private final HeaderInfo headerInfo;
     private final RefPointColInfo refPointsColInfo;
-    private final AtomicInteger idCounter = new AtomicInteger();
+    private final AtomicInteger idCounter = new AtomicInteger(); //do we need it?
 
     public MixcrClonotypeParser(String[] header,
                                 SegmentLibrary segmentLibrary,
@@ -28,18 +28,24 @@ public class MixcrClonotypeParser extends AbstractClonotypeTableParser<ReadlessC
 
     @Override
     public ClonotypeCall<ReadlessClonotypeImpl> parse(String[] splitLine) {
-        int id = idCounter.incrementAndGet();
+        int id = Integer.parseInt(splitLine[headerInfo.cloneIdColIndex]);
         int count = Integer.parseInt(splitLine[headerInfo.countColIndex]);
         double freq = Double.parseDouble(splitLine[headerInfo.freqColIndex]);
 
         NucleotideSequence cdr3Nt = new NucleotideSequence(splitLine[headerInfo.cdr3NtColIndex]);
 
-        AminoAcidSequence cdr3Aa = new AminoAcidSequence(splitLine[headerInfo.cdr3AaColIndex]);
-        //todo: perhaps read in if provided?
+        AminoAcidSequence cdr3Aa;
+        if (headerInfo.cdr3AaColIndex != -1) {
+            cdr3Aa = new AminoAcidSequence(splitLine[headerInfo.cdr3AaColIndex]);
+        } else {
+            cdr3Aa = AminoAcidSequence.translateFromCenter(cdr3Nt);
+        }
+
+        //todo: perhaps read in if provided? (Done)
 
         List<SegmentCall<VariableSegment>> vCalls = new ArrayList<>();
 
-        for (String v : splitLine[headerInfo.vColIndex].split(",")) {
+        for (String v : splitLine[headerInfo.vColIndex].replaceAll("\\*00", "*01").split(",")) {
             String[] vInfo = v.split("\\(");
             var variableSegment = getV(vInfo[0], Float.parseFloat(vInfo[1].split("\\)")[0]));
             vCalls.add(variableSegment);
@@ -47,7 +53,7 @@ public class MixcrClonotypeParser extends AbstractClonotypeTableParser<ReadlessC
 
         List<SegmentCall<DiversitySegment>> dCalls = new ArrayList<>();
         if (headerInfo.dColIndex >= 0) {
-            for (String d : splitLine[headerInfo.dColIndex].split(",")) {
+            for (String d : splitLine[headerInfo.dColIndex].replaceAll("\\*00", "*01").split(",")) {
                 String[] dInfo = d.split("\\(");
                 var diversitySegment = getD(dInfo[0], Float.parseFloat(dInfo[1].split("\\)")[0]));
                 dCalls.add(diversitySegment);
@@ -55,7 +61,7 @@ public class MixcrClonotypeParser extends AbstractClonotypeTableParser<ReadlessC
         }
 
         List<SegmentCall<JoiningSegment>> jCalls = new ArrayList<>();
-        for (String j : splitLine[headerInfo.jColIndex].split(",")) {
+        for (String j : splitLine[headerInfo.jColIndex].replaceAll("\\*00", "*01").split(",")) {
             String[] jInfo = j.split("\\(");
             var joiningSegment = getJ(jInfo[0], Float.parseFloat(jInfo[1].split("\\)")[0]));
             jCalls.add(joiningSegment);
@@ -63,7 +69,7 @@ public class MixcrClonotypeParser extends AbstractClonotypeTableParser<ReadlessC
 
         List<SegmentCall<ConstantSegment>> cCalls = new ArrayList<>();
         if (headerInfo.cColIndex >= 0) {
-            for (String c : splitLine[headerInfo.cColIndex].split(",")) {
+            for (String c : splitLine[headerInfo.cColIndex].replaceAll("\\*00", "*01").split(",")) {
                 String[] cInfo = c.split("\\(");
                 var constantSegment = getC(cInfo[0], Float.parseFloat(cInfo[1].split("\\)")[0]));
                 cCalls.add(constantSegment);
@@ -104,7 +110,7 @@ public class MixcrClonotypeParser extends AbstractClonotypeTableParser<ReadlessC
         }
         SegmentTrimming segmentTrimming = new SegmentTrimming(vTrim, jTrim, dTrim5, dTrim3);
 
-        return new ClonotypeCall<>(id, // todo: add clone ID
+        return new ClonotypeCall<>(id, // todo: add clone ID (DONE)
                 count, freq,
                 new ReadlessClonotypeImpl(cdr3Nt,
                         vCalls, dCalls, jCalls, cCalls,
@@ -168,7 +174,7 @@ public class MixcrClonotypeParser extends AbstractClonotypeTableParser<ReadlessC
 
         HeaderInfo(String[] header) {
             StringArrayIndexer headerParser = new StringArrayIndexer(header);
-            // todo: add clone ID
+            // todo: add clone ID (DONE)
             this.cloneIdColIndex = headerParser.getIndexOf(new String[]{"cloneId", "Clone ID"});
             this.countColIndex = headerParser.getIndexOf(new String[]{"cloneCount", "Clone count"});
             this.freqColIndex = headerParser.getIndexOfS(new String[]{"cloneFraction", "Clone fraction"});
@@ -178,7 +184,7 @@ public class MixcrClonotypeParser extends AbstractClonotypeTableParser<ReadlessC
             this.dColIndex = headerParser.getIndexOf(new String[]{"allDHitsWithScore", "All D Hits With Score ", "All D hits"}, false);
             this.jColIndex = headerParser.getIndexOf(new String[]{"allJHitsWithScore", "All J Hits With Score ", "All J hits"}, false);
             this.cColIndex = headerParser.getIndexOf(new String[]{"allCHitsWithScore", "All C Hits With Score ", "All C hits"}, false);
-            this.refPointColIndex = headerParser.getIndexOf(new String[]{"Ref. points"});
+            this.refPointColIndex = headerParser.getIndexOf(new String[]{"refPoints", "Ref. points"});
         }
     }
 }
