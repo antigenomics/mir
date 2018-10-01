@@ -18,7 +18,7 @@ public final class StmMapper<T, S extends Sequence<S>>
     private final SequenceSearchScope searchScope;
     private final ExplicitAlignmentScoring<S> scoring;
 
-    public StmMapper(Iterable<T> clonotypes,
+    public StmMapper(Iterable<T> objects,
                      SequenceProvider<T, S> sequenceProvider,
                      Alphabet<S> alphabet,
                      SequenceSearchScope searchScope,
@@ -26,7 +26,7 @@ public final class StmMapper<T, S extends Sequence<S>>
         this.stm = new SequenceTreeMap<>(alphabet);
         this.sequenceProvider = sequenceProvider;
         // for stream use stream::iterator; N/A for parallel streams
-        clonotypes.forEach(this::put);
+        objects.forEach(this::put);
         this.searchScope = searchScope;
         this.scoring = scoring;
     }
