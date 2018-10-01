@@ -1,9 +1,6 @@
 package com.milaboratory.mir.segment;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class SegmentLibraryImpl implements SegmentLibrary {
@@ -20,29 +17,37 @@ public class SegmentLibraryImpl implements SegmentLibrary {
                               Map<String, JoiningSegment> joiningSegmentMap,
                               Map<String, ConstantSegment> constantSegmentMap) {
         this(species, gene, variableSegmentMap, diversitySegmentMap, joiningSegmentMap, constantSegmentMap,
-                createDummyMajor(variableSegmentMap, diversitySegmentMap, joiningSegmentMap, constantSegmentMap));
+                createMockMajorMap(variableSegmentMap, diversitySegmentMap, joiningSegmentMap, constantSegmentMap));
     }
 
-    private static Map<String, String> createDummyMajor(Map<String, ? extends Segment> vMap,
-                                                        Map<String, ? extends Segment> dMap,
-                                                        Map<String, ? extends Segment> jMap,
-                                                        Map<String, ? extends Segment> cMap) {
-        var dummyMajorMap = new HashMap<String, String>();
+    private static Map<String, String> createMockMajorMap(Map<String, ? extends Segment> vMap,
+                                                          Map<String, ? extends Segment> dMap,
+                                                          Map<String, ? extends Segment> jMap,
+                                                          Map<String, ? extends Segment> cMap) {
+        var majorMap = new HashMap<String, String>();
 
-        for (String name : vMap.keySet()) {
-            dummyMajorMap.put(name, name);
-        }
-        for (String name : dMap.keySet()) {
-            dummyMajorMap.put(name, name);
-        }
-        for (String name : jMap.keySet()) {
-            dummyMajorMap.put(name, name);
-        }
-        for (String name : cMap.keySet()) {
-            dummyMajorMap.put(name, name);
+        majorMap.putAll(createMockMajorMap(vMap));
+        majorMap.putAll(createMockMajorMap(dMap));
+        majorMap.putAll(createMockMajorMap(jMap));
+        majorMap.putAll(createMockMajorMap(cMap));
+
+        return majorMap;
+    }
+
+    private static Map<String, String> createMockMajorMap(Map<String, ? extends Segment> map){
+        var majorMap = new HashMap<String, String>();
+
+        for(String name : map.keySet()) {
+            majorMap.put(name, name);
+            for (String suffix : Arrays.asList("*00", "*01")) {
+                var majorName = name.replaceFirst("\\*\\d\\d$", suffix);
+                if (map.containsKey(majorName)) {
+                    majorMap.put(name, majorName);
+                }
+            }
         }
 
-        return dummyMajorMap;
+        return majorMap;
     }
 
     public SegmentLibraryImpl(Species species, Gene gene,

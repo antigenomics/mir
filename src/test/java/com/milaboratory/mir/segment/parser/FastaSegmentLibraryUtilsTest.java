@@ -3,7 +3,6 @@ package com.milaboratory.mir.segment.parser;
 import com.milaboratory.core.alignment.AffineGapAlignmentScoring;
 import com.milaboratory.core.io.sequence.fasta.FastaRecord;
 import com.milaboratory.core.sequence.NucleotideSequence;
-import com.milaboratory.mir.mappers.align.SimpleExhaustiveMapperFactory;
 import com.milaboratory.mir.segment.Gene;
 import com.milaboratory.mir.segment.Species;
 import com.milaboratory.mir.structure.AntigenReceptorRegionType;
@@ -27,9 +26,7 @@ public class FastaSegmentLibraryUtilsTest {
                         new NucleotideSequence("GGGACTAGCGGGGGGG")));
 
         var lib = FastaSegmentLibraryUtils.createUsingTemplate(records,
-                MigecSegmentLibraryUtils.getLibraryFromResources(Species.Human, Gene.TRB),
-                new SimpleExhaustiveMapperFactory<>(
-                        AffineGapAlignmentScoring.getNucleotideBLASTScoring()));
+                Species.Human, Gene.TRB);
 
         System.out.println(lib);
 
@@ -45,5 +42,12 @@ public class FastaSegmentLibraryUtilsTest {
 
         Assert.assertTrue(lib.getV("TRBV00").getCdr3Part().toString().startsWith("TGT"));
         Assert.assertTrue(lib.getJ("TRBJ00").getCdr3Part().toString().endsWith("TTT"));
+    }
+
+    @Test
+    public void muruganTest() {
+        var lib = FastaSegmentLibraryUtils.loadMurugan(Species.Human, Gene.TRB);
+
+        System.out.println(lib);
     }
 }

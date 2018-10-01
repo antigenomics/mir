@@ -98,7 +98,7 @@ public final class MuruganModeParserUtils {
                 getFormula(gene), species, gene);
     }
 
-    static MuruganModelStream getResourceStream(Species species, Gene gene) throws IOException {
+    public static MuruganModelStream getResourceStream(Species species, Gene gene) throws IOException {
         return new MuruganModelStream(
                 CommonUtils.getResourceAsStream(PATH + "/" + species.getCode().toLowerCase() + "_" + gene.getCode().toLowerCase() + "_params.txt"),
                 CommonUtils.getResourceAsStream(PATH + "/" + species.getCode().toLowerCase() + "_" + gene.getCode().toLowerCase() + "_marginals.txt")
