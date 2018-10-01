@@ -13,4 +13,8 @@ public interface Segment {
     boolean isMissingInLibrary();
 
     boolean isMajorAllele();
+
+    // TODO: non-functional alleles
+
+    SegmentType getSegmentType();
 }

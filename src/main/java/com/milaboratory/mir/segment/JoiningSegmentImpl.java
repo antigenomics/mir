@@ -16,6 +16,17 @@ public class JoiningSegmentImpl implements JoiningSegment {
     private final int referencePoint;
     private final boolean majorAllele;
 
+    public static JoiningSegmentImpl fromMarkup
+            (String id,
+             NucleotideSequence germlineNt,
+             PrecomputedSequenceRegionMarkup<NucleotideSequence, AntigenReceptorRegionType> markup,
+             boolean majorAllele) {
+        var cdr3Markup = markup.getRegion(AntigenReceptorRegionType.CDR3);
+        return new JoiningSegmentImpl(id, germlineNt,
+                cdr3Markup.getEnd() - 4,
+                majorAllele);
+    }
+
     public JoiningSegmentImpl(String id,
                               NucleotideSequence germlineNt,
                               int referencePoint,

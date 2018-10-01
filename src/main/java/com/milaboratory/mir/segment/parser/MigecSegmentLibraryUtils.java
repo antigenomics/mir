@@ -11,7 +11,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
 
-public class MigecSegmentLibraryUtils {
+public final class MigecSegmentLibraryUtils {
     public static final String PATH = "segments.txt";
 
     private static final Map<SpeciesGene, SegmentLibraryImpl> resourceLibraryCache = new ConcurrentHashMap<>();

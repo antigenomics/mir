@@ -4,8 +4,8 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 public enum Species {
-    Human("hsa", "HomoSapiens", Arrays.asList("human", "homosapiens", "hsa")),
-    Mouse("mmu", "MusMusculus", Arrays.asList("mouse", "musmusculus", "mmu"));
+    Human("HSA", "HomoSapiens", Arrays.asList("human", "homosapiens", "hsa")),
+    Mouse("MMU", "MusMusculus", Arrays.asList("mouse", "musmusculus", "mmu"));
 
     private final String code, fullName;
     private final Set<String> aliases;

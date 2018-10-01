@@ -14,7 +14,36 @@ public class SegmentLibraryImpl implements SegmentLibrary {
     private final Map<String, JoiningSegment> joiningSegmentMap, joiningSegmentMajorAlleleMap;
     private final Map<String, ConstantSegment> constantSegmentMap, constantSegmentMajorAlleleMap;
 
-    // todo: major allele conversion
+    public SegmentLibraryImpl(Species species, Gene gene,
+                              Map<String, VariableSegment> variableSegmentMap,
+                              Map<String, DiversitySegment> diversitySegmentMap,
+                              Map<String, JoiningSegment> joiningSegmentMap,
+                              Map<String, ConstantSegment> constantSegmentMap) {
+        this(species, gene, variableSegmentMap, diversitySegmentMap, joiningSegmentMap, constantSegmentMap,
+                createDummyMajor(variableSegmentMap, diversitySegmentMap, joiningSegmentMap, constantSegmentMap));
+    }
+
+    private static Map<String, String> createDummyMajor(Map<String, ? extends Segment> vMap,
+                                                        Map<String, ? extends Segment> dMap,
+                                                        Map<String, ? extends Segment> jMap,
+                                                        Map<String, ? extends Segment> cMap) {
+        var dummyMajorMap = new HashMap<String, String>();
+
+        for (String name : vMap.keySet()) {
+            dummyMajorMap.put(name, name);
+        }
+        for (String name : dMap.keySet()) {
+            dummyMajorMap.put(name, name);
+        }
+        for (String name : jMap.keySet()) {
+            dummyMajorMap.put(name, name);
+        }
+        for (String name : cMap.keySet()) {
+            dummyMajorMap.put(name, name);
+        }
+
+        return dummyMajorMap;
+    }
 
     public SegmentLibraryImpl(Species species, Gene gene,
                               Map<String, VariableSegment> variableSegmentMap,
