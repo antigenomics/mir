@@ -8,8 +8,8 @@ import com.milaboratory.mir.segment.SegmentLibrary;
 
 public abstract class VDJModelConverter<T extends PlainTextHierarchicalModel>
         extends Converter<T, VariableDiversityJoiningModel> {
-    public VDJModelConverter(SegmentLibrary segmentLibrary, T plainTextHierarchicalModel) {
-        super(segmentLibrary, plainTextHierarchicalModel);
+    public VDJModelConverter(T plainTextHierarchicalModel, SegmentLibrary segmentLibrary) {
+        super(plainTextHierarchicalModel, segmentLibrary);
     }
 
     public abstract VariableDistribution getVariableDistribution();

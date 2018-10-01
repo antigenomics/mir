@@ -7,8 +7,8 @@ import com.milaboratory.mir.segment.SegmentLibrary;
 
 public abstract class VJModelConverter<T extends PlainTextHierarchicalModel>
         extends Converter<T, VariableJoiningModel> {
-    public VJModelConverter(SegmentLibrary segmentLibrary, T plainTextHierarchicalModel) {
-        super(segmentLibrary, plainTextHierarchicalModel);
+    public VJModelConverter(T plainTextHierarchicalModel, SegmentLibrary segmentLibrary) {
+        super(plainTextHierarchicalModel, segmentLibrary);
     }
 
     public abstract VariableDistribution getVariableDistribution();

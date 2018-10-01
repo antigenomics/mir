@@ -20,9 +20,9 @@ public final class MuruganVDJModelConverter extends VDJModelConverter<MuruganMod
     private final DiversityTrimming5Distribution diversityTrimming5Distribution;
     private final DiversityTrimming3Distribution diversityTrimming3Distribution;
 
-    public MuruganVDJModelConverter(SegmentLibrary segmentLibrary,
-                                    MuruganModel muruganModel) {
-        super(segmentLibrary, muruganModel);
+    public MuruganVDJModelConverter(MuruganModel muruganModel,
+                                    SegmentLibrary segmentLibrary) {
+        super(muruganModel, segmentLibrary);
         if (!muruganModel.getGene().hasD()) {
             throw new IllegalArgumentException("Cannot convert Murugan model without D segment to a VDJ model.");
         }

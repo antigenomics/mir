@@ -11,13 +11,8 @@ import java.io.IOException;
 
 public final class RearrangementModelUtils {
     public static RearrangementModel loadMuruganModel(SegmentLibrary segmentLibrary) {
-        MuruganModel mdl;
-        try {
-            mdl = MuruganModeParserUtils.getModelFromResources(segmentLibrary.getSpecies(),
-                    segmentLibrary.getGene());
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        MuruganModel mdl = MuruganModeParserUtils.getModelFromResources(segmentLibrary.getSpecies(),
+                segmentLibrary.getGene());
 
         var converter = MuruganConverterUtils.getConverter(mdl, segmentLibrary);
 

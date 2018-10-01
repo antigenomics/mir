@@ -7,6 +7,7 @@ import com.milaboratory.mir.rearrangement.blocks.NucleotidePairDistribution;
 import com.milaboratory.mir.rearrangement.parser.MuruganModel;
 import com.milaboratory.mir.segment.Segment;
 import com.milaboratory.mir.segment.SegmentLibrary;
+import com.milaboratory.mir.segment.parser.FastaSegmentLibraryUtils;
 
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -51,14 +52,24 @@ public final class MuruganConverterUtils {
     public static Converter getConverter(MuruganModel muruganModel,
                                          SegmentLibrary segmentLibrary) {
         if (muruganModel.getGene().hasD()) {
-            return new MuruganVDJModelConverter(segmentLibrary, muruganModel);
+            return new MuruganVDJModelConverter(muruganModel, segmentLibrary);
         } else {
-            return new MuruganVJModelConverter(segmentLibrary, muruganModel);
+            return new MuruganVJModelConverter(muruganModel, segmentLibrary);
         }
+    }
+
+    public static Converter getConverter(MuruganModel muruganModel) {
+        return getConverter(muruganModel,
+                FastaSegmentLibraryUtils.loadMurugan(muruganModel.getSpecies(), muruganModel.getGene()));
     }
 
     public static RearrangementModel asRearrangementModel(MuruganModel muruganModel,
                                                           SegmentLibrary segmentLibrary) {
         return getConverter(muruganModel, segmentLibrary).getRearrangementModel();
+    }
+
+    public static RearrangementModel asRearrangementModel(MuruganModel muruganModel) {
+        return asRearrangementModel(muruganModel,
+                FastaSegmentLibraryUtils.loadMurugan(muruganModel.getSpecies(), muruganModel.getGene()));
     }
 }

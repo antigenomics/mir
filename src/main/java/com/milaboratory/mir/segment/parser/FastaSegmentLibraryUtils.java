@@ -133,30 +133,34 @@ public final class FastaSegmentLibraryUtils {
                     boolean majorAllele = !segmentName.matches("^.+\\*\\d\\d$") || // all non conventional = major
                             (segmentName.endsWith("*00") || segmentName.endsWith("*01"));
 
-                    if (segmentName.contains(vToken)) {
-                        variableSegmentMapper
-                                .recomputeMarkup(record.getSequence())
-                                .ifPresent(markup ->
-                                        variableSegmentMap.put(segmentName,
-                                                VariableSegmentImpl.fromMarkup(segmentName,
-                                                        markup.getFullSequence(),
-                                                        markup, majorAllele
-                                                )));
-                    } else if (segmentName.contains(jToken)) {
-                        joiningSegmentMapper
-                                .recomputeMarkup(record.getSequence())
-                                .ifPresent(markup ->
-                                        joiningSegmentMap.put(segmentName,
-                                                JoiningSegmentImpl.fromMarkup(segmentName,
-                                                        markup.getFullSequence(),
-                                                        markup, majorAllele
-                                                )));
-                    } else if (segmentName.contains(dToken)) {
-                        diversitySegmentMap.put(segmentName, new DiversitySegmentImpl(segmentName,
-                                record.getSequence(), majorAllele));
-                    } else if (segmentName.contains(cToken)) {
-                        constantSegmentMap.put(segmentName, new ConstantSegmentImpl(segmentName,
-                                record.getSequence(), majorAllele));
+                    NucleotideSequence sequence = record.getSequence();
+
+                    if (!sequence.containsWildcards()) {
+                        if (segmentName.contains(vToken)) {
+                            variableSegmentMapper
+                                    .recomputeMarkup(sequence)
+                                    .ifPresent(markup ->
+                                            variableSegmentMap.put(segmentName,
+                                                    VariableSegmentImpl.fromMarkup(segmentName,
+                                                            markup.getFullSequence(),
+                                                            markup, majorAllele
+                                                    )));
+                        } else if (segmentName.contains(jToken)) {
+                            joiningSegmentMapper
+                                    .recomputeMarkup(sequence)
+                                    .ifPresent(markup ->
+                                            joiningSegmentMap.put(segmentName,
+                                                    JoiningSegmentImpl.fromMarkup(segmentName,
+                                                            markup.getFullSequence(),
+                                                            markup, majorAllele
+                                                    )));
+                        } else if (segmentName.contains(dToken)) {
+                            diversitySegmentMap.put(segmentName, new DiversitySegmentImpl(segmentName,
+                                    sequence, majorAllele));
+                        } else if (segmentName.contains(cToken)) {
+                            constantSegmentMap.put(segmentName, new ConstantSegmentImpl(segmentName,
+                                    sequence, majorAllele));
+                        }
                     }
                 }
         );

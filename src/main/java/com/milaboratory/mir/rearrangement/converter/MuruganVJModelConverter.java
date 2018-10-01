@@ -14,9 +14,9 @@ public final class MuruganVJModelConverter extends VJModelConverter<MuruganModel
     private final VariableTrimmingDistribution variableTrimmingDistribution;
     private final JoiningTrimmingDistribution joiningTrimmingDistribution;
 
-    public MuruganVJModelConverter(SegmentLibrary segmentLibrary,
-                                   MuruganModel muruganModel) {
-        super(segmentLibrary, muruganModel);
+    public MuruganVJModelConverter(MuruganModel muruganModel,
+                                   SegmentLibrary segmentLibrary) {
+        super(muruganModel, segmentLibrary);
         if (muruganModel.getGene().hasD()) {
             throw new IllegalArgumentException("Cannot convert Murugan model with D segment to a VJ model.");
         }

@@ -79,10 +79,9 @@ public final class MuruganModeParserUtils {
 
     }
 
-    public static MuruganModel getModelFromResources(Species species, Gene gene) throws IOException {
-        MuruganModelStream muruganModelStream = getResourceStream(species, gene);
-
+    public static MuruganModel getModelFromResources(Species species, Gene gene) {
         try {
+            MuruganModelStream muruganModelStream = getResourceStream(species, gene);
             return MuruganModelParser.load(muruganModelStream.getParams(),
                     muruganModelStream.getMarginals(),
                     getFormula(gene), species, gene);

@@ -12,7 +12,7 @@ import static com.milaboratory.mir.segment.parser.MigecSegmentLibraryUtils.getLi
 
 public class MuruganConverterUtilsTest {
     @Test
-    public void createTest() throws IOException {
+    public void createTest()  {
         getConverter(
                 getModelFromResources(Species.Human, Gene.TRA),
                 getLibraryFromResources(Species.Human, Gene.TRA)
@@ -31,6 +31,25 @@ public class MuruganConverterUtilsTest {
         getConverter(
                 getModelFromResources(Species.Mouse, Gene.TRB),
                 getLibraryFromResources(Species.Mouse, Gene.TRB)
+        );
+    }
+
+    @Test
+    public void builtInLibraryCreateTest() {
+        getConverter(
+                getModelFromResources(Species.Human, Gene.TRA)
+        );
+
+        getConverter(
+                getModelFromResources(Species.Human, Gene.TRB)
+        );
+
+        getConverter(
+                getModelFromResources(Species.Human, Gene.IGH)
+        );
+
+        getConverter(
+                getModelFromResources(Species.Mouse, Gene.TRB)
         );
     }
 }
