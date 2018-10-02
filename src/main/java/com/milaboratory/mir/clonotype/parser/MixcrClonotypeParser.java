@@ -55,6 +55,7 @@ public class MixcrClonotypeParser extends AbstractClonotypeTableParser<ReadlessC
         if (headerInfo.dColIndex >= 0) {
             for (String d : splitLine[headerInfo.dColIndex].replaceAll("\\*00", "*01").split(",")) {
                 String[] dInfo = d.split("\\(");
+                if (d.length() == 0) {continue;}
                 var diversitySegment = getD(dInfo[0], Float.parseFloat(dInfo[1].split("\\)")[0]));
                 dCalls.add(diversitySegment);
             }
@@ -70,6 +71,7 @@ public class MixcrClonotypeParser extends AbstractClonotypeTableParser<ReadlessC
         List<SegmentCall<ConstantSegment>> cCalls = new ArrayList<>();
         if (headerInfo.cColIndex >= 0) {
             for (String c : splitLine[headerInfo.cColIndex].replaceAll("\\*00", "*01").split(",")) {
+                if (c.length() == 0) {continue;}
                 String[] cInfo = c.split("\\(");
                 var constantSegment = getC(cInfo[0], Float.parseFloat(cInfo[1].split("\\)")[0]));
                 cCalls.add(constantSegment);
