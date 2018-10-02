@@ -4,7 +4,9 @@ import com.milaboratory.core.mutations.Mutations;
 import com.milaboratory.core.sequence.Sequence;
 
 public final class DummyExplicitAlignmentScoring<S extends Sequence<S>> implements ExplicitAlignmentScoring<S> {
-    public static final DummyExplicitAlignmentScoring INSTANCE = new DummyExplicitAlignmentScoring();
+    public static final <S extends Sequence<S>> DummyExplicitAlignmentScoring<S> instance() {
+        return new DummyExplicitAlignmentScoring<>();
+    }
 
     private DummyExplicitAlignmentScoring() {
 
