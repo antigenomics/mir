@@ -12,7 +12,7 @@ import static org.junit.Assert.*;
 
 public class MixcrClonotypeParserTest {
     @Test
-    public void parseTestEverythingOk() throws IOException {
+    public void parseTestEverythingOk() {
         var lib = MigecSegmentLibraryUtils.getLibraryFromResources(Species.Human, Gene.IGH);
         var header = "Clone ID\tClone count\tClone fraction\tClonal sequence(s)\tClonal sequence quality(s)\tAll V hits\tAll D hits\tAll J hits\tAll C hits\tAll V alignments\tAll D alignments\tAll J alignments\tAll C alignments\tN. Seq. FR1\tMin. qual. FR1\tN. Seq. CDR1\tMin. qual. CDR1\tN. Seq. FR2\tMin. qual. FR2\tN. Seq. CDR2\tMin. qual. CDR2\tN. Seq. FR3\tMin. qual. FR3\tN. Seq. CDR3\tMin. qual. CDR3\tN. Seq. FR4\tMin. qual. FR4\tAA. Seq. FR1\tAA. Seq. CDR1\tAA. Seq. FR2\tAA. Seq. CDR2\tAA. Seq. FR3\tAA. Seq. CDR3\tAA. Seq. FR4\tRef. points";
         var parser = new MixcrClonotypeParser(header.split("\t"), lib, true);
@@ -25,11 +25,15 @@ public class MixcrClonotypeParserTest {
         assertEquals(298-282, result.getClonotype().getJunctionMarkup().getJStart());
         assertEquals(292-282, result.getClonotype().getJunctionMarkup().getVEnd());
         assertEquals("IGHV3-66*01", result.getClonotype().getVariableSegmentCalls().get(0).getSegment().getId());
+        assertEquals("IGHD1-1*01", result.getClonotype().getDiversitySegmentCalls().get(0).getSegment().getId());
+        assertEquals("IGHJ6*01", result.getClonotype().getJoiningSegmentCalls().get(0).getSegment().getId());
+        // TODO: C segments
+        //assertEquals("IGHM*01", result.getClonotype().getConstantSegmentCalls().get(0).getSegment().getId());
         assertEquals(3778.4, result.getClonotype().getVariableSegmentCalls().get(1).getWeight(), 0.001);
-
     }
+
     @Test
-    public void parseTestNoAminoacidSequence() throws IOException {
+    public void parseTestNoAminoacidSequence() {
         var lib = MigecSegmentLibraryUtils.getLibraryFromResources(Species.Human, Gene.IGH);
         var header = "Clone ID\tClone count\tClone fraction\tClonal sequence(s)\tClonal sequence quality(s)\tAll V hits\tAll D hits\tAll J hits\tAll C hits\tAll V alignments\tAll D alignments\tAll J alignments\tAll C alignments\tN. Seq. FR1\tMin. qual. FR1\tN. Seq. CDR1\tMin. qual. CDR1\tN. Seq. FR2\tMin. qual. FR2\tN. Seq. CDR2\tMin. qual. CDR2\tN. Seq. FR3\tMin. qual. FR3\tN. Seq. CDR3\tMin. qual. CDR3\tN. Seq. FR4\tMin. qual. FR4\tAA. Seq. FR1\tAA. Seq. CDR1\tAA. Seq. FR2\tAA. Seq. CDR2\tAA. Seq. FR3\tAA. Seq. FR4\tRef. points";
         var parser = new MixcrClonotypeParser(header.split("\t"), lib, true);
@@ -37,8 +41,9 @@ public class MixcrClonotypeParserTest {
         var result = parser.parse(line.split("\t"));
         assertEquals(new AminoAcidSequence("CARVENSFYYYMDVW"), result.getClonotype().getCdr3Aa());
     }
+
     @Test
-    public void parseTestTrimmings() throws IOException {
+    public void parseTestTrimmings() {
         var lib = MigecSegmentLibraryUtils.getLibraryFromResources(Species.Human, Gene.TRB);
         var header = "cloneId\tcloneCount\tcloneFraction\tclonalSequence\tclonalSequenceQuality\tallVHitsWithScore\tallDHitsWithScore\tallJHitsWithScore\tallCHitsWithScore\tallVAlignments\tallDAlignments\tallJAlignments\tallCAlignments\tnSeqFR1\tminQualFR1\tnSeqCDR1\tminQualCDR1\tnSeqFR2\tminQualFR2\tnSeqCDR2\tminQualCDR2\tnSeqFR3\tminQualFR3\tnSeqCDR3\tminQualCDR3\tnSeqFR4\tminQualFR4\taaSeqFR1\taaSeqCDR1\taaSeqFR2\taaSeqCDR2\taaSeqFR3\taaSeqCDR3\taaSeqFR4\trefPoints";
         var parser = new MixcrClonotypeParser(header.split("\t"), lib, true);
@@ -46,8 +51,8 @@ public class MixcrClonotypeParserTest {
         var result = parser.parse(line.split("\t"));
         assertEquals(new AminoAcidSequence("CASSKARWDFTANVLTF"), result.getClonotype().getCdr3Aa());
         assertEquals(0, result.getClonotype().getSegmentTrimming().getVTrimming());
-        assertEquals(-7, result.getClonotype().getSegmentTrimming().getJTrimming());
+        assertEquals(7, result.getClonotype().getSegmentTrimming().getJTrimming());
         assertEquals(0, result.getClonotype().getSegmentTrimming().getDTrimming5());
-        assertEquals(-10, result.getClonotype().getSegmentTrimming().getDTrimming3());
+        assertEquals(10, result.getClonotype().getSegmentTrimming().getDTrimming3());
     }
 }

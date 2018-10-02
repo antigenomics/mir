@@ -13,6 +13,10 @@ public class VDJtoolsClonotypeParserFactory implements ClonotypeTableParserFacto
         this.majorAlleles = majorAlleles;
     }
 
+    public VDJtoolsClonotypeParserFactory(SegmentLibrary segmentLibrary) {
+        this(segmentLibrary, true);
+    }
+
     @Override
     public VDJtoolsClonotypeParser create(String[] header) {
         return new VDJtoolsClonotypeParser(header, segmentLibrary, majorAlleles);

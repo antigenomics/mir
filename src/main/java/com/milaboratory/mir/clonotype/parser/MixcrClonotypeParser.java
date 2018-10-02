@@ -10,161 +10,119 @@ import com.milaboratory.mir.clonotype.rearrangement.SegmentTrimming;
 import com.milaboratory.mir.segment.*;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class MixcrClonotypeParser extends AbstractClonotypeTableParser<ReadlessClonotypeImpl> {
+    private static final int RP_CDR3_BEGIN = 9,
+            RP_V_END_TRIMMED = 11,
+            RP_D_START_TRIMMED = 12,
+            RP_D_END_TRIMMED = 15,
+            RP_J_START_TRIMMED = 16,
+            RP_V_DEL = 10,
+            RP_D5_DEL = 13,
+            RP_D3_DEL = 14,
+            RP_J_DEL = 17;
+
     private final HeaderInfo headerInfo;
-    private final RefPointColInfo refPointsColInfo;
-    private final AtomicInteger idCounter = new AtomicInteger(); //do we need it?
+    private final boolean convertAlleles;
 
     public MixcrClonotypeParser(String[] header,
                                 SegmentLibrary segmentLibrary,
                                 boolean majorAlleles) {
+        this(header, segmentLibrary, majorAlleles, true);
+    }
+
+    public MixcrClonotypeParser(String[] header,
+                                SegmentLibrary segmentLibrary,
+                                boolean majorAlleles,
+                                boolean convertAlleles) {
         super(header, segmentLibrary, majorAlleles);
         this.headerInfo = new HeaderInfo(header);
-        this.refPointsColInfo = new RefPointColInfo();
+        this.convertAlleles = convertAlleles;
     }
 
     @Override
     public ClonotypeCall<ReadlessClonotypeImpl> parse(String[] splitLine) {
+        // todo: ask Dima if its long or int
         int id = Integer.parseInt(splitLine[headerInfo.cloneIdColIndex]);
         int count = Integer.parseInt(splitLine[headerInfo.countColIndex]);
         double freq = Double.parseDouble(splitLine[headerInfo.freqColIndex]);
 
         NucleotideSequence cdr3Nt = new NucleotideSequence(splitLine[headerInfo.cdr3NtColIndex]);
 
-        AminoAcidSequence cdr3Aa;
-        if (headerInfo.cdr3AaColIndex != -1) {
-            cdr3Aa = new AminoAcidSequence(splitLine[headerInfo.cdr3AaColIndex]);
-        } else {
-            cdr3Aa = AminoAcidSequence.translateFromCenter(cdr3Nt);
-        }
+        AminoAcidSequence cdr3Aa = headerInfo.cdr3AaColIndex == -1 ?
+                AminoAcidSequence.translateFromCenter(cdr3Nt) :
+                new AminoAcidSequence(splitLine[headerInfo.cdr3AaColIndex]);
 
-        //todo: perhaps read in if provided? (Done)
+        List<SegmentCall<VariableSegment>> vCalls  = streamSegmentCalls(splitLine, headerInfo.vColIndex)
+                .map(x -> getV(x[0], Float.parseFloat(x[1])))
+                .collect(Collectors.toList());
 
-        List<SegmentCall<VariableSegment>> vCalls = new ArrayList<>();
+        List<SegmentCall<DiversitySegment>> dCalls  = streamSegmentCalls(splitLine, headerInfo.dColIndex)
+                .map(x -> getD(x[0], Float.parseFloat(x[1])))
+                .collect(Collectors.toList());
 
-        for (String v : splitLine[headerInfo.vColIndex].replaceAll("\\*00", "*01").split(",")) {
-            String[] vInfo = v.split("\\(");
-            var variableSegment = getV(vInfo[0], Float.parseFloat(vInfo[1].split("\\)")[0]));
-            vCalls.add(variableSegment);
-        }
+        List<SegmentCall<JoiningSegment>> jCalls  = streamSegmentCalls(splitLine, headerInfo.jColIndex)
+                .map(x -> getJ(x[0], Float.parseFloat(x[1])))
+                .collect(Collectors.toList());
 
-        List<SegmentCall<DiversitySegment>> dCalls = new ArrayList<>();
-        if (headerInfo.dColIndex >= 0) {
-            for (String d : splitLine[headerInfo.dColIndex].replaceAll("\\*00", "*01").split(",")) {
-                String[] dInfo = d.split("\\(");
-                if (d.length() == 0) {continue;}
-                var diversitySegment = getD(dInfo[0], Float.parseFloat(dInfo[1].split("\\)")[0]));
-                dCalls.add(diversitySegment);
-            }
-        }
+        List<SegmentCall<ConstantSegment>> cCalls = streamSegmentCalls(splitLine, headerInfo.cColIndex)
+                .map(x -> getC(x[0], Float.parseFloat(x[1])))
+                .collect(Collectors.toList());
 
-        List<SegmentCall<JoiningSegment>> jCalls = new ArrayList<>();
-        for (String j : splitLine[headerInfo.jColIndex].replaceAll("\\*00", "*01").split(",")) {
-            String[] jInfo = j.split("\\(");
-            var joiningSegment = getJ(jInfo[0], Float.parseFloat(jInfo[1].split("\\)")[0]));
-            jCalls.add(joiningSegment);
-        }
+        // even if there are several ref point arrays joined by "," it will use first
+        String[] refPoints = splitLine[headerInfo.refPointColIndex].split("[,:]");
 
-        List<SegmentCall<ConstantSegment>> cCalls = new ArrayList<>();
-        if (headerInfo.cColIndex >= 0) {
-            for (String c : splitLine[headerInfo.cColIndex].replaceAll("\\*00", "*01").split(",")) {
-                if (c.length() == 0) {continue;}
-                String[] cInfo = c.split("\\(");
-                var constantSegment = getC(cInfo[0], Float.parseFloat(cInfo[1].split("\\)")[0]));
-                cCalls.add(constantSegment);
-            }
-        }
-
-        String[] refPoints = splitLine[headerInfo.refPointColIndex].split(",")[0].split(":", -1);
-
-        int vEnd = -1, dStart = -1, dEnd = -1, jStart = -1;
-        int cdr3Start = Integer.parseInt(refPoints[refPointsColInfo.CDR3Begin]);
-        if (!refPoints[refPointsColInfo.VEndTrimmed].isEmpty()) {
-            vEnd = Integer.parseInt(refPoints[refPointsColInfo.VEndTrimmed]) - cdr3Start;
-        }
-        if (!refPoints[refPointsColInfo.DBeginTrimmed].isEmpty()) {
-            dStart = Integer.parseInt(refPoints[refPointsColInfo.DBeginTrimmed]) - cdr3Start;
-        }
-        if (!refPoints[refPointsColInfo.DEndTrimmed].isEmpty()) {
-            dEnd = Integer.parseInt(refPoints[refPointsColInfo.DEndTrimmed]) - cdr3Start;
-        }
-        if (!refPoints[refPointsColInfo.JBeginTrimmed].isEmpty()) {
-            jStart = Integer.parseInt(refPoints[refPointsColInfo.JBeginTrimmed]) - cdr3Start;
-        }
+        // todo: handle cases when critical fields are missing, e.g. CDR3 ref points -- show skip & issue a warning
+        int cdr3Start = Integer.parseInt(refPoints[RP_CDR3_BEGIN]),
+                vEnd = parseJunctionMarkup(refPoints[RP_V_END_TRIMMED], cdr3Start),
+                jStart = parseJunctionMarkup(refPoints[RP_J_START_TRIMMED], cdr3Start),
+                dStart = parseJunctionMarkup(refPoints[RP_D_START_TRIMMED], cdr3Start),
+                dEnd = parseJunctionMarkup(refPoints[RP_D_END_TRIMMED], cdr3Start);
         JunctionMarkup junctionMarkup = new JunctionMarkup(vEnd, jStart, dStart, dEnd);
 
+        SegmentTrimming segmentTrimming = new SegmentTrimming(
+                parseSegmentTrimming(refPoints[RP_V_DEL]),
+                parseSegmentTrimming(refPoints[RP_J_DEL]),
+                parseSegmentTrimming(refPoints[RP_D5_DEL]),
+                parseSegmentTrimming(refPoints[RP_D3_DEL]));
 
-        int vTrim = 0, dTrim5 = 0, dTrim3 = 0, jTrim = 0;
-        if (!refPoints[refPointsColInfo.Num3V].isEmpty()) {
-            vTrim = Integer.parseInt(refPoints[refPointsColInfo.Num3V]);
-        }
-        if (!refPoints[refPointsColInfo.Num5D].isEmpty()) {
-            dTrim5 = Integer.parseInt(refPoints[refPointsColInfo.Num5D]);
-        }
-        if (!refPoints[refPointsColInfo.Num3D].isEmpty()) {
-            dTrim3 = Integer.parseInt(refPoints[refPointsColInfo.Num3D]);
-        }
-        if (!refPoints[refPointsColInfo.Num3J].isEmpty()) {
-            jTrim = Integer.parseInt(refPoints[refPointsColInfo.Num3J]);
-        }
-        SegmentTrimming segmentTrimming = new SegmentTrimming(vTrim, jTrim, dTrim5, dTrim3);
-
-        return new ClonotypeCall<>(id, // todo: add clone ID (DONE)
+        // todo: also parse contig
+        return new ClonotypeCall<>(id,
                 count, freq,
                 new ReadlessClonotypeImpl(cdr3Nt,
                         vCalls, dCalls, jCalls, cCalls,
                         segmentTrimming, junctionMarkup,
-                        cdr3Aa));
+                        cdr3Aa)
+        );
     }
 
+    private Stream<String[]> streamSegmentCalls(String[] splitLine, int index) {
+        return index == -1 ? Stream.empty() : streamSegmentCalls(splitLine[index]);
+    }
 
-    private static class RefPointColInfo {
-        final int V5UTRBeginTrimmed, V5UTREnd, L1Begin,
-                L1End, VIntronBegin, VIntronEnd, L2Begin,
-                L2End, FR1Begin, FR1End, CDR1Begin,
-                CDR1End, FR2Begin, FR2End, CDR2Begin,
-                CDR2End, FR3Begin, FR3End, CDR3Begin,
-                VEndTrimmed, DBeginTrimmed, DEndTrimmed, JBeginTrimmed,
-                CDR3End, FR4Begin, FR4End,
-                CBegin, CExon1End, Num3V, Num5D, Num3D, Num3J;
-
-        RefPointColInfo() {                        //
-            this.V5UTRBeginTrimmed = 0;
-            this.V5UTREnd = 1;
-            this.L1Begin = 1;
-            this.L1End = 2;
-            this.VIntronBegin = 2;
-            this.VIntronEnd = 3;
-            this.L2Begin = 3;
-            this.L2End = 4;
-            this.FR1Begin = 4;
-            this.FR1End = 5;
-            this.CDR1Begin = 5;
-            this.CDR1End = 6;
-            this.FR2Begin = 6;
-            this.FR2End = 7;
-            this.CDR2Begin = 7;
-            this.CDR2End = 8;
-            this.FR3Begin = 8;
-            this.FR3End = 9;
-            this.CDR3Begin = 9;
-            this.Num3V = 10;
-            this.VEndTrimmed = 11;
-            this.DBeginTrimmed = 12;
-            this.Num5D = 13;
-            this.Num3D = 14;
-            this.DEndTrimmed = 15;
-            this.JBeginTrimmed = 16;
-            this.Num3J = 17;
-            this.CDR3End = 18;
-            this.FR4Begin = 19;
-            this.FR4End = 19;
-            this.CBegin = 20;
-            this.CExon1End = 21;
+    private Stream<String[]> streamSegmentCalls(String str) {
+        if (str.isEmpty()) {
+            return Stream.empty();
         }
+        if (convertAlleles) {
+            str = str.replaceAll("\\*00", "*01");
+        }
+        return Arrays.stream(str.split(",")).map(x -> x.split("[\\(\\)]"));
+    }
+
+    private static int parseJunctionMarkup(String str, int cdr3Start) {
+        return str.isEmpty() ? -1 : (Integer.parseInt(str) - cdr3Start);
+    }
+
+    private static int parseSegmentTrimming(String str) {
+        // MIXCR convention: negative deletions = -#removed bases, positive = P segment size
+        // Murugan convention: positive = #removed bases, negative = -P segment size
+        // We use Murugan convention
+        return str.isEmpty() ? 0 : -Integer.parseInt(str);
     }
 
     private static class HeaderInfo {
@@ -176,11 +134,10 @@ public class MixcrClonotypeParser extends AbstractClonotypeTableParser<ReadlessC
 
         HeaderInfo(String[] header) {
             StringArrayIndexer headerParser = new StringArrayIndexer(header);
-            // todo: add clone ID (DONE)
             this.cloneIdColIndex = headerParser.getIndexOf(new String[]{"cloneId", "Clone ID"});
             this.countColIndex = headerParser.getIndexOf(new String[]{"cloneCount", "Clone count"});
             this.freqColIndex = headerParser.getIndexOfS(new String[]{"cloneFraction", "Clone fraction"});
-            this.cdr3NtColIndex = headerParser.getIndexOf(new String[]{"nSeqCDR3",  "N. Seq. CDR3"});
+            this.cdr3NtColIndex = headerParser.getIndexOf(new String[]{"nSeqCDR3", "N. Seq. CDR3"});
             this.cdr3AaColIndex = headerParser.getIndexOf(new String[]{"aaSeqCDR3", "AA. Seq. CDR3"}, false);
             this.vColIndex = headerParser.getIndexOf(new String[]{"allVHitsWithScore", "All V Hits With Score ", "All V hits"}, false);
             this.dColIndex = headerParser.getIndexOf(new String[]{"allDHitsWithScore", "All D Hits With Score ", "All D hits"}, false);

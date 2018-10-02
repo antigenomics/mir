@@ -15,7 +15,7 @@ import static org.junit.Assert.assertEquals;
 
 public class ClonotypeTablePipeTest {
     @Test
-    public void vdjtoolsReadTest() throws IOException {
+    public void vdjtoolsReadTest() {
         var sampleSupplier = TestUtils.streamSupplierFrom("samples/trad_sample.txt");
         var library = MigecSegmentLibraryUtils.getLibraryFromResources(Species.Human, Gene.TRA);
         var parserFactory = new VDJtoolsClonotypeParserFactory(library, true);
@@ -37,7 +37,7 @@ public class ClonotypeTablePipeTest {
         assertEquals(1051, clonotypeIterator.parallelStream().count());
     }
     @Test
-    public void mixcrReadTest() throws IOException {
+    public void mixcrReadTest() {
         var sampleSupplier = TestUtils.streamSupplierFrom("samples/mixcr_1.txt");
         var library = MigecSegmentLibraryUtils.getLibraryFromResources(Species.Human, Gene.IGH);
         var parserFactory = new MixcrClonotypeParserFactory(library, true);
