@@ -2,7 +2,7 @@ package com.milaboratory.mir.rearrangement.parser;
 
 import java.io.InputStream;
 
-final class MuruganModelStream {
+public final class MuruganModelStream {
     private final InputStream params, marginals;
 
     MuruganModelStream(InputStream params, InputStream marginals) {
@@ -10,11 +10,11 @@ final class MuruganModelStream {
         this.marginals = marginals;
     }
 
-    InputStream getParams() {
+    public InputStream getParams() {
         return params;
     }
 
-    InputStream getMarginals() {
+    public InputStream getMarginals() {
         return marginals;
     }
 }

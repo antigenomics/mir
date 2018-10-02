@@ -2,10 +2,10 @@ package com.milaboratory.mir.rearrangement.converter;
 
 import com.milaboratory.mir.rearrangement.blocks.*;
 import com.milaboratory.mir.rearrangement.parser.MuruganModel;
-import com.milaboratory.mir.rearrangement.parser.MuruganModeParserUtils;
+import com.milaboratory.mir.rearrangement.parser.MuruganModelParserUtils;
 import com.milaboratory.mir.segment.SegmentLibrary;
 
-import static com.milaboratory.mir.rearrangement.parser.MuruganModeParserUtils.*;
+import static com.milaboratory.mir.rearrangement.parser.MuruganModelParserUtils.*;
 
 public final class MuruganVDJModelConverter extends VDJModelConverter<MuruganModel> {
     private final MuruganConverterUtils.NucleotideDistributionBundle vdInsertNucleotideProbs,
@@ -20,19 +20,19 @@ public final class MuruganVDJModelConverter extends VDJModelConverter<MuruganMod
     private final DiversityTrimming5Distribution diversityTrimming5Distribution;
     private final DiversityTrimming3Distribution diversityTrimming3Distribution;
 
-    public MuruganVDJModelConverter(SegmentLibrary segmentLibrary,
-                                    MuruganModel muruganModel) {
-        super(segmentLibrary, muruganModel);
+    public MuruganVDJModelConverter(MuruganModel muruganModel,
+                                    SegmentLibrary segmentLibrary) {
+        super(muruganModel, segmentLibrary);
         if (!muruganModel.getGene().hasD()) {
             throw new IllegalArgumentException("Cannot convert Murugan model without D segment to a VDJ model.");
         }
         this.vdInsertNucleotideProbs = MuruganConverterUtils.getNucleotideDistributionFromJoint(
-                plainTextHierarchicalModel, MuruganModeParserUtils.VD_INS_DINUCL_FORMULA
+                plainTextHierarchicalModel, MuruganModelParserUtils.VD_INS_DINUCL_FORMULA
         );
         this.djInsertNucleotideProbs = MuruganConverterUtils.getNucleotideDistributionFromJoint(
-                plainTextHierarchicalModel, MuruganModeParserUtils.DJ_INS_DINUCL_FORMULA
+                plainTextHierarchicalModel, MuruganModelParserUtils.DJ_INS_DINUCL_FORMULA
         );
-        this.variableDistribution = getVariableDistribution(MuruganModeParserUtils.V_FORMULA);
+        this.variableDistribution = getVariableDistribution(MuruganModelParserUtils.V_FORMULA);
         // safe get P(J|V)
         this.joiningVariableDistribution = getJoiningVariableDistribution(J_NAME, V_NAME);
         // safe get P(D|J,V)

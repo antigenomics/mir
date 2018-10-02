@@ -10,12 +10,12 @@ import com.milaboratory.mir.segment.*;
 import java.util.Map;
 
 public abstract class Converter<T extends PlainTextHierarchicalModel, V extends RearrangementModel> {
-    protected final SegmentLibrary segmentLibrary;
     protected final T plainTextHierarchicalModel;
+    protected final SegmentLibrary segmentLibrary;
 
-    public Converter(SegmentLibrary segmentLibrary, T plainTextHierarchicalModel) {
-        this.segmentLibrary = segmentLibrary;
+    public Converter(T plainTextHierarchicalModel, SegmentLibrary segmentLibrary) {
         this.plainTextHierarchicalModel = plainTextHierarchicalModel;
+        this.segmentLibrary = segmentLibrary;
     }
 
     protected Map<String, Double> getProbabilities(String blockName) {

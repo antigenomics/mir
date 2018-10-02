@@ -9,7 +9,7 @@ import com.milaboratory.mir.probability.parser.HierarchicalModelFormula;
 import java.io.FileInputStream;
 import java.io.IOException;
 
-public final class MuruganModeParserUtils {
+public final class MuruganModelParserUtils {
     public static final String PATH = "murugan_models";
 
     public static final String
@@ -75,14 +75,13 @@ public final class MuruganModeParserUtils {
         return HierarchicalModelFormula.fromString(getFormulaStr(gene));
     }
 
-    private MuruganModeParserUtils() {
+    private MuruganModelParserUtils() {
 
     }
 
-    public static MuruganModel getModelFromResources(Species species, Gene gene) throws IOException {
-        MuruganModelStream muruganModelStream = getResourceStream(species, gene);
-
+    public static MuruganModel getModelFromResources(Species species, Gene gene) {
         try {
+            MuruganModelStream muruganModelStream = getResourceStream(species, gene);
             return MuruganModelParser.load(muruganModelStream.getParams(),
                     muruganModelStream.getMarginals(),
                     getFormula(gene), species, gene);
@@ -98,10 +97,10 @@ public final class MuruganModeParserUtils {
                 getFormula(gene), species, gene);
     }
 
-    static MuruganModelStream getResourceStream(Species species, Gene gene) throws IOException {
+    public static MuruganModelStream getResourceStream(Species species, Gene gene) throws IOException {
         return new MuruganModelStream(
-                CommonUtils.getResourceAsStream(PATH + "/" + species.getCode() + "_" + gene.getCode() + "_params.txt"),
-                CommonUtils.getResourceAsStream(PATH + "/" + species.getCode() + "_" + gene.getCode() + "_marginals.txt")
+                CommonUtils.getResourceAsStream(PATH + "/" + species.getCode().toLowerCase() + "_" + gene.getCode().toLowerCase() + "_params.txt"),
+                CommonUtils.getResourceAsStream(PATH + "/" + species.getCode().toLowerCase() + "_" + gene.getCode().toLowerCase() + "_marginals.txt")
         );
     }
 }

@@ -1,23 +1,16 @@
 package com.milaboratory.mir.rearrangement;
 
 import com.milaboratory.mir.rearrangement.converter.MuruganConverterUtils;
-import com.milaboratory.mir.rearrangement.parser.MuruganModeParserUtils;
+import com.milaboratory.mir.rearrangement.parser.MuruganModelParserUtils;
 import com.milaboratory.mir.rearrangement.parser.MuruganModel;
 import com.milaboratory.mir.segment.Gene;
 import com.milaboratory.mir.segment.SegmentLibrary;
 import com.milaboratory.mir.segment.Species;
 
-import java.io.IOException;
-
 public final class RearrangementModelUtils {
     public static RearrangementModel loadMuruganModel(SegmentLibrary segmentLibrary) {
-        MuruganModel mdl;
-        try {
-            mdl = MuruganModeParserUtils.getModelFromResources(segmentLibrary.getSpecies(),
-                    segmentLibrary.getGene());
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        MuruganModel mdl = MuruganModelParserUtils.getModelFromResources(segmentLibrary.getSpecies(),
+                segmentLibrary.getGene());
 
         var converter = MuruganConverterUtils.getConverter(mdl, segmentLibrary);
 

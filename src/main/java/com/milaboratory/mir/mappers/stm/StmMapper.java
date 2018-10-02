@@ -6,27 +6,47 @@ import com.milaboratory.core.sequence.Sequence;
 import com.milaboratory.core.tree.SequenceTreeMap;
 import com.milaboratory.mir.mappers.SequenceMapper;
 import com.milaboratory.mir.mappers.SequenceProvider;
+import com.milaboratory.mir.pipe.Pipe;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
+import java.util.function.Function;
+import java.util.stream.Stream;
+import java.util.stream.StreamSupport;
 
 public final class StmMapper<T, S extends Sequence<S>>
-        implements SequenceMapper<T, S> {
+        implements SequenceMapper<T, S>, Pipe<T> {
     private final SequenceTreeMap<S, List<T>> stm;
     private final SequenceProvider<T, S> sequenceProvider;
     private final SequenceSearchScope searchScope;
     private final ExplicitAlignmentScoring<S> scoring;
 
-    public StmMapper(Iterable<T> clonotypes,
+    public StmMapper(Iterable<? extends T> objects,
                      SequenceProvider<T, S> sequenceProvider,
                      Alphabet<S> alphabet,
                      SequenceSearchScope searchScope,
                      ExplicitAlignmentScoring<S> scoring) {
         this.stm = new SequenceTreeMap<>(alphabet);
         this.sequenceProvider = sequenceProvider;
-        // for stream use stream::iterator; N/A for parallel streams
-        clonotypes.forEach(this::put);
+        objects.forEach(this::put);
+        this.searchScope = searchScope;
+        this.scoring = scoring;
+    }
+
+    public StmMapper(Stream<? extends T> objects,
+                     SequenceProvider<T, S> sequenceProvider,
+                     Alphabet<S> alphabet,
+                     SequenceSearchScope searchScope,
+                     ExplicitAlignmentScoring<S> scoring) {
+        if (objects.isParallel()) {
+            // Stm is not thread safe
+            objects = objects.sequential();
+        }
+        this.stm = new SequenceTreeMap<>(alphabet);
+        this.sequenceProvider = sequenceProvider;
+        objects.forEach(this::put);
         this.searchScope = searchScope;
         this.scoring = scoring;
     }
@@ -107,6 +127,16 @@ public final class StmMapper<T, S extends Sequence<S>>
     @Override
     public SequenceProvider<T, S> getSequenceProvider() {
         return sequenceProvider;
+    }
+
+    @Override
+    public Stream<T> stream() {
+        return StreamSupport.stream(stm.values().spliterator(), false).flatMap(Collection::stream);
+    }
+
+    @Override
+    public Stream<T> parallelStream() {
+        return StreamSupport.stream(stm.values().spliterator(), true).flatMap(Collection::stream);
     }
 
     private static final class StmGroupHit<T, S extends Sequence<S>> {

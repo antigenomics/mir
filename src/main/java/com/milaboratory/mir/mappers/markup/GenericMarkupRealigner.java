@@ -26,4 +26,12 @@ public class GenericMarkupRealigner<T, S extends Sequence<S>, E extends Enum<E>,
                                 .realign(query, hit.getAlignment())
                 );
     }
+
+    public SequenceMapper<T, S> getMapper() {
+        return mapper;
+    }
+
+    public MarkupProvider<T, S, E, M> getMarkupProvider() {
+        return markupProvider;
+    }
 }

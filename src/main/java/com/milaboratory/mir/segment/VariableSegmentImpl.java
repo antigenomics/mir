@@ -16,6 +16,21 @@ public class VariableSegmentImpl implements VariableSegment {
     private final PrecomputedSequenceRegionMarkup<AminoAcidSequence, AntigenReceptorRegionType> regionMarkupAa;
     private final boolean majorAllele;
 
+    public static VariableSegmentImpl fromMarkup
+            (String id,
+             NucleotideSequence germlineNt,
+             PrecomputedSequenceRegionMarkup<NucleotideSequence, AntigenReceptorRegionType> markup,
+             boolean majorAllele) {
+        var cdr1Markup = markup.getRegion(AntigenReceptorRegionType.CDR1);
+        var cdr2Markup = markup.getRegion(AntigenReceptorRegionType.CDR2);
+        var cdr3Markup = markup.getRegion(AntigenReceptorRegionType.CDR3);
+        return new VariableSegmentImpl(id, germlineNt,
+                cdr1Markup.getStart(), cdr1Markup.getEnd(),
+                cdr2Markup.getStart(), cdr2Markup.getEnd(),
+                cdr3Markup.getStart() + 3,
+                majorAllele);
+    }
+
     public VariableSegmentImpl(String id,
                                NucleotideSequence germlineNt,
                                int cdr1Start, int cdr1End, int cdr2Start, int cdr2End, int referencePoint,

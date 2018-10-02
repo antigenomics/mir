@@ -4,7 +4,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 public enum SegmentType {
-    V("V", "Variable", Arrays.asList("v", "variable", "trav", "trbv"), VariableSegment.class), // todo
+    V("V", "Variable", Arrays.asList("v", "variable"), VariableSegment.class), // todo
     D("D", "Diversity", Arrays.asList("d", "diversity"), DiversitySegment.class),
     J("J", "Joining", Arrays.asList("j", "joining"), JoiningSegment.class),
     C("C", "Constant", Arrays.asList("c", "contstant"), ConstantSegment.class);

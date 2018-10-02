@@ -8,7 +8,7 @@ import org.junit.Test;
 
 import java.io.IOException;
 
-public class MuruganModeParserUtilsTest {
+public class MuruganModelParserUtilsTest {
     @Test
     public void getResourceStreamTest() throws IOException {
         getResourceStreamTest(Species.Human, Gene.TRB);
@@ -18,21 +18,21 @@ public class MuruganModeParserUtilsTest {
     }
 
     private void getResourceStreamTest(Species species, Gene gene) throws IOException {
-        MuruganModelStream res = MuruganModeParserUtils.getResourceStream(species, gene);
+        MuruganModelStream res = MuruganModelParserUtils.getResourceStream(species, gene);
         Assert.assertTrue(TestUtils.testStream(res.getMarginals()));
         Assert.assertTrue(TestUtils.testStream(res.getParams()));
     }
 
     @Test
-    public void loadFromResourceTest() throws IOException {
-        MuruganModeParserUtils.getModelFromResources(Species.Human, Gene.TRB);
-        MuruganModeParserUtils.getModelFromResources(Species.Human, Gene.TRA);
-        MuruganModeParserUtils.getModelFromResources(Species.Human, Gene.IGH);
-        MuruganModeParserUtils.getModelFromResources(Species.Mouse, Gene.TRB);
+    public void loadFromResourceTest() {
+        MuruganModelParserUtils.getModelFromResources(Species.Human, Gene.TRB);
+        MuruganModelParserUtils.getModelFromResources(Species.Human, Gene.TRA);
+        MuruganModelParserUtils.getModelFromResources(Species.Human, Gene.IGH);
+        MuruganModelParserUtils.getModelFromResources(Species.Mouse, Gene.TRB);
     }
 
     @Test(expected = RuntimeException.class)
-    public void loadFromResourceTest1() throws IOException {
-        MuruganModeParserUtils.getModelFromResources(Species.Mouse, Gene.TRA);
+    public void loadFromResourceTest1() {
+        MuruganModelParserUtils.getModelFromResources(Species.Mouse, Gene.TRA);
     }
 }
