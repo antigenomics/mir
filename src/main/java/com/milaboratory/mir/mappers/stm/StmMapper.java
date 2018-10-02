@@ -23,14 +23,29 @@ public final class StmMapper<T, S extends Sequence<S>>
     private final SequenceSearchScope searchScope;
     private final ExplicitAlignmentScoring<S> scoring;
 
-    public StmMapper(Iterable<T> objects,
+    public StmMapper(Iterable<? extends T> objects,
                      SequenceProvider<T, S> sequenceProvider,
                      Alphabet<S> alphabet,
                      SequenceSearchScope searchScope,
                      ExplicitAlignmentScoring<S> scoring) {
         this.stm = new SequenceTreeMap<>(alphabet);
         this.sequenceProvider = sequenceProvider;
-        // for stream use stream::iterator; N/A for parallel streams
+        objects.forEach(this::put);
+        this.searchScope = searchScope;
+        this.scoring = scoring;
+    }
+
+    public StmMapper(Stream<? extends T> objects,
+                     SequenceProvider<T, S> sequenceProvider,
+                     Alphabet<S> alphabet,
+                     SequenceSearchScope searchScope,
+                     ExplicitAlignmentScoring<S> scoring) {
+        if (objects.isParallel()) {
+            // Stm is not thread safe
+            objects = objects.sequential();
+        }
+        this.stm = new SequenceTreeMap<>(alphabet);
+        this.sequenceProvider = sequenceProvider;
         objects.forEach(this::put);
         this.searchScope = searchScope;
         this.scoring = scoring;

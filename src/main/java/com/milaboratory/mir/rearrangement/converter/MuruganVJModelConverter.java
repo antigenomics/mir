@@ -4,7 +4,7 @@ import com.milaboratory.mir.rearrangement.blocks.*;
 import com.milaboratory.mir.rearrangement.parser.MuruganModel;
 import com.milaboratory.mir.segment.SegmentLibrary;
 
-import static com.milaboratory.mir.rearrangement.parser.MuruganModeParserUtils.*;
+import static com.milaboratory.mir.rearrangement.parser.MuruganModelParserUtils.*;
 
 public final class MuruganVJModelConverter extends VJModelConverter<MuruganModel> {
     private final MuruganConverterUtils.NucleotideDistributionBundle insertNucleotideProbs;

@@ -4,10 +4,8 @@ import com.milaboratory.mir.segment.Gene;
 import com.milaboratory.mir.segment.Species;
 import org.junit.Test;
 
-import java.io.IOException;
-
 import static com.milaboratory.mir.rearrangement.converter.MuruganConverterUtils.*;
-import static com.milaboratory.mir.rearrangement.parser.MuruganModeParserUtils.getModelFromResources;
+import static com.milaboratory.mir.rearrangement.parser.MuruganModelParserUtils.getModelFromResources;
 import static com.milaboratory.mir.segment.parser.MigecSegmentLibraryUtils.getLibraryFromResources;
 
 public class MuruganConverterUtilsTest {

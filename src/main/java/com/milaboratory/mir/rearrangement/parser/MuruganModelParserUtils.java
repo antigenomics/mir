@@ -9,7 +9,7 @@ import com.milaboratory.mir.probability.parser.HierarchicalModelFormula;
 import java.io.FileInputStream;
 import java.io.IOException;
 
-public final class MuruganModeParserUtils {
+public final class MuruganModelParserUtils {
     public static final String PATH = "murugan_models";
 
     public static final String
@@ -75,7 +75,7 @@ public final class MuruganModeParserUtils {
         return HierarchicalModelFormula.fromString(getFormulaStr(gene));
     }
 
-    private MuruganModeParserUtils() {
+    private MuruganModelParserUtils() {
 
     }
 

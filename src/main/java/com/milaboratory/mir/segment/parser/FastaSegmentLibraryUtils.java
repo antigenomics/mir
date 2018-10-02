@@ -7,7 +7,7 @@ import com.milaboratory.core.sequence.NucleotideSequence;
 import com.milaboratory.mir.mappers.SequenceMapperFactory;
 import com.milaboratory.mir.mappers.align.SimpleExhaustiveMapperFactory;
 import com.milaboratory.mir.mappers.markup.SegmentMarkupRealignerNt;
-import com.milaboratory.mir.rearrangement.parser.MuruganModeParserUtils;
+import com.milaboratory.mir.rearrangement.parser.MuruganModelParserUtils;
 import com.milaboratory.mir.segment.*;
 
 import java.io.BufferedReader;
@@ -68,7 +68,7 @@ public final class FastaSegmentLibraryUtils {
     public static SegmentLibrary loadMurugan(Species species, Gene gene) {
         try {
             return loadMurugan(
-                    MuruganModeParserUtils.getResourceStream(species, gene).getParams(),
+                    MuruganModelParserUtils.getResourceStream(species, gene).getParams(),
                     species, gene);
         } catch (IOException e) {
             throw new RuntimeException(e);

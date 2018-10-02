@@ -1,6 +1,12 @@
 package com.milaboratory.mir.clonotype;
 
-public class ClonotypeCall<T extends Clonotype> {
+import com.milaboratory.core.sequence.AminoAcidSequence;
+import com.milaboratory.core.sequence.NucleotideSequence;
+import com.milaboratory.mir.segment.*;
+
+import java.util.List;
+
+public class ClonotypeCall<T extends Clonotype> implements Clonotype {
     public static <T extends Clonotype> ClonotypeCall<T> getDummy() {
         return new ClonotypeCall<>(-1, -1, -1, null);
     }
@@ -30,5 +36,35 @@ public class ClonotypeCall<T extends Clonotype> {
 
     public T getClonotype() {
         return clonotype;
+    }
+
+    @Override
+    public NucleotideSequence getCdr3Nt() {
+        return clonotype.getCdr3Nt();
+    }
+
+    @Override
+    public AminoAcidSequence getCdr3Aa() {
+        return clonotype.getCdr3Aa();
+    }
+
+    @Override
+    public List<SegmentCall<VariableSegment>> getVariableSegmentCalls() {
+        return clonotype.getVariableSegmentCalls();
+    }
+
+    @Override
+    public List<SegmentCall<DiversitySegment>> getDiversitySegmentCalls() {
+        return clonotype.getDiversitySegmentCalls();
+    }
+
+    @Override
+    public List<SegmentCall<JoiningSegment>> getJoiningSegmentCalls() {
+        return clonotype.getJoiningSegmentCalls();
+    }
+
+    @Override
+    public List<SegmentCall<ConstantSegment>> getConstantSegmentCalls() {
+        return clonotype.getConstantSegmentCalls();
     }
 }

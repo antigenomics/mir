@@ -2,15 +2,13 @@ package com.milaboratory.mir.rearrangement;
 
 import com.milaboratory.core.sequence.NucleotideSequence;
 import com.milaboratory.mir.clonotype.rearrangement.JunctionMarkup;
-import com.milaboratory.mir.segment.AbsentDiversitySegment;
-import com.milaboratory.mir.segment.DiversitySegment;
-import com.milaboratory.mir.segment.JoiningSegment;
-import com.milaboratory.mir.segment.VariableSegment;
+import com.milaboratory.mir.segment.*;
 
 public class RearrangementTemplate {
     private final VariableSegment variableSegment;
     private final JoiningSegment joiningSegment;
     private final DiversitySegment diversitySegment;
+    private final ConstantSegment constantSegment = MissingConstantSegment.INSTANCE;
     private final int variableTrimming, joiningTrimming,
             diversityTrimming5, diversityTrimming3;
     private final NucleotideSequence variableDiversityInsert, diversityJoiningInsert,
@@ -124,5 +122,9 @@ public class RearrangementTemplate {
 
     public NucleotideSequence getVariableJoiningInsert() {
         return variableJoiningInsert;
+    }
+
+    public ConstantSegment getConstantSegment() {
+        return constantSegment;
     }
 }

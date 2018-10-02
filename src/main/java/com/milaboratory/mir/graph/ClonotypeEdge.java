@@ -2,19 +2,19 @@ package com.milaboratory.mir.graph;
 
 import com.milaboratory.mir.clonotype.Clonotype;
 
-public class Edge {
-    private final Clonotype from, to;
+public class ClonotypeEdge<T extends Clonotype> {
+    private final T from, to;
 
-    public Edge(Clonotype from, Clonotype to) {
+    public ClonotypeEdge(T from, T to) {
         this.from = from;
         this.to = to;
     }
 
-    public Clonotype getFrom() {
+    public T getFrom() {
         return from;
     }
 
-    public Clonotype getTo() {
+    public T getTo() {
         return to;
     }
 }
