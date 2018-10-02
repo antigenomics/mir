@@ -89,8 +89,7 @@ public final class StmMapper<T, S extends Sequence<S>>
             if (previousGroupHit == null) {
                 // introduce a hit if we don't have any previous alignments with this sequence
                 alignmentScore = scoring.computeScore(query, mutations);
-                groupHitBuffer.put(targetSequence, new StmGroupHit<>(group,
-                        targetSequence, alignmentScore, mutations));
+                groupHitBuffer.put(targetSequence, new StmGroupHit<>(group, alignmentScore, mutations));
             } else if ( // exhaustive search - don't take first hit but try to compare scores
                     searchScope.isExhaustive() &&
                             // if filter is greedy - only consider hits that do not have more mutations than previous hit
@@ -99,8 +98,7 @@ public final class StmMapper<T, S extends Sequence<S>>
                             // now compute alignment score and replace if its better than previous
                             (alignmentScore = scoring.computeScore(query, mutations)) > previousGroupHit.alignmentScore
             ) {
-                groupHitBuffer.put(targetSequence, new StmGroupHit<>(group,
-                        targetSequence, alignmentScore, mutations));
+                groupHitBuffer.put(targetSequence, new StmGroupHit<>(group, alignmentScore, mutations));
             }
         }
 
@@ -109,7 +107,7 @@ public final class StmMapper<T, S extends Sequence<S>>
         for (var groupHit : groupHitBuffer.values()) {
             for (var target : groupHit.group) {
                 hits.add(new StmMapperHit<>(target,
-                        groupHit.targetSequence,
+                        query,
                         groupHit.alignmentScore,
                         groupHit.mutations)
                 );
@@ -141,15 +139,13 @@ public final class StmMapper<T, S extends Sequence<S>>
 
     private static final class StmGroupHit<T, S extends Sequence<S>> {
         final List<T> group;
-        final S targetSequence;
         final float alignmentScore;
         final Mutations<S> mutations;
 
-        StmGroupHit(List<T> group, S targetSequence,
+        StmGroupHit(List<T> group,
                     float alignmentScore,
                     Mutations<S> mutations) {
             this.group = group;
-            this.targetSequence = targetSequence;
             this.alignmentScore = alignmentScore;
             this.mutations = mutations;
         }

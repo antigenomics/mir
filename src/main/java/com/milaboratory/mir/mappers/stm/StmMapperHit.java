@@ -8,20 +8,20 @@ import com.milaboratory.mir.mappers.HitWithAlignment;
 public final class StmMapperHit<T, S extends Sequence<S>> implements HitWithAlignment<T, S> {
     private final T target;
     private final float alignmentScore;
-    private final S targetSequence;
+    private final S querySequence;
     private final Mutations<S> mutations;
 
-    public StmMapperHit(T target, S targetSequence,
+    public StmMapperHit(T target, S querySequence,
                         float alignmentScore, Mutations<S> mutations) {
         this.target = target;
-        this.targetSequence = targetSequence;
+        this.querySequence = querySequence;
         this.alignmentScore = alignmentScore;
         this.mutations = mutations;
     }
 
     public Alignment<S> getAlignment() {
         return new Alignment<>(
-                targetSequence, mutations, alignmentScore
+                querySequence, mutations, alignmentScore
         );
     }
 

@@ -17,4 +17,8 @@ public class ClonotypeEdge<T extends Clonotype> {
     public T getTo() {
         return to;
     }
+
+    public boolean isRedundant() {
+        return from == to;
+    }
 }

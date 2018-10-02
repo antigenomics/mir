@@ -30,4 +30,9 @@ public class JunctionMarkup {
     public int getDEnd() {
         return dEnd;
     }
+
+    @Override
+    public String toString() {
+        return vEnd + "\t" + dStart + "\t" + dEnd + "\t" + jStart;
+    }
 }

@@ -31,4 +31,9 @@ public class SegmentCall<T extends Segment> {
     public static <T extends Segment> List<SegmentCall<T>> asCallList(T segment) {
         return Collections.singletonList(asCall(segment));
     }
+
+    @Override
+    public String toString() {
+        return segment.getId() + "(" + weight + ")";
+    }
 }

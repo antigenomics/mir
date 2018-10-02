@@ -6,6 +6,7 @@ import com.milaboratory.mir.segment.*;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class ReadlessClonotypeImpl implements ClonotypeWithRearrangementInfo {
     private final SegmentTrimming segmentTrimming;
@@ -97,5 +98,16 @@ public class ReadlessClonotypeImpl implements ClonotypeWithRearrangementInfo {
     @Override
     public List<SegmentCall<ConstantSegment>> getConstantSegmentCalls() {
         return constantSegmentCalls;
+    }
+
+    @Override
+    public String toString() {
+        return cdr3nt + "\t" + cdr3aa + "\t" +
+                variableSegmentCalls.stream().map(SegmentCall::toString).collect(Collectors.joining(",")) + "\t" +
+                diversitySegmentCalls.stream().map(SegmentCall::toString).collect(Collectors.joining(",")) + "\t" +
+                joiningSegmentCalls.stream().map(SegmentCall::toString).collect(Collectors.joining(",")) + "\t" +
+                constantSegmentCalls.stream().map(SegmentCall::toString).collect(Collectors.joining(",")) + "\t" +
+                junctionMarkup.toString().replaceAll("\t", ":") + "\t" +
+                segmentTrimming.toString().replaceAll("\t", ":") + "";
     }
 }

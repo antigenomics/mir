@@ -9,7 +9,7 @@ import com.milaboratory.mir.segment.Species;
 import com.milaboratory.mir.segment.parser.MigecSegmentLibraryUtils;
 import org.junit.Test;
 
-public class Cdr3NtScopedGraphTest {
+public class IgCdr3NtScopedGraphTest {
 
     @Test
     public void test1() {
@@ -18,11 +18,12 @@ public class Cdr3NtScopedGraphTest {
                 MigecSegmentLibraryUtils.getLibraryFromResources(Species.Human, Gene.TRB)
         );
 
-        var input = new ReproducibleGeneratorPipe<>(() -> ((RearrangementTemplate) mdl.generate()).toRearrangement(),
+        var input = new ReproducibleGeneratorPipe<>(
+                () -> ((RearrangementTemplate) mdl.generate()).toRearrangement(),
                 10000);
 
-        new Cdr3NtScopedGraph<>(input, 3, 6, 3, 9)
-                .stream()
+        new IgCdr3NtScopedGraph<>(input, 1, 6, 3, 9)
+                .parallelStream()
                 .forEach(System.out::println);
     }
 }

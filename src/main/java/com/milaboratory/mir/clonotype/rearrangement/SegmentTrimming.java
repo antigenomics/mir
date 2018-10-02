@@ -29,4 +29,9 @@ public class SegmentTrimming {
     public int getDTrimming3() {
         return dTrimming3;
     }
+
+    @Override
+    public String toString() {
+        return vTrimming + "\t" + dTrimming5 + "\t" + dTrimming3 + "\t" + jTrimming;
+    }
 }
