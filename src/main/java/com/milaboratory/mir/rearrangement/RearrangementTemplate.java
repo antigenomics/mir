@@ -2,6 +2,7 @@ package com.milaboratory.mir.rearrangement;
 
 import com.milaboratory.core.sequence.NucleotideSequence;
 import com.milaboratory.mir.clonotype.rearrangement.JunctionMarkup;
+import com.milaboratory.mir.clonotype.rearrangement.SegmentTrimming;
 import com.milaboratory.mir.segment.*;
 
 public class RearrangementTemplate {
@@ -126,5 +127,9 @@ public class RearrangementTemplate {
 
     public ConstantSegment getConstantSegment() {
         return constantSegment;
+    }
+
+    public SegmentTrimming getSegmentTrimming() {
+        return new SegmentTrimming(variableTrimming, joiningTrimming, diversityTrimming5, diversityTrimming3);
     }
 }

@@ -21,4 +21,9 @@ public class ClonotypeEdge<T extends Clonotype> {
     public boolean isRedundant() {
         return from == to;
     }
+
+    @Override
+    public String toString() {
+        return from + "\t" + to;
+    }
 }

@@ -108,6 +108,6 @@ public class ReadlessClonotypeImpl implements ClonotypeWithRearrangementInfo {
                 joiningSegmentCalls.stream().map(SegmentCall::toString).collect(Collectors.joining(",")) + "\t" +
                 constantSegmentCalls.stream().map(SegmentCall::toString).collect(Collectors.joining(",")) + "\t" +
                 junctionMarkup.toString().replaceAll("\t", ":") + "\t" +
-                segmentTrimming.toString().replaceAll("\t", ":") + "";
+                segmentTrimming.toString().replaceAll("\t", ":");
     }
 }

@@ -90,7 +90,7 @@ public class IgCdr3NtScopedGraph<T extends Clonotype>
     }
 
     private Alignment<NucleotideSequence> getAlignment(T query, T target) {
-        return Aligner.alignGlobalAffine(AffineGapAlignmentScoring.IGBLAST_NUCLEOTIDE_SCORING,
+        return Aligner.alignGlobalAffine(AffineGapAlignmentScoring.getNucleotideBLASTScoring(),
                 query.getCdr3Nt(),
                 target.getCdr3Nt());
     }

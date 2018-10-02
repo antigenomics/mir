@@ -2,6 +2,7 @@ package com.milaboratory.mir.graph;
 
 
 import com.milaboratory.core.alignment.Alignment;
+import com.milaboratory.core.alignment.AlignmentHelper;
 import com.milaboratory.core.sequence.Sequence;
 import com.milaboratory.mir.clonotype.Clonotype;
 
@@ -15,5 +16,11 @@ public class ClonotypeEdgeWithAlignment<T extends Clonotype, S extends Sequence<
 
     public Alignment<S> getAlignment() {
         return alignment;
+    }
+
+    @Override
+    public String toString() {
+        var helper = alignment.getAlignmentHelper();
+        return super.toString() + "\t" + helper.getSeq1String() + "\t" + helper.getSeq2String();
     }
 }

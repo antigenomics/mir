@@ -9,6 +9,7 @@ import com.milaboratory.mir.segment.*;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class Rearrangement implements Clonotype {
     private final RearrangementTemplate rearrangementTemplate;
@@ -62,5 +63,16 @@ public class Rearrangement implements Clonotype {
     @Override
     public List<SegmentCall<ConstantSegment>> getConstantSegmentCalls() {
         return Collections.singletonList(SegmentCall.asCall(rearrangementTemplate.getConstantSegment()));
+    }
+
+    @Override
+    public String toString() {
+        return getCdr3Nt() + "\t" + getCdr3Aa() + "\t" +
+                rearrangementTemplate.getVariableSegment().getId() + "\t" +
+                rearrangementTemplate.getDiversitySegment().getId() + "\t" +
+                rearrangementTemplate.getJoiningSegment().getId() + "\t" +
+                rearrangementTemplate.getConstantSegment().getId() + "\t" +
+                junctionMarkup.toString().replaceAll("\t", ":") + "\t" +
+                rearrangementTemplate.getSegmentTrimming().toString().replaceAll("\t", ":");
     }
 }
