@@ -50,6 +50,24 @@ public class StringArrayIndexer {
         return res;
     }
 
+    public int getIndexOf(String[] names) {
+        return getIndexOf(names, true);
+    }
+
+    public int getIndexOf(String[] names, boolean strict) {
+        for (String name : names) {
+            int res = getIndexOf(name, false);
+            if (res > -1) {
+                return res;
+            }
+        }
+        if (strict) {
+            throw new RuntimeException("Failed to parse header, " +
+                    "missing column '" + Arrays.toString(names) + "'");
+        }
+        return -1;
+    }
+
     public int getIndexOfS(String name) {
         return getIndexOfS(name, true);
     }
@@ -65,6 +83,24 @@ public class StringArrayIndexer {
                     "missing column '" + name + "'");
         }
         return -1;
+    }
+
+    public int getIndexOfS(String[] names, boolean strict) {
+        for (String name : names) {
+            int res = getIndexOfS(name, false);
+            if (res > -1) {
+                return res;
+            }
+        }
+        if (strict) {
+            throw new RuntimeException("Failed to parse header, " +
+                    "missing column '" + Arrays.toString(names) + "'");
+        }
+        return -1;
+    }
+
+    public int getIndexOfS(String[] names) {
+        return getIndexOfS(names, true);
     }
 
     public boolean isIgnoreCase() {
