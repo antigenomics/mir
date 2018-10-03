@@ -10,37 +10,45 @@ import com.milaboratory.mir.segment.parser.MigecSegmentLibraryUtils;
 
 import java.io.InputStream;
 
-public class ClonotypeTableParserUtils {
-    public ClonotypeTablePipe<? extends Clonotype> streamFrom(InputStream inputStream,
+public final class ClonotypeTableParserUtils {
+    public static ClonotypeTablePipe<? extends Clonotype> streamFrom(InputStream inputStream,
                                                               Software software,
                                                               SegmentLibrary segmentLibrary,
                                                               boolean majorAllelesOnly,
                                                               boolean buffered) {
+        ClonotypeTableParserFactory parserFactory;
         switch (software) {
             case VDJtools:
-                var parserFactory = new VDJtoolsClonotypeParserFactory(segmentLibrary, majorAllelesOnly);
-                return buffered ?
-                        new ClonotypeTableBufferedPipe<>(inputStream, parserFactory) :
-                        new ClonotypeTablePipe<>(inputStream, parserFactory);
+                parserFactory = new VDJtoolsClonotypeParserFactory(segmentLibrary, majorAllelesOnly);
+                break;
+
+            case MIXCR:
+                parserFactory = new MixcrClonotypeParserFactory(segmentLibrary, majorAllelesOnly);
+                break;
+
+            default:
+                throw new IllegalArgumentException("Software " + software + " not supported");
         }
 
-        throw new IllegalArgumentException("Software " + software + " not supported");
+        return buffered ?
+                new ClonotypeTableBufferedPipe<>(inputStream, parserFactory) :
+                new ClonotypeTablePipe<>(inputStream, parserFactory);
     }
 
-    public ClonotypeTablePipe<? extends Clonotype> streamFrom(InputStream inputStream,
+    public static ClonotypeTablePipe<? extends Clonotype> streamFrom(InputStream inputStream,
                                                               Software software,
                                                               SegmentLibrary segmentLibrary,
                                                               boolean majorAllelesOnly) {
         return streamFrom(inputStream, software, segmentLibrary, majorAllelesOnly, true);
     }
 
-    public ClonotypeTablePipe<? extends Clonotype> streamFrom(InputStream inputStream,
+    public static ClonotypeTablePipe<? extends Clonotype> streamFrom(InputStream inputStream,
                                                               Software software,
                                                               SegmentLibrary segmentLibrary) {
         return streamFrom(inputStream, software, segmentLibrary, true);
     }
 
-    public ClonotypeTablePipe<? extends Clonotype> streamFrom(InputStream inputStream,
+    public static ClonotypeTablePipe<? extends Clonotype> streamFrom(InputStream inputStream,
                                                               Software software,
                                                               Species species, Gene gene) {
         return streamFrom(inputStream, software,

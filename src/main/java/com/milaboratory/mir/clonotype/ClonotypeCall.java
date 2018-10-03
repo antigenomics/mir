@@ -67,4 +67,9 @@ public class ClonotypeCall<T extends Clonotype> implements Clonotype {
     public List<SegmentCall<ConstantSegment>> getConstantSegmentCalls() {
         return clonotype.getConstantSegmentCalls();
     }
+
+    @Override
+    public String toString() {
+        return id + "\t" + count + "\t" + frequency + "\t" + clonotype;
+    }
 }

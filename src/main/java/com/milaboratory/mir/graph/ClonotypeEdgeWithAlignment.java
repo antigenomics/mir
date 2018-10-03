@@ -2,7 +2,6 @@ package com.milaboratory.mir.graph;
 
 
 import com.milaboratory.core.alignment.Alignment;
-import com.milaboratory.core.alignment.AlignmentHelper;
 import com.milaboratory.core.sequence.Sequence;
 import com.milaboratory.mir.clonotype.Clonotype;
 

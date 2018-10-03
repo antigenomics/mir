@@ -16,7 +16,7 @@ import static org.junit.Assert.assertEquals;
 public class ClonotypeTablePipeTest {
     @Test
     public void vdjtoolsReadTest() {
-        var sampleSupplier = TestUtils.streamSupplierFrom("samples/trad_sample.txt");
+        var sampleSupplier = TestUtils.streamSupplierFrom("samples/trad_sample.txt.gz");
         var library = MigecSegmentLibraryUtils.getLibraryFromResources(Species.Human, Gene.TRA);
         var parserFactory = new VDJtoolsClonotypeParserFactory(library, true);
 
@@ -38,24 +38,13 @@ public class ClonotypeTablePipeTest {
     }
     @Test
     public void mixcrReadTest() {
-        var sampleSupplier = TestUtils.streamSupplierFrom("samples/mixcr_1.txt");
+        var sampleSupplier = TestUtils.streamSupplierFrom("samples/mixcr_1.txt.gz");
         var library = MigecSegmentLibraryUtils.getLibraryFromResources(Species.Human, Gene.IGH);
         var parserFactory = new MixcrClonotypeParserFactory(library, true);
 
+        assertEquals(2507, new ClonotypeTablePipe<>(sampleSupplier.get(), parserFactory).stream().count());
 
-        var clonotypeIterator = new ClonotypeTablePipe<>(sampleSupplier.get(), parserFactory);
-        assertEquals(2507, clonotypeIterator.stream().count());
-
-
-        clonotypeIterator = new ClonotypeTablePipe<>(sampleSupplier.get(), parserFactory);
-        assertEquals(2507, clonotypeIterator.parallelStream().count());
-
-
-        clonotypeIterator = new ClonotypeTableBufferedPipe<>(sampleSupplier.get(), parserFactory);
-        assertEquals(2507, clonotypeIterator.stream().count());
-
-
-        clonotypeIterator = new ClonotypeTableBufferedPipe<>(sampleSupplier.get(), parserFactory);
-        assertEquals(2507, clonotypeIterator.parallelStream().count());
+        sampleSupplier = TestUtils.streamSupplierFrom("samples/mixcr_2.txt.gz");
+        assertEquals(3589, new ClonotypeTablePipe<>(sampleSupplier.get(), parserFactory).stream().count());
     }
 }
