@@ -16,6 +16,7 @@ public class ResourceTests {
     @Test
     public void testMainResources() throws IOException {
         TestUtils.testStream(CommonUtils.getResourceAsStream("segments.txt"));
+        TestUtils.testStream(CommonUtils.getResourceAsStream("mhc/mhc_serotype_prot.txt"));
         TestUtils.testStream(CommonUtils.getResourceAsStream("murugan_models/hsa_tra_params.txt"));
         TestUtils.testStream(CommonUtils.getResourceAsStream("murugan_models/hsa_tra_marginals.txt"));
         TestUtils.testStream(CommonUtils.getResourceAsStream("murugan_models/hsa_trb_params.txt"));

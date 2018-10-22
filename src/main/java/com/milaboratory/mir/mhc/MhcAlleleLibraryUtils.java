@@ -1,6 +1,7 @@
 package com.milaboratory.mir.mhc;
 
 import com.milaboratory.core.sequence.AminoAcidSequence;
+import com.milaboratory.mir.CommonUtils;
 import com.milaboratory.mir.mappers.markup.ArrayBasedSequenceRegionMarkup;
 import com.milaboratory.mir.segment.Species;
 
@@ -14,9 +15,20 @@ import java.util.Map;
 
 public final class MhcAlleleLibraryUtils {
     private static final int NUM_COLUMNS = 10;
-    private static final String HEADER = "species\tmhc.class\tchain\tallele\tgroove.start\thelix1.start\thelix2.start\thelix3.start\tmembrane.start";
+    private static final String HEADER = "species\tmhc.class\tchain\tallele\tsignal.start\tregion1.start\tregion2.start\tregion3.start\tmembrane.start";
+    private static final String RESOURCE_PATH = "mhc/mhc_serotype_prot.txt";
 
-    public static MhcAlleleLibrary parse(InputStream inputStream, Species species, MhcClassType mhcClassType) {
+    public static MhcAlleleLibrary load(Species species, MhcClassType mhcClassType) {
+        try {
+            return parse(CommonUtils.getResourceAsStream(RESOURCE_PATH),
+                    species,
+                    mhcClassType);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public static MhcAlleleLibrary parse(InputStream inputStream, Species species, MhcClassType mhcClassType) throws IOException {
         Map<String, MhcAllele> mhcAlleles = new HashMap<>();
         try (BufferedReader br = new BufferedReader(new InputStreamReader(inputStream))) {
             boolean firstLine = true;
@@ -60,12 +72,11 @@ public final class MhcAlleleLibraryUtils {
                     var markup = new ArrayBasedSequenceRegionMarkup<>(
                             sequence,
                             new int[]{
-                                    0,                              // start
-                                    Integer.parseInt(splitLine[4]), // groove
-                                    Integer.parseInt(splitLine[5]), // helix1
-                                    Integer.parseInt(splitLine[6]), // helix2
-                                    Integer.parseInt(splitLine[7]), // helix3
-                                    Integer.parseInt(splitLine[8]), // membrane
+                                    Integer.parseInt(splitLine[4]), // signal   start
+                                    Integer.parseInt(splitLine[5]), // region1   start
+                                    Integer.parseInt(splitLine[6]), // region2   start
+                                    Integer.parseInt(splitLine[7]), // region3   start
+                                    Integer.parseInt(splitLine[8]), // membrane start
                                     sequence.size()                 // end
                             },
                             MhcRegionType.class
@@ -74,9 +85,8 @@ public final class MhcAlleleLibraryUtils {
                     mhcAlleles.put(id, new MhcAllele(id, mhcChainType, mhcClassType, markup));
                 }
             }
-        } catch (IOException e) {
-            throw new RuntimeException(e);
         }
+
         return new MhcAlleleLibrary(mhcClassType, species, mhcAlleles);
     }
 }

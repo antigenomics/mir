@@ -33,4 +33,9 @@ public final class MhcAllele {
     public SequenceRegionMarkup<AminoAcidSequence, MhcRegionType, ? extends SequenceRegionMarkup> getRegionMarkup() {
         return regionMarkup;
     }
+
+    @Override
+    public String toString() {
+        return id + "\t" + regionMarkup.toString();
+    }
 }

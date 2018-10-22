@@ -1,5 +1,5 @@
 package com.milaboratory.mir.mhc;
 
 public enum MhcRegionType {
-    GROOVE, HELIX1, HELIX2, HELIX3, MEMBRANE
+    SIGNAL, REGION1, REGION2, REGION3, MEMBRANE
 }
