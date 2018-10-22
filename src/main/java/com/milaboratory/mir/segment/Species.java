@@ -1,6 +1,8 @@
 package com.milaboratory.mir.segment;
 
 import java.util.*;
+import java.util.concurrent.locks.Condition;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 public enum Species {
