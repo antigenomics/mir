@@ -74,15 +74,19 @@ public class RunCdr3NtScopedGraph implements Callable<Void> {
 
         var output = CommonUtils.createFileAsStream(outputPath);
         try (var pw = new PrintWriter(output)) {
-            pw.println("from.id\tto.id\tfrom.cdr3nt.aln\tto.cdr3nt.aln");
+            pw.println("from.id\tto.id\tfrom.cdr3nt.aln\tto.cdr3nt.aln\tsubsts\tindels");
             new Cdr3NtScopedGraph<>(input, kNn, maxSubstitutions, maxIndels)
                     .parallelStream()
                     .forEach(edge -> {
                         var helper = edge.getAlignment().getAlignmentHelper();
+                        int totalMut = edge.getAlignment().getAbsoluteMutations().size(),
+                                indels = edge.getAlignment().getAbsoluteMutations().countOfIndels();
                         pw.println(edge.getFrom().getId() + "\t" +
                                 edge.getTo().getId() + "\t" +
                                 helper.getSeq1String() + "\t" +
-                                helper.getSeq2String()
+                                helper.getSeq2String() + "\t" +
+                                (totalMut - indels) + "\t" +
+                                indels
                         );
                     });
         }
