@@ -10,6 +10,10 @@ public class PdbParserUtils {
     private static final PdbFieldCache<ResidueName> residueNameCache = new PdbFieldCache<>(ResidueName::new);
     private static final PdbFieldCache<ElementSymbolWithCharge> elementSymbolWithChargePdbFieldCache = new PdbFieldCache<>(ElementSymbolWithCharge::new);
 
+    public static final AtomName CA_ATOM_NAME = atomNameCache.createField(" CA "),
+            C_ATOM_NAME = atomNameCache.createField(" C  "),
+            N_ATOM_NAME = atomNameCache.createField(" C  ");
+
     private static final int PDB_LINE_SZ = 80;
 
     public static void writeStructure(Structure structure, PrintWriter pw) {
@@ -52,11 +56,11 @@ public class PdbParserUtils {
                         newIndex++;
                     }
 
-                    atom.shiftedResidueSequenceNumber = newIndex;
+                    atom.sequentialResidueSequenceNumber = newIndex;
 
                     atomMap
                             .computeIfAbsent(atom.getChainIdentifier(), x -> new HashMap<>())
-                            .computeIfAbsent(atom.shiftedResidueSequenceNumber, x -> new ArrayList<>())
+                            .computeIfAbsent(atom.sequentialResidueSequenceNumber, x -> new ArrayList<>())
                             .add(atom);
                 }
             }

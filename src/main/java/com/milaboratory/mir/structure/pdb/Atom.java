@@ -17,6 +17,8 @@ public interface Atom<T extends Atom<T>> extends Comparable<T>, CoordinateSet<T>
 
     char getChainIdentifier();
 
+    short getSequentialResidueSequenceNumber();
+
     short getResidueSequenceNumber();
 
     char getResidueInsertionCode();

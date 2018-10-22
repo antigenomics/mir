@@ -83,6 +83,11 @@ public final class AtomImpl implements Atom<AtomImpl> {
     }
 
     @Override
+    public short getSequentialResidueSequenceNumber() {
+        return parent.getSequentialResidueSequenceNumber();
+    }
+
+    @Override
     public char getResidueInsertionCode() {
         return parent.getResidueInsertionCode();
     }

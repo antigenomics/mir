@@ -17,7 +17,7 @@ public final class RawAtom implements Atom<RawAtom> {
     private final float occupancy;
     private final float temperatureFactor;
     private final ElementSymbolWithCharge elementSymbolWithCharge;
-    short shiftedResidueSequenceNumber;
+    short sequentialResidueSequenceNumber;
 
     public RawAtom(AtomType atomType,
                    short atomSerialNumber,
@@ -43,7 +43,7 @@ public final class RawAtom implements Atom<RawAtom> {
         this.occupancy = occupancy;
         this.temperatureFactor = temperatureFactor;
         this.elementSymbolWithCharge = elementSymbolWithCharge;
-        this.shiftedResidueSequenceNumber = residueSequenceNumber;
+        this.sequentialResidueSequenceNumber = residueSequenceNumber;
     }
 
     private RawAtom(RawAtom toCopy, Coordinates newCoordinates) {
@@ -126,8 +126,9 @@ public final class RawAtom implements Atom<RawAtom> {
         return PdbParserUtils.writeAtom(this);
     }
 
-    public short getShiftedResidueSequenceNumber() {
-        return shiftedResidueSequenceNumber;
+    @Override
+    public short getSequentialResidueSequenceNumber() {
+        return sequentialResidueSequenceNumber;
     }
 
     @Override

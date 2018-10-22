@@ -1,6 +1,6 @@
 package com.milaboratory.mir.structure.pdb.geometry;
 
-public class Coordinates {
+public final class Coordinates {
     private final float x, y, z;
 
     public Coordinates(float x, float y, float z) {

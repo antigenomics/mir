@@ -12,6 +12,7 @@ import java.util.stream.Collectors;
 public final class Residue implements Comparable<Residue>, CoordinateSet<Residue> {
     private final Chain parent;
     private final ResidueName residueName;
+    private final short sequentialResidueSequenceNumber;
     private final short residueSequenceNumber;
     private final char residueInsertionCode;
     private final List<AtomImpl> atoms;
@@ -23,8 +24,9 @@ public final class Residue implements Comparable<Residue>, CoordinateSet<Residue
         this.parent = parent;
         var firstAtom = rawAtoms.get(0);
         this.residueName = firstAtom.getResidueName();
-        this.residueSequenceNumber = firstAtom.getShiftedResidueSequenceNumber(); // helps with insertion code bullshit
-        this.residueInsertionCode = ' '; //firstAtom.getResidueInsertionCode(); get rid of this BS!
+        this.sequentialResidueSequenceNumber = firstAtom.getSequentialResidueSequenceNumber();
+        this.residueSequenceNumber = firstAtom.getResidueSequenceNumber();
+        this.residueInsertionCode = firstAtom.getResidueInsertionCode();
         this.atoms = rawAtoms.stream().map(
                 x -> {
                     if (x.getChainIdentifier() != getChainIdentifier()) {
@@ -33,12 +35,15 @@ public final class Residue implements Comparable<Residue>, CoordinateSet<Residue
                     if (x.getResidueName() != residueName) {
                         throw new IllegalArgumentException("Wrong residue name " + x);
                     }
-                    if (x.getShiftedResidueSequenceNumber() != residueSequenceNumber) {
-                        throw new IllegalArgumentException("Wrong residue index " + x);
+                    if (x.getSequentialResidueSequenceNumber() != sequentialResidueSequenceNumber) {
+                        throw new IllegalArgumentException("Wrong shifted residue index " + x);
                     }
-                    //if (x.getResidueInsertionCode() != residueInsertionCode) {
-                    //    throw new IllegalArgumentException("Wrong residue insertion code " + x);
-                    //}
+                    if (x.getResidueSequenceNumber() != residueSequenceNumber) {
+                        throw new IllegalArgumentException("Wrong original residue index " + x);
+                    }
+                    if (x.getResidueInsertionCode() != residueInsertionCode) {
+                        throw new IllegalArgumentException("Wrong residue insertion code " + x);
+                    }
                     return new AtomImpl(this,
                             x.getAtomType(),
                             x.getAtomSerialNumber(),
@@ -53,10 +58,12 @@ public final class Residue implements Comparable<Residue>, CoordinateSet<Residue
     }
 
     public Residue(Chain parent, ResidueName residueName,
+                   short sequentialResidueSequenceNumber,
                    short residueSequenceNumber, char residueInsertionCode,
                    List<AtomImpl> atoms) {
         this.parent = parent;
         this.residueName = residueName;
+        this.sequentialResidueSequenceNumber = sequentialResidueSequenceNumber;
         this.residueSequenceNumber = residueSequenceNumber;
         this.residueInsertionCode = residueInsertionCode;
         this.atoms = Collections.unmodifiableList(atoms);
@@ -65,6 +72,7 @@ public final class Residue implements Comparable<Residue>, CoordinateSet<Residue
     private Residue(Residue toCopy, List<AtomImpl> newAtoms) {
         this.parent = toCopy.parent;
         this.residueName = toCopy.residueName;
+        this.sequentialResidueSequenceNumber = toCopy.sequentialResidueSequenceNumber;
         this.residueSequenceNumber = toCopy.residueSequenceNumber;
         this.residueInsertionCode = toCopy.residueInsertionCode;
         this.atoms = Collections.unmodifiableList(newAtoms);
@@ -80,6 +88,10 @@ public final class Residue implements Comparable<Residue>, CoordinateSet<Residue
 
     public ResidueName getResidueName() {
         return residueName;
+    }
+
+    public short getSequentialResidueSequenceNumber() {
+        return sequentialResidueSequenceNumber;
     }
 
     public short getResidueSequenceNumber() {
@@ -106,7 +118,7 @@ public final class Residue implements Comparable<Residue>, CoordinateSet<Residue
         if (res != 0) {
             return res;
         }
-        return Short.compare(residueSequenceNumber, o.residueSequenceNumber);
+        return Short.compare(sequentialResidueSequenceNumber, o.sequentialResidueSequenceNumber);
     }
 
     @Override

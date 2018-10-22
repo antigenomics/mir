@@ -39,8 +39,8 @@ public class Chain implements Comparable<Chain>, CoordinateSet<Chain> {
     private static Range getRange(Collection<Residue> residues) {
         int minResidue = Integer.MAX_VALUE, maxResidue = Integer.MIN_VALUE;
         for (Residue residue : residues) {
-            minResidue = Math.min(minResidue, residue.getResidueSequenceNumber());
-            maxResidue = Math.max(maxResidue, residue.getResidueSequenceNumber());
+            minResidue = Math.min(minResidue, residue.getSequentialResidueSequenceNumber());
+            maxResidue = Math.max(maxResidue, residue.getSequentialResidueSequenceNumber());
         }
         return new Range(minResidue, maxResidue + 1);
     }
@@ -58,7 +58,7 @@ public class Chain implements Comparable<Chain>, CoordinateSet<Chain> {
                 this,
                 residues
                         .stream()
-                        .filter(x -> region.contains(x.getResidueSequenceNumber()))
+                        .filter(x -> region.contains(x.getSequentialResidueSequenceNumber()))
                         .collect(Collectors.toList()),
                 region);
     }
