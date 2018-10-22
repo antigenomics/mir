@@ -7,7 +7,7 @@ import java.io.IOException;
 public class ResourceTests {
     @Test
     public void testTestResources() throws IOException {
-        TestUtils.testStream(CommonUtils.getResourceAsStream("samples/trad_sample.txt"));
+//        TestUtils.testStream(CommonUtils.getResourceAsStream("samples/trad_sample.txt"));
         TestUtils.testStream(CommonUtils.getResourceAsStream("samples/trad_sample.txt.gz"));
         TestUtils.testStream(CommonUtils.getResourceAsStream("structures/1ao7_al.pdb"));
         //todo
