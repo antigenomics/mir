@@ -1,11 +1,19 @@
 package com.milaboratory.mir.structure;
 
-import com.milaboratory.mir.structure.pdb.Structure;
+public class TcrPeptideMhcComplex {
+    private final AntigenReceptor antigenReceptor;
+    private final PeptideMhcComplex peptideMhcComplex;
 
-public interface TcrPeptideMhcComplex {
-    AntigenReceptor getAntigenReceptor();
+    public TcrPeptideMhcComplex(AntigenReceptor antigenReceptor, PeptideMhcComplex peptideMhcComplex) {
+        this.antigenReceptor = antigenReceptor;
+        this.peptideMhcComplex = peptideMhcComplex;
+    }
 
-    PeptideMhcComplex getPeptideMhcComplex();
+    public AntigenReceptor getAntigenReceptor() {
+        return antigenReceptor;
+    }
 
-    Structure getStructure();
+    public PeptideMhcComplex getPeptideMhcComplex() {
+        return peptideMhcComplex;
+    }
 }

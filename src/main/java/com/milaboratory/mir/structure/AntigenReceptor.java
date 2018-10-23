@@ -1,9 +1,13 @@
 package com.milaboratory.mir.structure;
 
-public interface AntigenReceptor {
-    AntigenReceptorChain getFirstChain();
+public class AntigenReceptor {
+    private final AntigenReceptorChain firstChain, secondChain;
+    private final AntigenReceptorType antigenReceptorType;
 
-    AntigenReceptorChain getSecondChain();
-
-    AntigenReceptorType getAntigenReceptorType();
+    public AntigenReceptor(AntigenReceptorChain firstChain, AntigenReceptorChain secondChain,
+                           AntigenReceptorType antigenReceptorType) {
+        this.firstChain = firstChain;
+        this.secondChain = secondChain;
+        this.antigenReceptorType = antigenReceptorType;
+    }
 }
