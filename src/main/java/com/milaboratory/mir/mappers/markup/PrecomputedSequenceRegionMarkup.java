@@ -21,20 +21,33 @@ public final class PrecomputedSequenceRegionMarkup<S extends Sequence<S>, E exte
             regionMap.put(regionType, SequenceRegion.empty(regionType, alphabet, 0));
         }
         return new PrecomputedSequenceRegionMarkup<>(fullSequence,
-                regionMap, regionTypeClass, true);
+                regionMap, regionTypeClass, true, 0.0);
     }
 
     public PrecomputedSequenceRegionMarkup(S fullSequence,
                                            EnumMap<E, SequenceRegion<S, E>> regionMap,
                                            Class<E> regionTypeClass) {
-        this(fullSequence, regionMap, regionTypeClass, false);
+        this(fullSequence, regionMap, regionTypeClass, 1.0);
+    }
+
+    public PrecomputedSequenceRegionMarkup(S fullSequence,
+                                           EnumMap<E, SequenceRegion<S, E>> regionMap,
+                                           Class<E> regionTypeClass, double score) {
+        this(fullSequence, regionMap, regionTypeClass, false, score);
     }
 
     PrecomputedSequenceRegionMarkup(S fullSequence,
                                     EnumMap<E, SequenceRegion<S, E>> regionMap,
                                     Class<E> regionTypeClass,
                                     boolean unsafe) {
-        super(fullSequence, regionTypeClass);
+        this(fullSequence, regionMap, regionTypeClass, unsafe, 1.0);
+    }
+
+    PrecomputedSequenceRegionMarkup(S fullSequence,
+                                    EnumMap<E, SequenceRegion<S, E>> regionMap,
+                                    Class<E> regionTypeClass,
+                                    boolean unsafe, double score) {
+        super(fullSequence, regionTypeClass, score);
         if (regionMap.size() != regionTypeClass.getEnumConstants().length) {
             throw new IllegalArgumentException("Bad markup - wrong number of regions: " + regionMap);
         }
@@ -85,7 +98,8 @@ public final class PrecomputedSequenceRegionMarkup<S extends Sequence<S>, E exte
                     SequenceRegion.cutFrom(region.getRegionType(), querySequence, start, end));
         }
 
-        return new PrecomputedSequenceRegionMarkup<>(querySequence, newRegionMap, regionTypeClass, true);
+        return new PrecomputedSequenceRegionMarkup<>(querySequence, newRegionMap, regionTypeClass,
+                true, computeScore(querySequence, alignment));
     }
 
     @Override
@@ -102,7 +116,7 @@ public final class PrecomputedSequenceRegionMarkup<S extends Sequence<S>, E exte
         }
 
         return new PrecomputedSequenceRegionMarkup<>(sequence.concatenate(fullSequence),
-                newRegionMap, regionTypeClass, true);
+                newRegionMap, regionTypeClass, true, score);
     }
 
     @Override
@@ -112,7 +126,7 @@ public final class PrecomputedSequenceRegionMarkup<S extends Sequence<S>, E exte
         }
 
         return new PrecomputedSequenceRegionMarkup<>(fullSequence.concatenate(sequence),
-                regionMap, regionTypeClass, true);
+                regionMap, regionTypeClass, true, score);
     }
 
     @Override
@@ -136,26 +150,11 @@ public final class PrecomputedSequenceRegionMarkup<S extends Sequence<S>, E exte
                 markup[i + 1] = sequenceRegion.getEnd();
             }
         }
-        return new ArrayBasedSequenceRegionMarkup<>(fullSequence, markup, regionTypeClass, true);
+        return new ArrayBasedSequenceRegionMarkup<>(fullSequence, markup, regionTypeClass, true, score);
     }
 
     @Override
     public PrecomputedSequenceRegionMarkup<S, E> asPrecomputed() {
         return this;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        PrecomputedSequenceRegionMarkup<?, ?> that = (PrecomputedSequenceRegionMarkup<?, ?>) o;
-        return Objects.equals(regionMap, that.regionMap) &&
-                Objects.equals(fullSequence, that.fullSequence) &&
-                Objects.equals(regionTypeClass, that.regionTypeClass);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(regionMap, fullSequence, regionTypeClass);
     }
 }

@@ -16,15 +16,23 @@ public final class ArrayBasedSequenceRegionMarkup<S extends Sequence<S>, E exten
             Alphabet<S> alphabet,
             Class<E> regionTypeClass) {
         return new ArrayBasedSequenceRegionMarkup<>(alphabet.getEmptySequence(),
-                new int[regionTypeClass.getEnumConstants().length + 1], regionTypeClass, true);
+                new int[regionTypeClass.getEnumConstants().length + 1], regionTypeClass, true, 0.0);
     }
 
     public ArrayBasedSequenceRegionMarkup(S fullSequence, int[] markup, Class<E> regionTypeClass) {
-        this(fullSequence, markup, regionTypeClass, false);
+        this(fullSequence, markup, regionTypeClass, 1.0);
+    }
+
+    public ArrayBasedSequenceRegionMarkup(S fullSequence, int[] markup, Class<E> regionTypeClass, double score) {
+        this(fullSequence, markup, regionTypeClass, false, score);
     }
 
     ArrayBasedSequenceRegionMarkup(S fullSequence, int[] markup, Class<E> regionTypeClass, boolean unsafe) {
-        super(fullSequence, regionTypeClass);
+        this(fullSequence, markup, regionTypeClass, unsafe, 1.0);
+    }
+
+    ArrayBasedSequenceRegionMarkup(S fullSequence, int[] markup, Class<E> regionTypeClass, boolean unsafe, double score) {
+        super(fullSequence, regionTypeClass, score);
 
         this.markup = unsafe ? markup : markup.clone();
         if (markup.length != regionTypeClass.getEnumConstants().length + 1) {
@@ -70,17 +78,22 @@ public final class ArrayBasedSequenceRegionMarkup<S extends Sequence<S>, E exten
                     "embedded markups / other markup comes before this one.");
         }
 
+        double len = getEnd() - getStart(), otherLen = other.getEnd() - other.getStart();
+        double score = (this.score * len + other.score * otherLen) / (len + otherLen);
+
         if (other instanceof ArrayBasedSequenceRegionMarkup) {
             return new ArrayBasedSequenceRegionMarkup<>(fullSequence,
                     concatenateArr(markup, ((ArrayBasedSequenceRegionMarkup) other).markup),
-                    regionTypeClass, true);
+                    regionTypeClass, true, score);
         } else {
             int[] newMarkup = markup.clone();
             int i = 0;
             for (SequenceRegion<S, E> region : other.getAllRegions().values()) {
                 update(i++, newMarkup, region.getStart(), region.getEnd());
             }
-            return new ArrayBasedSequenceRegionMarkup<>(fullSequence, newMarkup, regionTypeClass, true);
+
+            return new ArrayBasedSequenceRegionMarkup<>(fullSequence, newMarkup, regionTypeClass,
+                    true, score);
         }
     }
 
@@ -124,7 +137,9 @@ public final class ArrayBasedSequenceRegionMarkup<S extends Sequence<S>, E exten
             newMarkup[i] = SequenceRegionMarkupUtils.targetToQueryPosition(markup[i], alignment);
         }
 
-        return new ArrayBasedSequenceRegionMarkup<>(fullSequence, newMarkup, regionTypeClass, true);
+        return new ArrayBasedSequenceRegionMarkup<>(fullSequence, newMarkup, regionTypeClass,
+                true,
+                computeScore(querySequence, alignment));
     }
 
     @Override
@@ -138,7 +153,7 @@ public final class ArrayBasedSequenceRegionMarkup<S extends Sequence<S>, E exten
             newMarkup[i] += sequence.size();
         }
         return new ArrayBasedSequenceRegionMarkup<>(sequence.concatenate(fullSequence),
-                newMarkup, regionTypeClass, true);
+                newMarkup, regionTypeClass, true, score);
     }
 
     @Override
@@ -148,7 +163,7 @@ public final class ArrayBasedSequenceRegionMarkup<S extends Sequence<S>, E exten
         }
 
         return new ArrayBasedSequenceRegionMarkup<>(fullSequence.concatenate(sequence),
-                markup, regionTypeClass, true);
+                markup, regionTypeClass, true, score);
     }
 
     @Override
@@ -168,25 +183,7 @@ public final class ArrayBasedSequenceRegionMarkup<S extends Sequence<S>, E exten
 
     @Override
     public PrecomputedSequenceRegionMarkup<S, E> asPrecomputed() {
-        return new PrecomputedSequenceRegionMarkup<>(fullSequence, getAllRegions(), regionTypeClass, true);
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        ArrayBasedSequenceRegionMarkup<?, ?> that = (ArrayBasedSequenceRegionMarkup<?, ?>) o;
-
-        return Arrays.equals(markup, that.markup) &&
-                Objects.equals(fullSequence, that.fullSequence) &&
-                Objects.equals(regionTypeClass, that.regionTypeClass);
-    }
-
-    @Override
-    public int hashCode() {
-        int result = Objects.hash(fullSequence, regionTypeClass);
-        result = 31 * result + Arrays.hashCode(markup);
-        return result;
+        return new PrecomputedSequenceRegionMarkup<>(fullSequence, getAllRegions(), regionTypeClass, true, score);
     }
 
     @Override
