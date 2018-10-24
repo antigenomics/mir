@@ -6,10 +6,11 @@ public class MhcComplex {
     private final MhcChain firstChain, secondChain;
     private final MhcClassType mhcClassType;
 
-    public MhcComplex(MhcChain firstChain, MhcChain secondChain, MhcClassType mhcClassType) {
+    public MhcComplex(MhcChain firstChain, MhcChain secondChain) {
         this.firstChain = firstChain;
         this.secondChain = secondChain;
-        this.mhcClassType = mhcClassType;
+        this.mhcClassType = MhcClassType.combine(firstChain.getMhcAllele().getMhcClass(),
+                secondChain.getMhcAllele().getMhcClass());
     }
 
     public MhcChain getFirstChain() {

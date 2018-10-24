@@ -9,12 +9,14 @@ import com.milaboratory.mir.structure.pdb.Chain;
 
 public class MhcChain implements StructureChainWithMarkup<MhcRegionType> {
     private final MhcAllele mhcAllele;
-    private final MhcChainType mhcChainType;
     private final Chain structureChain;
+    private final SequenceRegionMarkup<AminoAcidSequence, MhcRegionType, ? extends SequenceRegionMarkup> markup;
 
-    public MhcChain(MhcAllele mhcAllele, MhcChainType mhcChainType, Chain structureChain) {
+    public MhcChain(MhcAllele mhcAllele,
+                    SequenceRegionMarkup<AminoAcidSequence, MhcRegionType, ? extends SequenceRegionMarkup> markup,
+                    Chain structureChain) {
         this.mhcAllele = mhcAllele;
-        this.mhcChainType = mhcChainType;
+        this.markup = markup;
         this.structureChain = structureChain;
     }
 
@@ -22,13 +24,9 @@ public class MhcChain implements StructureChainWithMarkup<MhcRegionType> {
         return mhcAllele;
     }
 
-    public MhcChainType getMhcChainType() {
-        return mhcChainType;
-    }
-
     @Override
     public SequenceRegionMarkup<AminoAcidSequence, MhcRegionType, ? extends SequenceRegionMarkup> getMarkup() {
-        return mhcAllele.getRegionMarkup();
+        return markup;
     }
 
     @Override

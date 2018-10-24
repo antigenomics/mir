@@ -1,9 +1,13 @@
 package com.milaboratory.mir.mhc;
 
 public enum MhcClassType {
-    MHCI, MHCII;
+    MHCI, MHCII, CHIMERIC;
 
     public boolean matches(String alias) {
         return name().toLowerCase().equals(alias.toLowerCase());
+    }
+
+    public static MhcClassType combine(MhcClassType a, MhcClassType b) {
+        return a == b ? a : CHIMERIC;
     }
 }
