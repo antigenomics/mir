@@ -14,6 +14,33 @@ import static com.milaboratory.mir.structure.AntigenReceptorRegionType.*;
 
 public class ReceptorMarkupRealignerAaTest {
     @Test
+    public void payloadTest() {
+        var lib = MigecSegmentLibraryUtils.getLibraryFromResources(Species.Human, Gene.TRA);
+
+        var seq = new AminoAcidSequence(
+                "KEVEQNSGPLSVPEGAIASLNCTYSDRGSQSFFWYRQYSGKSPELIMSIYSNGDKEDGRFTAQLNKASQYVSLLIRDSQP" +
+                        "SDSATYLCAVTTDSWGKLQFGAGTQVVVTPDIQNPDPAVYQLRDSKSSDKSVCLFTDFDSQTNVSQSKDSDVYITDKTVL" +
+                        "DMRSMDFKSNSAVAWSNKSDFACANAFNNSIIPEDTFFPSPESS");
+
+        var realigner = new ReceptorMarkupRealignerAa(
+                lib, new SimpleExhaustiveMapperFactory<>(
+                AffineGapAlignmentScoring.getAminoAcidBLASTScoring(BLASTMatrix.BLOSUM62)
+        ), true
+        );
+
+        var res = realigner.recomputeMarkup(seq);
+        Assert.assertTrue(res.isPresent());
+
+        var payload = res.get().getPayload();
+        System.out.println(payload.toString());
+        Assert.assertTrue(payload instanceof ReceptorMarkupRealigner.VariableJoiningPair);
+        Assert.assertEquals("TRAV12-2*01",
+                ((ReceptorMarkupRealigner.VariableJoiningPair) payload).getVariableSegment().getId());
+        Assert.assertEquals("TRAJ24*01",
+                ((ReceptorMarkupRealigner.VariableJoiningPair) payload).getJoiningSegment().getId());
+    }
+
+    @Test
     public void test1() {
         var lib = MigecSegmentLibraryUtils.getLibraryFromResources(Species.Human, Gene.TRA);
 
@@ -30,6 +57,7 @@ public class ReceptorMarkupRealignerAaTest {
 
         var res = realigner.recomputeMarkup(seq);
         Assert.assertTrue(res.isPresent());
+
         var resUnboxed = res.get().getMarkup();
         System.out.println(resUnboxed);
 
