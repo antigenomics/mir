@@ -6,14 +6,20 @@ import java.util.Objects;
 
 public class MarkupRealignmentResult<S extends Sequence<S>, E extends Enum<E>, M extends SequenceRegionMarkup<S, E, M>>
         implements Comparable<MarkupRealignmentResult<S, E, M>> {
+    private final Object payload; // todo: dirty, but too much generics otherwise/we'll use it internally
     private final M markup;
     private final int numberOfMatches;
     private final double coverage;
 
     public MarkupRealignmentResult(M markup, int numberOfMatches, double coverage) {
+        this(markup, numberOfMatches, coverage, null);
+    }
+
+    public MarkupRealignmentResult(M markup, int numberOfMatches, double coverage, Object payload) {
         this.markup = markup;
         this.numberOfMatches = numberOfMatches;
         this.coverage = coverage;
+        this.payload = payload;
     }
 
     public M getMarkup() {
@@ -28,6 +34,10 @@ public class MarkupRealignmentResult<S extends Sequence<S>, E extends Enum<E>, M
         return coverage;
     }
 
+    public Object getPayload() {
+        return payload;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -35,12 +45,13 @@ public class MarkupRealignmentResult<S extends Sequence<S>, E extends Enum<E>, M
         MarkupRealignmentResult<?, ?, ?> that = (MarkupRealignmentResult<?, ?, ?>) o;
         return numberOfMatches == that.numberOfMatches &&
                 Double.compare(that.coverage, coverage) == 0 &&
+                Objects.equals(payload, that.payload) &&
                 Objects.equals(markup, that.markup);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(markup, numberOfMatches, coverage);
+        return Objects.hash(payload, markup, numberOfMatches, coverage);
     }
 
     @Override

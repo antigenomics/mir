@@ -40,7 +40,8 @@ public class GenericMarkupRealigner<T, S extends Sequence<S>, E extends Enum<E>,
                                 .getMarkup(hit.getTarget())
                                 .realign(query, hit.getAlignment()),
                         matches,
-                        coverage
+                        coverage,
+                        hit.getTarget()
                 ));
             }
         }

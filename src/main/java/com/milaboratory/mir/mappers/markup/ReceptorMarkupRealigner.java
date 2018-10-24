@@ -34,10 +34,14 @@ public class ReceptorMarkupRealigner<S extends Sequence<S>>
             int vMatches = actualVResult.getNumberOfMatches(), jMatches = 0;
             double vCoverage = actualVResult.getCoverage(), jCoverage = 0;
 
+            var variableSegment = (VariableSegment) actualVResult.getPayload();
+            var joiningSegment = (JoiningSegment) null;
+
             if (vMarkupEnd < query.size()) {
                 var jResult = joiningSegmentRealigner.recomputeMarkup(query.getRange(vMarkupEnd, query.size()));
                 if (jResult.isPresent()) {
                     var actualJResult = jResult.get();
+                    joiningSegment = (JoiningSegment) actualJResult.getPayload();
                     var jMarkup = actualJResult.getMarkup().padLeft(query.getRange(0, vMarkupEnd));
                     vMarkup = vMarkup.concatenate(jMarkup);
 
@@ -50,10 +54,38 @@ public class ReceptorMarkupRealigner<S extends Sequence<S>>
                     new MarkupRealignmentResult<>(
                             vMarkup,
                             vMatches + jMatches,
-                            (vMatches * vCoverage + jMatches * jCoverage) / (vMatches + jMatches)
+                            (vMatches * vCoverage + jMatches * jCoverage) / (vMatches + jMatches),
+                            new VariableJoiningPair(
+                                    variableSegment, joiningSegment
+                            )
                     )
             );
         }
         return Optional.empty();
+    }
+
+    public static class VariableJoiningPair {
+        private final VariableSegment variableSegment;
+        private final JoiningSegment joiningSegment;
+
+        public VariableJoiningPair(VariableSegment variableSegment, JoiningSegment joiningSegment) {
+            this.variableSegment = variableSegment;
+            this.joiningSegment = joiningSegment;
+        }
+
+        public VariableSegment getVariableSegment() {
+            return variableSegment;
+        }
+
+        public JoiningSegment getJoiningSegment() {
+            return joiningSegment;
+        }
+
+        @Override
+        public String toString() {
+            return "(" + variableSegment.getId() +
+                    ", " + joiningSegment.getId() +
+                    ")";
+        }
     }
 }
