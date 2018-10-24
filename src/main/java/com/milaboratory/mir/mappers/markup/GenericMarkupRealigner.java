@@ -9,22 +9,38 @@ public class GenericMarkupRealigner<T, S extends Sequence<S>, E extends Enum<E>,
         implements MarkupRealigner<S, E, M> {
     private final SequenceMapper<T, S> mapper;
     private final MarkupProvider<T, S, E, M> markupProvider;
+    private final double minCoverage;
+    private final int minMatches;
 
     public GenericMarkupRealigner(SequenceMapper<T, S> mapper,
-                                  MarkupProvider<T, S, E, M> markupProvider) {
+                                  MarkupProvider<T, S, E, M> markupProvider,
+                                  double minCoverage, int minMatches) {
         this.mapper = mapper;
         this.markupProvider = markupProvider;
+        this.minCoverage = minCoverage;
+        this.minMatches = minMatches;
     }
 
     public Optional<M> recomputeMarkup(S query) {
-        return mapper
+        var hitOpt = mapper
                 .map(query)
-                .getBestHit()
-                .map(
-                        hit -> markupProvider
-                                .getMarkup(hit.getTarget())
-                                .realign(query, hit.getAlignment())
-                );
+                .getBestHit();
+
+        HitWithAlignment<T, S> hit;
+        if (hitOpt.isPresent()) {
+            hit = hitOpt.get();
+            var alignment = hit.getAlignment();
+            int matches = alignment.getSequence2Range().length() - alignment.getAbsoluteMutations().size();
+            double coverage = matches / (double) query.size();
+
+            if (matches >= minMatches && coverage >= minCoverage) {
+                return Optional.of(markupProvider
+                        .getMarkup(hit.getTarget())
+                        .realign(query, hit.getAlignment()));
+            }
+        }
+
+        return Optional.empty();
     }
 
     public SequenceMapper<T, S> getMapper() {

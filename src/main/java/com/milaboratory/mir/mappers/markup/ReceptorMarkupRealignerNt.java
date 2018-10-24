@@ -20,20 +20,11 @@ public final class ReceptorMarkupRealignerNt extends ReceptorMarkupRealigner<Nuc
     public ReceptorMarkupRealignerNt(SegmentLibrary segmentLibrary,
                                      SequenceMapperFactory<NucleotideSequence> mapperFactory,
                                      boolean majorAllelesOnly) {
-        this(segmentLibrary, mapperFactory, majorAllelesOnly, true);
-    }
-
-    public ReceptorMarkupRealignerNt(SegmentLibrary segmentLibrary,
-                                     SequenceMapperFactory<NucleotideSequence> mapperFactory,
-                                     boolean majorAllelesOnly,
-                                     boolean requireReferencePointPresence) {
         super(new SegmentMarkupRealignerNt<>(
-                        majorAllelesOnly ? segmentLibrary.getAllVMajor() : segmentLibrary.getAllV(), mapperFactory,
-                        requireReferencePointPresence
+                        majorAllelesOnly ? segmentLibrary.getAllVMajor() : segmentLibrary.getAllV(), mapperFactory
                 ),
                 new SegmentMarkupRealignerNt<>(
-                        majorAllelesOnly ? segmentLibrary.getAllJMajor() : segmentLibrary.getAllJ(), mapperFactory,
-                        requireReferencePointPresence
+                        majorAllelesOnly ? segmentLibrary.getAllJMajor() : segmentLibrary.getAllJ(), mapperFactory
                 ));
     }
 }

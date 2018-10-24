@@ -1,13 +1,14 @@
 package com.milaboratory.mir.mhc;
 
 import com.milaboratory.core.sequence.AminoAcidSequence;
+import com.milaboratory.mir.mappers.markup.PrecomputedSequenceRegionMarkup;
 import com.milaboratory.mir.mappers.markup.SequenceRegionMarkup;
 
 public final class MhcAllele {
     private final String id;
     private final MhcChainType mhcChain;
     private final MhcClassType mhcClass;
-    private final SequenceRegionMarkup<AminoAcidSequence, MhcRegionType, ? extends SequenceRegionMarkup> regionMarkup;
+    private final PrecomputedSequenceRegionMarkup<AminoAcidSequence, MhcRegionType> regionMarkup;
 
     public MhcAllele(String id,
                      MhcChainType mhcChain, MhcClassType mhcClass,
@@ -15,7 +16,7 @@ public final class MhcAllele {
         this.id = id;
         this.mhcChain = mhcChain;
         this.mhcClass = mhcClass;
-        this.regionMarkup = regionMarkup;
+        this.regionMarkup = regionMarkup.asPrecomputed();
     }
 
     public String getId() {
@@ -30,7 +31,7 @@ public final class MhcAllele {
         return mhcClass;
     }
 
-    public SequenceRegionMarkup<AminoAcidSequence, MhcRegionType, ? extends SequenceRegionMarkup> getRegionMarkup() {
+    public PrecomputedSequenceRegionMarkup<AminoAcidSequence, MhcRegionType> getRegionMarkup() {
         return regionMarkup;
     }
 

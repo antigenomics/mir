@@ -11,12 +11,10 @@ public abstract class SequenceRegionMarkup<S extends Sequence<S>, E extends Enum
         M extends SequenceRegionMarkup<S, E, M>> {
     protected final S fullSequence;
     protected final Class<E> regionTypeClass;
-    protected final double score;
 
-    public SequenceRegionMarkup(S fullSequence, Class<E> regionTypeClass, double score) {
+    public SequenceRegionMarkup(S fullSequence, Class<E> regionTypeClass) {
         this.fullSequence = fullSequence;
         this.regionTypeClass = regionTypeClass;
-        this.score = score;
     }
 
     public S getFullSequence() {
@@ -42,15 +40,6 @@ public abstract class SequenceRegionMarkup<S extends Sequence<S>, E extends Enum
     public abstract int getStart();
 
     public abstract int getEnd();
-
-    public double getScore() {
-        return score;
-    }
-
-    public static <S extends Sequence<S>> double computeScore(S querySequence, Alignment<S> alignment) {
-        return (alignment.getSequence2Range().length() - alignment.getAbsoluteMutations().size()) /
-                (double) querySequence.size();
-    }
 
     public abstract ArrayBasedSequenceRegionMarkup<S, E> asArrayBased();
 

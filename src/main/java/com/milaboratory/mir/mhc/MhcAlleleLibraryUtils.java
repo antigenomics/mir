@@ -18,17 +18,19 @@ public final class MhcAlleleLibraryUtils {
     private static final String HEADER = "species\tmhc.class\tchain\tallele\tsignal.start\tregion1.start\tregion2.start\tregion3.start\tmembrane.start";
     private static final String RESOURCE_PATH = "mhc/mhc_serotype_prot.txt";
 
-    public static MhcAlleleLibrary load(Species species, MhcClassType mhcClassType) {
+    public static MhcAlleleLibrary load(Species species, MhcClassType mhcClassType, MhcChainType mhcChainType) {
         try {
             return parse(CommonUtils.getResourceAsStream(RESOURCE_PATH),
                     species,
-                    mhcClassType);
+                    mhcClassType,
+                    mhcChainType);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
 
-    public static MhcAlleleLibrary parse(InputStream inputStream, Species species, MhcClassType mhcClassType) throws IOException {
+    public static MhcAlleleLibrary parse(InputStream inputStream, Species species,
+                                         MhcClassType mhcClassType, MhcChainType mhcChainType) throws IOException {
         Map<String, MhcAllele> mhcAlleles = new HashMap<>();
         try (BufferedReader br = new BufferedReader(new InputStreamReader(inputStream))) {
             boolean firstLine = true;
@@ -51,17 +53,9 @@ public final class MhcAlleleLibraryUtils {
                             Arrays.toString(splitLine));
                 }
 
-                if (species.matches(splitLine[0]) && mhcClassType.matches(splitLine[1])) {
-                    MhcChainType mhcChainType;
-
-                    String mhcChainTypeStr = splitLine[2];
-                    if (MhcChainType.Alpha.toString().equalsIgnoreCase(mhcChainTypeStr)) {
-                        mhcChainType = MhcChainType.Alpha;
-                    } else if (MhcChainType.Beta.toString().equalsIgnoreCase(mhcChainTypeStr)) {
-                        mhcChainType = MhcChainType.Beta;
-                    } else {
-                        throw new RuntimeException("Cannot parse MHC chain type " + mhcChainTypeStr);
-                    }
+                if (species.matches(splitLine[0]) &&
+                        mhcClassType.matches(splitLine[1]) &&
+                        mhcChainType.matches(splitLine[2])) {
 
                     String id = splitLine[3];
 
@@ -80,7 +74,7 @@ public final class MhcAlleleLibraryUtils {
                                     sequence.size()                 // end
                             },
                             MhcRegionType.class
-                    ).asPrecomputed();
+                    );
 
                     mhcAlleles.put(id, new MhcAllele(id, mhcChainType, mhcClassType, markup));
                 }

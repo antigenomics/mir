@@ -23,8 +23,7 @@ public class SegmentMarkupRealignerAaTest {
 
         var realigner = new SegmentMarkupRealignerAa<>(
                 lib.getAllVMajor().stream().filter(x -> x != segment).collect(Collectors.toList()),
-                new SimpleExhaustiveMapperFactory<>(AffineGapAlignmentScoring.getAminoAcidBLASTScoring(BLASTMatrix.BLOSUM62)),
-                true
+                new SimpleExhaustiveMapperFactory<>(AffineGapAlignmentScoring.getAminoAcidBLASTScoring(BLASTMatrix.BLOSUM62))
         );
 
         var observed = realigner.recomputeMarkup(segment.getGermlineSequenceAa());

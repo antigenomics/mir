@@ -20,20 +20,11 @@ public final class ReceptorMarkupRealignerAa extends ReceptorMarkupRealigner<Ami
     public ReceptorMarkupRealignerAa(SegmentLibrary segmentLibrary,
                                      SequenceMapperFactory<AminoAcidSequence> mapperFactory,
                                      boolean majorAllelesOnly) {
-        this(segmentLibrary, mapperFactory, majorAllelesOnly, true);
-    }
-
-    public ReceptorMarkupRealignerAa(SegmentLibrary segmentLibrary,
-                                     SequenceMapperFactory<AminoAcidSequence> mapperFactory,
-                                     boolean majorAllelesOnly,
-                                     boolean requireReferencePointPresence) {
         super(new SegmentMarkupRealignerAa<>(
-                        majorAllelesOnly ? segmentLibrary.getAllVMajor() : segmentLibrary.getAllV(), mapperFactory,
-                        requireReferencePointPresence
+                        majorAllelesOnly ? segmentLibrary.getAllVMajor() : segmentLibrary.getAllV(), mapperFactory
                 ),
                 new SegmentMarkupRealignerAa<>(
-                        majorAllelesOnly ? segmentLibrary.getAllJMajor() : segmentLibrary.getAllJ(), mapperFactory,
-                        requireReferencePointPresence
+                        majorAllelesOnly ? segmentLibrary.getAllJMajor() : segmentLibrary.getAllJ(), mapperFactory
                 ));
     }
 }

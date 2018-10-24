@@ -117,10 +117,8 @@ public final class FastaSegmentLibraryUtils {
         Map<String, JoiningSegment> joiningSegmentMap = new HashMap<>();
         Map<String, ConstantSegment> constantSegmentMap = new HashMap<>();
 
-        var variableSegmentMapper = new SegmentMarkupRealignerNt<>(template.getAllVMajor(),
-                mapperFactory, true);
-        var joiningSegmentMapper = new SegmentMarkupRealignerNt<>(template.getAllJMajor(),
-                mapperFactory, true);
+        var variableSegmentMapper = new SegmentMarkupRealignerNt<>(template.getAllVMajor(), mapperFactory);
+        var joiningSegmentMapper = new SegmentMarkupRealignerNt<>(template.getAllJMajor(), mapperFactory);
 
         String vToken = template.getGene().getCode() + SegmentType.V.getCode();
         String dToken = template.getGene().getCode() + SegmentType.D.getCode();

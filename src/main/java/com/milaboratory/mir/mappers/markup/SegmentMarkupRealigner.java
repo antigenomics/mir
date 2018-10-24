@@ -16,8 +16,9 @@ public class SegmentMarkupRealigner<T extends SegmentWithMarkup, S extends Seque
 
     public SegmentMarkupRealigner(SequenceMapper<T, S> mapper,
                                   SegmentMarkupProvider<T, S> markupProvider,
-                                  boolean requireReferencePointPresence) {
-        super(mapper, markupProvider);
+                                  boolean requireReferencePointPresence,
+                                  double minCoverage, int minMatches) {
+        super(mapper, markupProvider, minCoverage, minMatches);
         this.requireReferencePointPresence = requireReferencePointPresence;
     }
 
@@ -25,8 +26,9 @@ public class SegmentMarkupRealigner<T extends SegmentWithMarkup, S extends Seque
                                   SequenceMapperFactory<S> mapperFactory,
                                   SequenceProvider<T, S> sequenceProvider,
                                   SegmentMarkupProvider<T, S> markupProvider,
+                                  double minCoverage, int minMatches,
                                   boolean requireReferencePointPresence) {
-        super(mapperFactory.create(segments, sequenceProvider), markupProvider);
+        super(mapperFactory.create(segments, sequenceProvider), markupProvider, minCoverage, minMatches);
         this.requireReferencePointPresence = requireReferencePointPresence;
     }
 
@@ -34,7 +36,8 @@ public class SegmentMarkupRealigner<T extends SegmentWithMarkup, S extends Seque
     public Optional<PrecomputedSequenceRegionMarkup<S, AntigenReceptorRegionType>> recomputeMarkup(S query) {
         var result = super.recomputeMarkup(query);
         if (requireReferencePointPresence &&
-                result.isPresent() && result.get().getRegion(AntigenReceptorRegionType.CDR3).isEmpty()) {
+                result.isPresent() &&
+                result.get().getRegion(AntigenReceptorRegionType.CDR3).isEmpty()) {
             return Optional.empty();
         }
         return result;
