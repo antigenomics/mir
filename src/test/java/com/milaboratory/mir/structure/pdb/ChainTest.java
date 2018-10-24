@@ -50,7 +50,7 @@ public class ChainTest {
         var res = realigner.recomputeMarkup(chain.getSequence());
 
         Assert.assertTrue(res.isPresent());
-        var resUnboxed = res.get();
+        var resUnboxed = res.get().getMarkup();
         System.out.println(resUnboxed);
 
         Assert.assertEquals(

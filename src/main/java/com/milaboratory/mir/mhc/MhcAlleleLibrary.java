@@ -8,11 +8,16 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 public final class MhcAlleleLibrary {
+    private final MhcChainType mhcChainType;
     private final MhcClassType mhcClass;
     private final Species species;
     private final Map<String, MhcAllele> alleleMap;
 
-    public MhcAlleleLibrary(MhcClassType mhcClass, Species species, Map<String, MhcAllele> alleleMap) {
+    public MhcAlleleLibrary(MhcChainType mhcChainType,
+                            MhcClassType mhcClass,
+                            Species species,
+                            Map<String, MhcAllele> alleleMap) {
+        this.mhcChainType = mhcChainType;
         this.mhcClass = mhcClass;
         this.species = species;
         this.alleleMap = alleleMap;
@@ -24,6 +29,10 @@ public final class MhcAlleleLibrary {
 
     public MhcAllele getAllele(String id) {
         return alleleMap.get(id);
+    }
+
+    public MhcChainType getMhcChainType() {
+        return mhcChainType;
     }
 
     public MhcClassType getMhcClass() {
@@ -40,7 +49,7 @@ public final class MhcAlleleLibrary {
 
     @Override
     public String toString() {
-        return species + "\t" + mhcClass + ":\n" +
+        return species + "\t" + mhcClass + "\t" + mhcChainType + ":\n" +
                 alleleMap.values().stream().limit(10).map(MhcAllele::toString).collect(Collectors.joining("\n"));
     }
 }

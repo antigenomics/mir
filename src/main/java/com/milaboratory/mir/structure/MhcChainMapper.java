@@ -3,7 +3,7 @@ package com.milaboratory.mir.structure;
 import com.milaboratory.core.sequence.AminoAcidSequence;
 import com.milaboratory.mir.mappers.SequenceMapperFactory;
 import com.milaboratory.mir.mhc.MhcAlleleLibrary;
-import com.milaboratory.mir.mhc.MhcMarkupRealigner;
+import com.milaboratory.mir.mappers.markup.MhcMarkupRealigner;
 
 public class MhcChainMapper {
     private final MhcMarkupRealigner mhcMarkupRealigner;

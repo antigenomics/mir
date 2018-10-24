@@ -33,11 +33,12 @@ public class SegmentMarkupRealigner<T extends SegmentWithMarkup, S extends Seque
     }
 
     @Override
-    public Optional<PrecomputedSequenceRegionMarkup<S, AntigenReceptorRegionType>> recomputeMarkup(S query) {
+    public Optional<MarkupRealignmentResult<S, AntigenReceptorRegionType,
+            PrecomputedSequenceRegionMarkup<S, AntigenReceptorRegionType>>> recomputeMarkup(S query) {
         var result = super.recomputeMarkup(query);
         if (requireReferencePointPresence &&
                 result.isPresent() &&
-                result.get().getRegion(AntigenReceptorRegionType.CDR3).isEmpty()) {
+                result.get().getMarkup().getRegion(AntigenReceptorRegionType.CDR3).isEmpty()) {
             return Optional.empty();
         }
         return result;

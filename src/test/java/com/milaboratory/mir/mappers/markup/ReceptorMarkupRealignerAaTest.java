@@ -30,7 +30,7 @@ public class ReceptorMarkupRealignerAaTest {
 
         var res = realigner.recomputeMarkup(seq);
         Assert.assertTrue(res.isPresent());
-        var resUnboxed = res.get();
+        var resUnboxed = res.get().getMarkup();
         System.out.println(resUnboxed);
 
         Assert.assertEquals(
@@ -74,7 +74,7 @@ public class ReceptorMarkupRealignerAaTest {
 
         var res = realigner.recomputeMarkup(seq);
         Assert.assertTrue(res.isPresent());
-        var resUnboxed = res.get();
+        var resUnboxed = res.get().getMarkup();
         System.out.println(resUnboxed);
 
         Assert.assertEquals(

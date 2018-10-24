@@ -21,7 +21,8 @@ public class GenericMarkupRealigner<T, S extends Sequence<S>, E extends Enum<E>,
         this.minMatches = minMatches;
     }
 
-    public Optional<M> recomputeMarkup(S query) {
+    @Override
+    public Optional<MarkupRealignmentResult<S, E, M>> recomputeMarkup(S query) {
         var hitOpt = mapper
                 .map(query)
                 .getBestHit();
@@ -34,9 +35,13 @@ public class GenericMarkupRealigner<T, S extends Sequence<S>, E extends Enum<E>,
             double coverage = matches / (double) query.size();
 
             if (matches >= minMatches && coverage >= minCoverage) {
-                return Optional.of(markupProvider
-                        .getMarkup(hit.getTarget())
-                        .realign(query, hit.getAlignment()));
+                return Optional.of(new MarkupRealignmentResult<>(
+                        markupProvider
+                                .getMarkup(hit.getTarget())
+                                .realign(query, hit.getAlignment()),
+                        matches,
+                        coverage
+                ));
             }
         }
 

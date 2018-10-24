@@ -28,6 +28,6 @@ public class SegmentMarkupRealignerAaTest {
 
         var observed = realigner.recomputeMarkup(segment.getGermlineSequenceAa());
         Assert.assertTrue(observed.isPresent());
-        Assert.assertEquals(segment.getRegionMarkupAa(), observed.get());
+        Assert.assertEquals(segment.getRegionMarkupAa(), observed.get().getMarkup());
     }
 }

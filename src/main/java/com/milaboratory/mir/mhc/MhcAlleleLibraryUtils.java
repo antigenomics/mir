@@ -81,6 +81,6 @@ public final class MhcAlleleLibraryUtils {
             }
         }
 
-        return new MhcAlleleLibrary(mhcClassType, species, mhcAlleles);
+        return new MhcAlleleLibrary(mhcChainType, mhcClassType, species, mhcAlleles);
     }
 }

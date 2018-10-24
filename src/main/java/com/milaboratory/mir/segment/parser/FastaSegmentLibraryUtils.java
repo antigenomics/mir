@@ -15,6 +15,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 public final class FastaSegmentLibraryUtils {
     public static final SimpleExhaustiveMapperFactory<NucleotideSequence> DEFAULT_MAPPER_FACTORY =
@@ -112,10 +113,10 @@ public final class FastaSegmentLibraryUtils {
     public static SegmentLibrary createUsingTemplate(Collection<FastaRecord<NucleotideSequence>> records,
                                                      SegmentLibrary template,
                                                      SequenceMapperFactory<NucleotideSequence> mapperFactory) {
-        Map<String, VariableSegment> variableSegmentMap = new HashMap<>();
-        Map<String, DiversitySegment> diversitySegmentMap = new HashMap<>();
-        Map<String, JoiningSegment> joiningSegmentMap = new HashMap<>();
-        Map<String, ConstantSegment> constantSegmentMap = new HashMap<>();
+        Map<String, VariableSegment> variableSegmentMap = new ConcurrentHashMap<>();
+        Map<String, DiversitySegment> diversitySegmentMap = new ConcurrentHashMap<>();
+        Map<String, JoiningSegment> joiningSegmentMap = new ConcurrentHashMap<>();
+        Map<String, ConstantSegment> constantSegmentMap = new ConcurrentHashMap<>();
 
         var variableSegmentMapper = new SegmentMarkupRealignerNt<>(template.getAllVMajor(), mapperFactory);
         var joiningSegmentMapper = new SegmentMarkupRealignerNt<>(template.getAllJMajor(), mapperFactory);
@@ -137,20 +138,20 @@ public final class FastaSegmentLibraryUtils {
                         if (segmentName.contains(vToken)) {
                             variableSegmentMapper
                                     .recomputeMarkup(sequence)
-                                    .ifPresent(markup ->
+                                    .ifPresent(vRes ->
                                             variableSegmentMap.put(segmentName,
                                                     VariableSegmentImpl.fromMarkup(segmentName,
-                                                            markup.getFullSequence(),
-                                                            markup, majorAllele
+                                                            vRes.getMarkup().getFullSequence(),
+                                                            vRes.getMarkup(), majorAllele
                                                     )));
                         } else if (segmentName.contains(jToken)) {
                             joiningSegmentMapper
                                     .recomputeMarkup(sequence)
-                                    .ifPresent(markup ->
+                                    .ifPresent(jRes ->
                                             joiningSegmentMap.put(segmentName,
                                                     JoiningSegmentImpl.fromMarkup(segmentName,
-                                                            markup.getFullSequence(),
-                                                            markup, majorAllele
+                                                            jRes.getMarkup().getFullSequence(),
+                                                            jRes.getMarkup(), majorAllele
                                                     )));
                         } else if (segmentName.contains(dToken)) {
                             diversitySegmentMap.put(segmentName, new DiversitySegmentImpl(segmentName,

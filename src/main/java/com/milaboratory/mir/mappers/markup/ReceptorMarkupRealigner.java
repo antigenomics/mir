@@ -19,25 +19,40 @@ public class ReceptorMarkupRealigner<S extends Sequence<S>>
     }
 
     @Override
-    public Optional<PrecomputedSequenceRegionMarkup<S, AntigenReceptorRegionType>> recomputeMarkup(S query) {
-        var vMarkup = variableSegmentRealigner.recomputeMarkup(query);
-        if (vMarkup.isPresent()) {
-            var actualVMarkup = vMarkup.get();
-            int vMarkupEnd = actualVMarkup.getEnd();
+    public Optional<MarkupRealignmentResult<S, AntigenReceptorRegionType,
+            PrecomputedSequenceRegionMarkup<S, AntigenReceptorRegionType>>> recomputeMarkup(S query) {
+        var vResult = variableSegmentRealigner.recomputeMarkup(query);
+        if (vResult.isPresent()) {
+            var actualVResult = vResult.get();
+            var vMarkup = actualVResult.getMarkup();
+            int vMarkupEnd = vMarkup.getEnd();
 
             if (vMarkupEnd == 0) {
                 return Optional.empty();
             }
 
+            int vMatches = actualVResult.getNumberOfMatches(), jMatches = 0;
+            double vCoverage = actualVResult.getCoverage(), jCoverage = 0;
+
             if (vMarkupEnd < query.size()) {
-                var jMarkup = joiningSegmentRealigner.recomputeMarkup(query.getRange(vMarkupEnd, query.size()));
-                if (jMarkup.isPresent()) {
-                    var actualJMarkup = jMarkup.get().padLeft(query.getRange(0, vMarkupEnd));
-                    actualVMarkup = actualVMarkup.concatenate(actualJMarkup);
+                var jResult = joiningSegmentRealigner.recomputeMarkup(query.getRange(vMarkupEnd, query.size()));
+                if (jResult.isPresent()) {
+                    var actualJResult = jResult.get();
+                    var jMarkup = actualJResult.getMarkup().padLeft(query.getRange(0, vMarkupEnd));
+                    vMarkup = vMarkup.concatenate(jMarkup);
+
+                    jMatches = actualJResult.getNumberOfMatches();
+                    jCoverage = actualJResult.getCoverage();
                 }
             }
 
-            return Optional.of(actualVMarkup);
+            return Optional.of(
+                    new MarkupRealignmentResult<>(
+                            vMarkup,
+                            vMatches + jMatches,
+                            (vMatches * vCoverage + jMatches * jCoverage) / (vMatches + jMatches)
+                    )
+            );
         }
         return Optional.empty();
     }
