@@ -79,7 +79,7 @@ public final class MhcAlleleLibraryUtils {
                             MhcRegionType.class
                     );
 
-                    mhcAlleles.put(id, new MhcAllele(id, mhcChainType, mhcClassType, markup));
+                    mhcAlleles.put(id, new MhcAllele(id, mhcChainType, mhcClassType, species, markup));
                 }
             }
         }
