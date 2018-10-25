@@ -57,10 +57,10 @@ public final class MhcAlleleLibraryUtils {
                     String id = splitLine[3];
                     String mhcChainTypeStr = splitLine[2];
                     MhcChainType mhcChainType = null;
-                    if (MhcChainType.Alpha.matches(mhcChainTypeStr)) {
-                        mhcChainType = MhcChainType.Alpha;
-                    } else if (MhcChainType.Beta.matches(mhcChainTypeStr)) {
-                        mhcChainType = MhcChainType.Beta;
+                    if (MhcChainType.ALPHA.matches(mhcChainTypeStr)) {
+                        mhcChainType = MhcChainType.ALPHA;
+                    } else if (MhcChainType.BETA.matches(mhcChainTypeStr)) {
+                        mhcChainType = MhcChainType.BETA;
                     } else {
                         throw new RuntimeException("Cannot parse MHC chain type " + mhcChainTypeStr);
                     }

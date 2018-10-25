@@ -1,15 +1,13 @@
 package com.milaboratory.mir.structure.output;
 
 import com.milaboratory.mir.TableWriter;
-import com.milaboratory.mir.structure.AntigenReceptorChain;
-import com.milaboratory.mir.structure.MhcChain;
-import com.milaboratory.mir.structure.PeptideChain;
-import com.milaboratory.mir.structure.TcrPeptideMhcComplex;
+import com.milaboratory.mir.structure.*;
 
 import java.io.OutputStream;
 
 public class GeneralAnnotationWriter extends TableWriter<TcrPeptideMhcComplex> {
-    public static final String HEADER = "id\tspecies\tchain\torder\ttype\tallele";
+    public static final String HEADER =
+            "pdb.id\tcomplex.species\tchain.component\tchain.supertype\tchain.type\tchain.id\tallele.info\tseq.length";
 
     public GeneralAnnotationWriter(OutputStream os) {
         super(os, HEADER);
@@ -17,31 +15,32 @@ public class GeneralAnnotationWriter extends TableWriter<TcrPeptideMhcComplex> {
 
     @Override
     public String convert(TcrPeptideMhcComplex complex) {
-        String prefix = complex.getStructure().getId() + "\t" +
-                complex.getSpecies() + "\t";
+        // todo: consider using JSON annotations/etc
+        String prefix = complex.getStructure().getId() + "\t" + complex.getSpecies();
 
         String res = "";
 
-        res += prefix + convert(complex.getPeptideMhcComplex().getPeptideChain()) + "\n";
-        res += prefix + convert(complex.getPeptideMhcComplex().getMhcComplex().getFirstChain(), 0) + "\n";
-        res += prefix + convert(complex.getPeptideMhcComplex().getMhcComplex().getSecondChain(), 1) + "\n";
-        res += prefix + convert(complex.getAntigenReceptor().getFirstChain(), 0) + "\n";
-        res += prefix + convert(complex.getAntigenReceptor().getSecondChain(), 1);
+        var tcrComplex = complex.getAntigenReceptor();
+        var prefix1 = prefix + "\t" + ComplexComponentType.TCR + "\t" + tcrComplex.getAntigenReceptorType();
+        res += prefix1 + "\t" + writeChain(tcrComplex.getFirstChain()) + "\n";
+        res += prefix1 + "\t" + writeChain(tcrComplex.getSecondChain()) + "\n";
+
+        var peptide = complex.getPeptideMhcComplex().getPeptideChain();
+        res += prefix + "\t" + ComplexComponentType.PEPTIDE + "\t" + ComplexComponentType.PEPTIDE + "\t" +
+                writeChain(peptide) + "\n";
+
+        var mhcComplex = complex.getPeptideMhcComplex().getMhcComplex();
+        prefix1 = prefix + "\t" + ComplexComponentType.MHC + "\t" + mhcComplex.getMhcClassType() + "\t";
+        res += prefix1 + writeChain(mhcComplex.getFirstChain()) + "\n";
+        res += prefix1 + writeChain(mhcComplex.getSecondChain());
 
         return res;
     }
 
-    private String convert(PeptideChain peptideChain) {
-        return peptideChain.getStructureChain().getChainIdentifier() + "\t0\tP\tNA";
-    }
-
-    private String convert(MhcChain mhcChain, int order) {
-        return mhcChain.getStructureChain().getChainIdentifier() + "\t" + order + "\t" +
-                "MHC\t" + mhcChain.getMhcAllele().getId();
-    }
-
-    private String convert(AntigenReceptorChain arChain, int order) {
-        return arChain.getStructureChain().getChainIdentifier() + "\t" + order + "\t" +
-                "TCR\t" + arChain.getVariableSegment().getId() + ":" + arChain.getJoiningSegment().getId();
+    private String writeChain(StructureChainWithMarkup chain) {
+        return chain.getChainTypeStr() + "\t" +
+                chain.getStructureChainId() + "\t" +
+                chain.getAlleleInfoStr() + "\t" +
+                chain.getStructureChain().getSequence().size();
     }
 }

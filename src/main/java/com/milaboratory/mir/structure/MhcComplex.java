@@ -8,14 +8,14 @@ public final class MhcComplex implements HeterodimerComplex<MhcRegionType, MhcCh
 
     public MhcComplex(MhcChain firstChain, MhcChain secondChain) {
         boolean correctOrder =
-                firstChain.getMhcAllele().getMhcChain().getOrder() <=
-                        secondChain.getMhcAllele().getMhcChain().getOrder();
+                firstChain.getMhcAllele().getMhcChainType().getOrder() <=
+                        secondChain.getMhcAllele().getMhcChainType().getOrder();
 
         this.firstChain = correctOrder ? firstChain : secondChain;
         this.secondChain = correctOrder ? secondChain : firstChain;
 
-        this.mhcClassType = MhcClassType.combine(firstChain.getMhcAllele().getMhcClass(),
-                secondChain.getMhcAllele().getMhcClass());
+        this.mhcClassType = MhcClassType.combine(firstChain.getMhcAllele().getMhcClassType(),
+                secondChain.getMhcAllele().getMhcClassType());
     }
 
     @Override

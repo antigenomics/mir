@@ -14,7 +14,7 @@ public final class AntigenReceptorChain implements StructureChainWithMarkup<Anti
     private final JoiningSegment joiningSegment;
     private final ConstantSegment constantSegment;
     private final Chain structureChain;
-    private final Gene antigenReceptorChainType;
+    private final Gene gene;
 
     public AntigenReceptorChain(SequenceRegionMarkup<AminoAcidSequence, AntigenReceptorRegionType, ? extends SequenceRegionMarkup> markup,
                                 VariableSegment variableSegment,
@@ -27,7 +27,7 @@ public final class AntigenReceptorChain implements StructureChainWithMarkup<Anti
         this.constantSegment = constantSegment;
         this.structureChain = structureChain;
         // todo: better impl for specifying gene
-        this.antigenReceptorChainType = Gene.valueOf(variableSegment.getId().substring(0, 3));
+        this.gene = Gene.valueOf(variableSegment.getId().substring(0, 3));
     }
 
     @Override
@@ -35,8 +35,8 @@ public final class AntigenReceptorChain implements StructureChainWithMarkup<Anti
         return markup;
     }
 
-    public Gene getAntigenReceptorChainType() {
-        return antigenReceptorChainType;
+    public Gene getGene() {
+        return gene;
     }
 
     public VariableSegment getVariableSegment() {
@@ -54,5 +54,15 @@ public final class AntigenReceptorChain implements StructureChainWithMarkup<Anti
     @Override
     public Chain getStructureChain() {
         return structureChain;
+    }
+
+    @Override
+    public String getChainTypeStr() {
+        return gene.toString();
+    }
+
+    @Override
+    public String getAlleleInfoStr() {
+        return variableSegment.getId() + ":" + joiningSegment.getId();
     }
 }

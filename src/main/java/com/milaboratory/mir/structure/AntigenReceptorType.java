@@ -1,6 +1,5 @@
 package com.milaboratory.mir.structure;
 
-import com.milaboratory.mir.mhc.MhcClassType;
 import com.milaboratory.mir.segment.Gene;
 
 import java.util.HashMap;

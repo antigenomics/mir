@@ -18,7 +18,7 @@ public class GeneralAnnotationWriterTest {
     @Test
     public void test() throws IOException {
         var os = new ByteArrayOutputStream();
-        try(var writer = new GeneralAnnotationWriter(os)) {
+        try (var writer = new GeneralAnnotationWriter(os)) {
             var mapper = new PeptideMhcComplexMapper(
                     new SimpleExhaustiveMapperFactory<>(
                             AffineGapAlignmentScoring.getAminoAcidBLASTScoring(BLASTMatrix.BLOSUM62))
@@ -28,11 +28,13 @@ public class GeneralAnnotationWriterTest {
 
         System.out.println(os.toString());
 
-        Assert.assertEquals("id\tspecies\tchain\torder\ttype\tallele\n" +
-                "1ao7_al\tHuman\tC\t0\tP\tNA\n" +
-                "1ao7_al\tHuman\tA\t0\tMHC\tHLA-A2\n" +
-                "1ao7_al\tHuman\tB\t1\tMHC\tB2M\n" +
-                "1ao7_al\tHuman\tD\t0\tTCR\tTRAV12-2*01:TRAJ24*01\n" +
-                "1ao7_al\tHuman\tE\t1\tTCR\tTRBV6-5*01:TRBJ2-7*01\n", os.toString());
+        Assert.assertEquals(
+                "pdb.id\tcomplex.species\tchain.component\tchain.supertype\tchain.type\tchain.id\tallele.info\tseq.length\n" +
+                        "1ao7_al\tHuman\tTCR\tTRAB\tTRA\tD\tTRAV12-2*01:TRAJ24*01\t115\n" +
+                        "1ao7_al\tHuman\tTCR\tTRAB\tTRB\tE\tTRBV6-5*01:TRBJ2-7*01\t215\n" +
+                        "1ao7_al\tHuman\tPEPTIDE\tPEPTIDE\tPEPTIDE\tC\tNA\t9\n" +
+                        "1ao7_al\tHuman\tMHC\tMHCI\tALPHA\tA\tHLA-A2\t274\n" +
+                        "1ao7_al\tHuman\tMHC\tMHCI\tBETA\tB\tB2M\t100\n",
+                os.toString());
     }
 }

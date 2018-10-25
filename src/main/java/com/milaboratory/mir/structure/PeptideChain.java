@@ -2,11 +2,8 @@ package com.milaboratory.mir.structure;
 
 import com.milaboratory.core.sequence.AminoAcidSequence;
 import com.milaboratory.mir.mappers.markup.ArrayBasedSequenceRegionMarkup;
-import com.milaboratory.mir.mappers.markup.PrecomputedSequenceRegionMarkup;
 import com.milaboratory.mir.mappers.markup.SequenceRegionMarkup;
 import com.milaboratory.mir.structure.pdb.Chain;
-
-import java.util.EnumMap;
 
 public final class PeptideChain implements StructureChainWithMarkup<PeptideRegionType> {
     private final AminoAcidSequence sequence;
@@ -31,5 +28,10 @@ public final class PeptideChain implements StructureChainWithMarkup<PeptideRegio
 
     public Chain getStructureChain() {
         return structureChain;
+    }
+
+    @Override
+    public String getChainTypeStr() {
+        return ComplexComponentType.PEPTIDE.toString();
     }
 }

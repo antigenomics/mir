@@ -31,4 +31,14 @@ public final class MhcChain implements StructureChainWithMarkup<MhcRegionType> {
     public Chain getStructureChain() {
         return structureChain;
     }
+
+    @Override
+    public String getChainTypeStr() {
+        return mhcAllele.getMhcChainType().toString();
+    }
+
+    @Override
+    public String getAlleleInfoStr() {
+        return mhcAllele.getId();
+    }
 }

@@ -8,4 +8,14 @@ public interface StructureChainWithMarkup<E extends Enum<E>> {
     SequenceRegionMarkup<AminoAcidSequence, E, ? extends SequenceRegionMarkup> getMarkup();
 
     Chain getStructureChain();
+
+    String getChainTypeStr();
+
+    default String getStructureChainId() {
+        return ((Character) getStructureChain().getChainIdentifier()).toString();
+    }
+
+    default String getAlleleInfoStr() {
+        return "NA";
+    }
 }

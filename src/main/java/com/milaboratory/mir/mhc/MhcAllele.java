@@ -8,17 +8,17 @@ import com.milaboratory.mir.structure.MhcRegionType;
 
 public final class MhcAllele {
     private final String id;
-    private final MhcChainType mhcChain;
-    private final MhcClassType mhcClass;
+    private final MhcChainType mhcChainType;
+    private final MhcClassType mhcClassType;
     private final Species species;
     private final PrecomputedSequenceRegionMarkup<AminoAcidSequence, MhcRegionType> regionMarkup;
 
     public MhcAllele(String id,
-                     MhcChainType mhcChain, MhcClassType mhcClass, Species species,
+                     MhcChainType mhcChainType, MhcClassType mhcClassType, Species species,
                      SequenceRegionMarkup<AminoAcidSequence, MhcRegionType, ? extends SequenceRegionMarkup> regionMarkup) {
         this.id = id;
-        this.mhcChain = mhcChain;
-        this.mhcClass = mhcClass;
+        this.mhcChainType = mhcChainType;
+        this.mhcClassType = mhcClassType;
         this.species = species;
         this.regionMarkup = regionMarkup.asPrecomputed();
     }
@@ -27,12 +27,12 @@ public final class MhcAllele {
         return id;
     }
 
-    public MhcChainType getMhcChain() {
-        return mhcChain;
+    public MhcChainType getMhcChainType() {
+        return mhcChainType;
     }
 
-    public MhcClassType getMhcClass() {
-        return mhcClass;
+    public MhcClassType getMhcClassType() {
+        return mhcClassType;
     }
 
     public Species getSpecies() {
