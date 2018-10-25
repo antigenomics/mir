@@ -2,14 +2,13 @@ package com.milaboratory.mir.structure;
 
 import com.milaboratory.core.sequence.AminoAcidSequence;
 import com.milaboratory.mir.mappers.markup.SequenceRegionMarkup;
-import com.milaboratory.mir.mhc.MhcRegionType;
 import com.milaboratory.mir.segment.ConstantSegment;
 import com.milaboratory.mir.segment.Gene;
 import com.milaboratory.mir.segment.JoiningSegment;
 import com.milaboratory.mir.segment.VariableSegment;
 import com.milaboratory.mir.structure.pdb.Chain;
 
-public class AntigenReceptorChain implements StructureChainWithMarkup<AntigenReceptorRegionType> {
+public final class AntigenReceptorChain implements StructureChainWithMarkup<AntigenReceptorRegionType> {
     private final SequenceRegionMarkup<AminoAcidSequence, AntigenReceptorRegionType, ? extends SequenceRegionMarkup> markup;
     private final VariableSegment variableSegment;
     private final JoiningSegment joiningSegment;

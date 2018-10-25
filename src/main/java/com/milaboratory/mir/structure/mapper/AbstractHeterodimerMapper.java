@@ -1,8 +1,11 @@
-package com.milaboratory.mir.structure;
+package com.milaboratory.mir.structure.mapper;
 
 import com.milaboratory.core.sequence.AminoAcidSequence;
 import com.milaboratory.mir.mappers.markup.MarkupRealigner;
 import com.milaboratory.mir.mappers.markup.SequenceRegionMarkup;
+import com.milaboratory.mir.structure.HeterodimerComplex;
+import com.milaboratory.mir.structure.HeterodimerComplexFactory;
+import com.milaboratory.mir.structure.StructureChainWithMarkup;
 import com.milaboratory.mir.structure.pdb.Chain;
 
 import java.util.ArrayList;

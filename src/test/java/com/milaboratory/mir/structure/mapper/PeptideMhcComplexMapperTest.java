@@ -1,4 +1,4 @@
-package com.milaboratory.mir.structure;
+package com.milaboratory.mir.structure.mapper;
 
 import com.milaboratory.core.alignment.AffineGapAlignmentScoring;
 import com.milaboratory.core.alignment.BLASTMatrix;
@@ -6,6 +6,8 @@ import com.milaboratory.core.sequence.AminoAcidSequence;
 import com.milaboratory.mir.TestUtils;
 import com.milaboratory.mir.mappers.align.SimpleExhaustiveMapperFactory;
 import com.milaboratory.mir.segment.Species;
+import com.milaboratory.mir.structure.TestStructureCache;
+import com.milaboratory.mir.structure.mapper.PeptideMhcComplexMapper;
 import com.milaboratory.mir.structure.pdb.Structure;
 import com.milaboratory.mir.structure.pdb.parser.PdbParserUtils;
 import org.junit.Assert;
@@ -13,16 +15,13 @@ import org.junit.Test;
 
 import java.io.IOException;
 
-import static org.junit.Assert.*;
-
-public class ComplexMapperTest {
+public class PeptideMhcComplexMapperTest {
 
     @Test
-    public void test() throws IOException {
-        Structure struct = PdbParserUtils
-                .parseStructure("1ao7_al", TestUtils.streamFrom("structures/1ao7_al.pdb"));
+    public void test() {
+        var struct = TestStructureCache.get("1ao7");
 
-        var mapper = new ComplexMapper(
+        var mapper = new PeptideMhcComplexMapper(
                 new SimpleExhaustiveMapperFactory<>(
                         AffineGapAlignmentScoring.getAminoAcidBLASTScoring(BLASTMatrix.BLOSUM62))
         );

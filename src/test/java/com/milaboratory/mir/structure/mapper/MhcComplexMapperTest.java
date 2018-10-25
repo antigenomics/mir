@@ -1,11 +1,10 @@
-package com.milaboratory.mir.structure;
+package com.milaboratory.mir.structure.mapper;
 
 import com.milaboratory.core.alignment.AffineGapAlignmentScoring;
 import com.milaboratory.core.alignment.BLASTMatrix;
-import com.milaboratory.mir.TestUtils;
 import com.milaboratory.mir.mappers.align.SimpleExhaustiveMapperFactory;
-import com.milaboratory.mir.structure.pdb.Structure;
-import com.milaboratory.mir.structure.pdb.parser.PdbParserUtils;
+import com.milaboratory.mir.structure.MhcChain;
+import com.milaboratory.mir.structure.TestStructureCache;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -15,8 +14,7 @@ import java.util.HashMap;
 public class MhcComplexMapperTest {
     @Test
     public void test() throws IOException {
-        Structure struct = PdbParserUtils
-                .parseStructure("1ao7_al", TestUtils.streamFrom("structures/1ao7_al.pdb"));
+        var struct = TestStructureCache.get("1ao7");
 
         var allAlleles = DefaultComplexMapperLibrary.INSTANCE.getMhcAlleles();
 

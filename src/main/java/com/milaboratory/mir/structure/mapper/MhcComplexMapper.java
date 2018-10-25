@@ -1,10 +1,12 @@
-package com.milaboratory.mir.structure;
+package com.milaboratory.mir.structure.mapper;
 
 import com.milaboratory.core.sequence.AminoAcidSequence;
 import com.milaboratory.mir.mappers.SequenceMapperFactory;
 import com.milaboratory.mir.mhc.MhcAllele;
 import com.milaboratory.mir.mappers.markup.MhcMarkupRealigner;
-import com.milaboratory.mir.mhc.MhcRegionType;
+import com.milaboratory.mir.structure.MhcRegionType;
+import com.milaboratory.mir.structure.MhcChain;
+import com.milaboratory.mir.structure.MhcComplex;
 
 import java.util.Collection;
 

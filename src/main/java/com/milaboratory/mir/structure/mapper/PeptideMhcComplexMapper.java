@@ -1,31 +1,34 @@
-package com.milaboratory.mir.structure;
+package com.milaboratory.mir.structure.mapper;
 
 import com.milaboratory.core.sequence.AminoAcidSequence;
 import com.milaboratory.mir.mappers.SequenceMapperFactory;
 import com.milaboratory.mir.mhc.MhcAllele;
 import com.milaboratory.mir.segment.JoiningSegment;
 import com.milaboratory.mir.segment.VariableSegment;
+import com.milaboratory.mir.structure.PeptideChain;
+import com.milaboratory.mir.structure.PeptideMhcComplex;
+import com.milaboratory.mir.structure.TcrPeptideMhcComplex;
 import com.milaboratory.mir.structure.pdb.Structure;
 
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Optional;
 
-public class ComplexMapper {
+public class PeptideMhcComplexMapper {
     private final AntigenReceptorMapper antigenReceptorMapper;
     private final MhcComplexMapper mhcComplexMapper;
 
-    public ComplexMapper(SequenceMapperFactory<AminoAcidSequence> mapperFactory) {
+    public PeptideMhcComplexMapper(SequenceMapperFactory<AminoAcidSequence> mapperFactory) {
         this(DefaultComplexMapperLibrary.INSTANCE.getMhcAlleles(),
                 DefaultComplexMapperLibrary.INSTANCE.getVariableSegments(),
                 DefaultComplexMapperLibrary.INSTANCE.getJoiningSegments(),
                 mapperFactory);
     }
 
-    public ComplexMapper(Collection<MhcAllele> mhcAlleles,
-                         Collection<VariableSegment> variableSegments,
-                         Collection<JoiningSegment> joiningSegments,
-                         SequenceMapperFactory<AminoAcidSequence> mapperFactory) {
+    public PeptideMhcComplexMapper(Collection<MhcAllele> mhcAlleles,
+                                   Collection<VariableSegment> variableSegments,
+                                   Collection<JoiningSegment> joiningSegments,
+                                   SequenceMapperFactory<AminoAcidSequence> mapperFactory) {
         this.antigenReceptorMapper = new AntigenReceptorMapper(
                 variableSegments, joiningSegments, mapperFactory
         );
@@ -76,7 +79,8 @@ public class ComplexMapper {
 
         return Optional.of(new TcrPeptideMhcComplex(
                 antigenReceptorComplex,
-                new PeptideMhcComplex(peptide, mhcComplex)
+                new PeptideMhcComplex(peptide, mhcComplex),
+                structure
         ));
     }
 }

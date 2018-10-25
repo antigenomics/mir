@@ -3,11 +3,9 @@ package com.milaboratory.mir.structure;
 import com.milaboratory.core.sequence.AminoAcidSequence;
 import com.milaboratory.mir.mappers.markup.SequenceRegionMarkup;
 import com.milaboratory.mir.mhc.MhcAllele;
-import com.milaboratory.mir.mhc.MhcChainType;
-import com.milaboratory.mir.mhc.MhcRegionType;
 import com.milaboratory.mir.structure.pdb.Chain;
 
-public class MhcChain implements StructureChainWithMarkup<MhcRegionType> {
+public final class MhcChain implements StructureChainWithMarkup<MhcRegionType> {
     private final MhcAllele mhcAllele;
     private final Chain structureChain;
     private final SequenceRegionMarkup<AminoAcidSequence, MhcRegionType, ? extends SequenceRegionMarkup> markup;

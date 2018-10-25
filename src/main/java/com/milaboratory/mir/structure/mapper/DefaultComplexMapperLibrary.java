@@ -1,4 +1,4 @@
-package com.milaboratory.mir.structure;
+package com.milaboratory.mir.structure.mapper;
 
 import com.milaboratory.mir.mhc.MhcAllele;
 import com.milaboratory.mir.mhc.MhcAlleleLibraryUtils;

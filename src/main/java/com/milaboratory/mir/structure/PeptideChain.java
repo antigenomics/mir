@@ -8,7 +8,7 @@ import com.milaboratory.mir.structure.pdb.Chain;
 
 import java.util.EnumMap;
 
-public class PeptideChain implements StructureChainWithMarkup<PeptideRegionType> {
+public final class PeptideChain implements StructureChainWithMarkup<PeptideRegionType> {
     private final AminoAcidSequence sequence;
     private final Chain structureChain;
     private final SequenceRegionMarkup<AminoAcidSequence, PeptideRegionType, ? extends SequenceRegionMarkup> markup;

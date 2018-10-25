@@ -1,6 +1,6 @@
 package com.milaboratory.mir.structure;
 
-public class AntigenReceptor implements HeterodimerComplex<AntigenReceptorRegionType, AntigenReceptorChain> {
+public final class AntigenReceptor implements HeterodimerComplex<AntigenReceptorRegionType, AntigenReceptorChain> {
     private final AntigenReceptorChain firstChain, secondChain;
     private final AntigenReceptorType antigenReceptorType;
 

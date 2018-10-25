@@ -1,9 +1,8 @@
 package com.milaboratory.mir.structure;
 
 import com.milaboratory.mir.mhc.MhcClassType;
-import com.milaboratory.mir.mhc.MhcRegionType;
 
-public class MhcComplex implements HeterodimerComplex<MhcRegionType, MhcChain> {
+public final class MhcComplex implements HeterodimerComplex<MhcRegionType, MhcChain> {
     private final MhcChain firstChain, secondChain;
     private final MhcClassType mhcClassType;
 
@@ -28,7 +27,7 @@ public class MhcComplex implements HeterodimerComplex<MhcRegionType, MhcChain> {
     public MhcChain getSecondChain() {
         return secondChain;
     }
-    
+
     public MhcClassType getMhcClassType() {
         return mhcClassType;
     }

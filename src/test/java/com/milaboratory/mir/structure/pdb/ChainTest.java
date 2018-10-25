@@ -11,6 +11,7 @@ import com.milaboratory.mir.mappers.markup.SequenceRegion;
 import com.milaboratory.mir.segment.Gene;
 import com.milaboratory.mir.segment.Species;
 import com.milaboratory.mir.segment.parser.MigecSegmentLibraryUtils;
+import com.milaboratory.mir.structure.TestStructureCache;
 import com.milaboratory.mir.structure.pdb.parser.PdbParserUtils;
 import org.junit.Assert;
 import org.junit.Test;
@@ -20,14 +21,12 @@ import java.io.IOException;
 import static com.milaboratory.mir.structure.AntigenReceptorRegionType.CDR3;
 
 public class ChainTest {
-    private final Structure struct = PdbParserUtils
-            .parseStructure("1ao7_al", TestUtils.streamFrom("structures/1ao7_al.pdb"));
-
     public ChainTest() throws IOException {
     }
 
     @Test
     public void getRegionTest1() {
+        var struct = TestStructureCache.get("1ao7");
         var region = struct.getChain('A')
                 .extractRegion(new SequenceRegion<>(DummyRegion.R1,
                         new AminoAcidSequence("GSHSMRY"),
@@ -37,8 +36,9 @@ public class ChainTest {
     }
 
     @Test
-    public void getRegionTest2(){
+    public void getRegionTest2() {
         var lib = MigecSegmentLibraryUtils.getLibraryFromResources(Species.Human, Gene.TRB);
+        var struct = TestStructureCache.get("1ao7");
 
         var realigner = new ReceptorMarkupRealignerAa(
                 lib, new SimpleExhaustiveMapperFactory<>(

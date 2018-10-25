@@ -1,6 +1,6 @@
 package com.milaboratory.mir.structure;
 
-public class PeptideMhcComplex {
+public final class PeptideMhcComplex {
     private final PeptideChain peptideChain;
     private final MhcComplex mhcComplex;
 

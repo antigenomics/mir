@@ -33,26 +33,29 @@ public class PdbParserUtilsTest {
         var stream = TestUtils.streamFrom("structures/1ao7_al.pdb");
         var struct = PdbParserUtils.parseStructure("1ao7_al", stream);
         System.out.println(struct);
+        Assert.assertEquals(5, struct.getChains().size());
+        Assert.assertEquals("1ao7_al", struct.getId());
     }
 
     // todo
     @Test
     public void parseStructSpeedTest() throws IOException {
         var streamProvider = TestUtils.streamSupplierFrom("structures/1ao7_al.pdb");
+        int n = 10;
         long start, end;
 
         start = System.currentTimeMillis();
-        for (int i = 0; i < 100; i++) {
+        for (int i = 0; i < n; i++) {
             PdbParserUtils.parseStructure("1ao7_al", streamProvider.get());
         }
         end = System.currentTimeMillis();
-        System.out.println("We read 100 structures in " + (end - start) + "ms");
+        System.out.println("We read " + n + " structures in " + (end - start) + "ms");
 
         start = System.currentTimeMillis();
-        for (int i = 0; i < 100; i++) {
+        for (int i = 0; i < n; i++) {
             new PDBFileParser().parsePDBFile(streamProvider.get());
         }
         end = System.currentTimeMillis();
-        System.out.println("BioJava reads 100 structures in " + (end - start) + "ms");
+        System.out.println("BioJava reads " + n + " structures in " + (end - start) + "ms");
     }
 }

@@ -4,6 +4,7 @@ import com.milaboratory.core.sequence.AminoAcidSequence;
 import com.milaboratory.mir.CommonUtils;
 import com.milaboratory.mir.mappers.markup.ArrayBasedSequenceRegionMarkup;
 import com.milaboratory.mir.segment.Species;
+import com.milaboratory.mir.structure.MhcRegionType;
 
 import java.io.BufferedReader;
 import java.io.IOException;

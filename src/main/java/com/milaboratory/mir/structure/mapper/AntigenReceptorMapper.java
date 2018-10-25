@@ -1,4 +1,4 @@
-package com.milaboratory.mir.structure;
+package com.milaboratory.mir.structure.mapper;
 
 import com.milaboratory.core.sequence.AminoAcidSequence;
 import com.milaboratory.mir.mappers.SequenceMapperFactory;
@@ -6,6 +6,9 @@ import com.milaboratory.mir.mappers.markup.*;
 import com.milaboratory.mir.segment.JoiningSegment;
 import com.milaboratory.mir.segment.MissingConstantSegment;
 import com.milaboratory.mir.segment.VariableSegment;
+import com.milaboratory.mir.structure.AntigenReceptor;
+import com.milaboratory.mir.structure.AntigenReceptorChain;
+import com.milaboratory.mir.structure.AntigenReceptorRegionType;
 
 import java.util.Collection;
 

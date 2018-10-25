@@ -1,17 +1,10 @@
 package com.milaboratory.mir.mappers.markup;
 
 import com.milaboratory.core.sequence.AminoAcidSequence;
-import com.milaboratory.core.sequence.Sequence;
 import com.milaboratory.mir.mappers.*;
-import com.milaboratory.mir.mappers.markup.GenericMarkupRealigner;
-import com.milaboratory.mir.mappers.markup.PrecomputedSequenceRegionMarkup;
 import com.milaboratory.mir.mhc.MhcAllele;
 import com.milaboratory.mir.mhc.MhcAlleleLibrary;
-import com.milaboratory.mir.mhc.MhcRegionType;
-import com.milaboratory.mir.segment.SegmentWithMarkup;
-import com.milaboratory.mir.structure.AntigenReceptorRegionType;
-
-import java.util.Optional;
+import com.milaboratory.mir.structure.MhcRegionType;
 
 public final class MhcMarkupRealigner
         extends GenericMarkupRealigner<MhcAllele, AminoAcidSequence, MhcRegionType, PrecomputedSequenceRegionMarkup<AminoAcidSequence, MhcRegionType>> {

@@ -1,10 +1,14 @@
-package com.milaboratory.mir.structure;
+package com.milaboratory.mir.structure.mapper;
 
 import com.milaboratory.core.alignment.AffineGapAlignmentScoring;
 import com.milaboratory.core.alignment.BLASTMatrix;
 import com.milaboratory.core.sequence.AminoAcidSequence;
 import com.milaboratory.mir.TestUtils;
 import com.milaboratory.mir.mappers.align.SimpleExhaustiveMapperFactory;
+import com.milaboratory.mir.structure.AntigenReceptorChain;
+import com.milaboratory.mir.structure.AntigenReceptorRegionType;
+import com.milaboratory.mir.structure.mapper.AntigenReceptorMapper;
+import com.milaboratory.mir.structure.mapper.DefaultComplexMapperLibrary;
 import com.milaboratory.mir.structure.pdb.Structure;
 import com.milaboratory.mir.structure.pdb.parser.PdbParserUtils;
 import org.junit.Assert;
