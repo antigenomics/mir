@@ -5,8 +5,12 @@ public class AntigenReceptor implements HeterodimerComplex<AntigenReceptorRegion
     private final AntigenReceptorType antigenReceptorType;
 
     public AntigenReceptor(AntigenReceptorChain firstChain, AntigenReceptorChain secondChain) {
-        this.firstChain = firstChain;
-        this.secondChain = secondChain;
+        boolean correctOrder =
+                firstChain.getAntigenReceptorChainType().getOrder() <=
+                secondChain.getAntigenReceptorChainType().getOrder();
+
+        this.firstChain = correctOrder ? firstChain : secondChain;
+        this.secondChain = correctOrder ? secondChain : firstChain;
         this.antigenReceptorType = AntigenReceptorType.combine(firstChain.getAntigenReceptorChainType(),
                 secondChain.getAntigenReceptorChainType());
     }

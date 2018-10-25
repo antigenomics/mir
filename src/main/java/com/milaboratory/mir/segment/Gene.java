@@ -1,16 +1,18 @@
 package com.milaboratory.mir.segment;
 
 public enum Gene {
-    TRA("TRA", false), TRB("TRB", true),
-    TRG("TRG", false), TRD("TRD", true),
-    IGK("IGK", false), IGL("IGL", false), IGH("IGH", true);
+    TRA("TRA", false, 0), TRB("TRB", true, 1),
+    TRG("TRG", false, 0), TRD("TRD", true, 1),
+    IGK("IGK", false, 0), IGL("IGL", false, 0), IGH("IGH", true, 1);
 
     private final String code;
     private final boolean hasD;
+    private final int order;
 
-    Gene(String code, boolean hasD) {
+    Gene(String code, boolean hasD, int order) {
         this.code = code;
         this.hasD = hasD;
+        this.order = order;
     }
 
     public String getCode() {
@@ -19,6 +21,10 @@ public enum Gene {
 
     public boolean hasD() {
         return hasD;
+    }
+
+    public int getOrder() {
+        return order;
     }
 
     public boolean matches(String name) {
