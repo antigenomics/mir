@@ -9,28 +9,25 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 public final class MhcAlleleLibraryUtils {
     private static final int NUM_COLUMNS = 10;
     private static final String HEADER = "species\tmhc.class\tchain\tallele\tsignal.start\tregion1.start\tregion2.start\tregion3.start\tmembrane.start";
     private static final String RESOURCE_PATH = "mhc/mhc_serotype_prot.txt";
 
-    public static MhcAlleleLibrary load(Species species, MhcClassType mhcClassType, MhcChainType mhcChainType) {
+    public static MhcAlleleLibrary load(Species species, MhcClassType mhcClassType) {
         try {
             return parse(CommonUtils.getResourceAsStream(RESOURCE_PATH),
                     species,
-                    mhcClassType,
-                    mhcChainType);
+                    mhcClassType);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
 
     public static MhcAlleleLibrary parse(InputStream inputStream, Species species,
-                                         MhcClassType mhcClassType, MhcChainType mhcChainType) throws IOException {
+                                         MhcClassType mhcClassType) throws IOException {
         Map<String, MhcAllele> mhcAlleles = new HashMap<>();
         try (BufferedReader br = new BufferedReader(new InputStreamReader(inputStream))) {
             boolean firstLine = true;
@@ -54,12 +51,18 @@ public final class MhcAlleleLibraryUtils {
                 }
 
                 if (species.matches(splitLine[0]) &&
-                        mhcClassType.matches(splitLine[1]) &&
-                        mhcChainType.matches(splitLine[2])) {
+                        mhcClassType.matches(splitLine[1])) {
 
                     String id = splitLine[3];
-
-                    // groove.start	helix1.start	helix2.start	helix3.start	membrane.start
+                    String mhcChainTypeStr = splitLine[2];
+                    MhcChainType mhcChainType = null;
+                    if (MhcChainType.Alpha.matches(mhcChainTypeStr)) {
+                        mhcChainType = MhcChainType.Alpha;
+                    } else if (MhcChainType.Beta.matches(mhcChainTypeStr)) {
+                        mhcChainType = MhcChainType.Beta;
+                    } else {
+                        throw new RuntimeException("Cannot parse MHC chain type " + mhcChainTypeStr);
+                    }
 
                     AminoAcidSequence sequence = new AminoAcidSequence(splitLine[9]);
 
@@ -81,6 +84,6 @@ public final class MhcAlleleLibraryUtils {
             }
         }
 
-        return new MhcAlleleLibrary(mhcChainType, mhcClassType, species, mhcAlleles);
+        return new MhcAlleleLibrary(mhcClassType, species, mhcAlleles);
     }
 }

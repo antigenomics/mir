@@ -1,8 +1,9 @@
 package com.milaboratory.mir.structure;
 
 import com.milaboratory.mir.mhc.MhcClassType;
+import com.milaboratory.mir.mhc.MhcRegionType;
 
-public class MhcComplex {
+public class MhcComplex implements HeterodimerComplex<MhcRegionType, MhcChain> {
     private final MhcChain firstChain, secondChain;
     private final MhcClassType mhcClassType;
 
@@ -13,10 +14,12 @@ public class MhcComplex {
                 secondChain.getMhcAllele().getMhcClass());
     }
 
+    @Override
     public MhcChain getFirstChain() {
         return firstChain;
     }
 
+    @Override
     public MhcChain getSecondChain() {
         return secondChain;
     }

@@ -6,6 +6,8 @@ import com.milaboratory.mir.segment.JoiningSegment;
 import com.milaboratory.mir.segment.SegmentLibrary;
 import com.milaboratory.mir.segment.VariableSegment;
 
+import java.util.Collection;
+
 public final class ReceptorMarkupRealignerAa extends ReceptorMarkupRealigner<AminoAcidSequence> {
     public ReceptorMarkupRealignerAa(SegmentMarkupRealignerAa<VariableSegment> variableSegmentRealigner,
                                      SegmentMarkupRealignerAa<JoiningSegment> joiningSegmentRealigner) {
@@ -25,6 +27,17 @@ public final class ReceptorMarkupRealignerAa extends ReceptorMarkupRealigner<Ami
                 ),
                 new SegmentMarkupRealignerAa<>(
                         majorAllelesOnly ? segmentLibrary.getAllJMajor() : segmentLibrary.getAllJ(), mapperFactory
+                ));
+    }
+
+    public ReceptorMarkupRealignerAa(Collection<VariableSegment> variableSegments,
+                                     Collection<JoiningSegment> joiningSegments,
+                                     SequenceMapperFactory<AminoAcidSequence> mapperFactory) {
+        super(new SegmentMarkupRealignerAa<>(
+                        variableSegments, mapperFactory
+                ),
+                new SegmentMarkupRealignerAa<>(
+                        joiningSegments, mapperFactory
                 ));
     }
 }

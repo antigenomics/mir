@@ -12,9 +12,7 @@ public class MhcAlleleLibraryUtilsTest {
     public void loadTest() {
         for (Species species : Arrays.asList(Species.Human, Species.Mouse)) {
             for (MhcClassType mhcClassType : Arrays.asList(MhcClassType.MHCI, MhcClassType.MHCII)) {
-                for (MhcChainType mhcChainType : Arrays.asList(MhcChainType.Alpha, MhcChainType.Beta)) {
-                    System.out.println(MhcAlleleLibraryUtils.load(species, mhcClassType, mhcChainType));
-                }
+                System.out.println(MhcAlleleLibraryUtils.load(species, mhcClassType));
             }
         }
     }
