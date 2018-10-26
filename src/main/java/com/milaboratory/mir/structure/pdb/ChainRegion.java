@@ -10,7 +10,7 @@ public final class ChainRegion<E extends Enum<E>> extends Chain {
     private final SequenceRegion<AminoAcidSequence, E> region;
 
     ChainRegion(Chain parent, List<Residue> newResidues, SequenceRegion<AminoAcidSequence, E> region) {
-        super(parent, newResidues);
+        super(parent, newResidues, region.getStart());
         this.parent = parent;
         this.region = region;
 

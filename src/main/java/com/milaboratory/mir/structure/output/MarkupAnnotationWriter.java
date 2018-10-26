@@ -2,7 +2,7 @@ package com.milaboratory.mir.structure.output;
 
 import com.milaboratory.core.sequence.AminoAcidSequence;
 import com.milaboratory.mir.TableWriter;
-import com.milaboratory.mir.mappers.markup.SequenceRegionMarkup;
+import com.milaboratory.mir.mappers.markup.SequenceRegion;
 import com.milaboratory.mir.structure.*;
 
 import java.io.OutputStream;
@@ -13,6 +13,10 @@ public class MarkupAnnotationWriter extends TableWriter<TcrPeptideMhcComplex> {
 
     public MarkupAnnotationWriter(OutputStream os) {
         super(os, HEADER);
+    }
+
+    protected MarkupAnnotationWriter(OutputStream os, String header) {
+        super(os, header);
     }
 
     @Override
@@ -30,22 +34,23 @@ public class MarkupAnnotationWriter extends TableWriter<TcrPeptideMhcComplex> {
         return res;
     }
 
-    private <E extends Enum<E>> String convert(String prefix,
-                                               StructureChainWithMarkup<E> structureChainWithMarkup) {
-        return convert(prefix + "\t" + structureChainWithMarkup.getStructureChainId(),
-                structureChainWithMarkup.getMarkup());
-    }
-
     private <E extends Enum<E>> String convert(
             String prefix,
-            SequenceRegionMarkup<AminoAcidSequence, E, ? extends SequenceRegionMarkup> markup) {
-        return markup.getAllRegions().values().stream()
-                .map(x ->
-                        prefix + "\t" +
-                                x.getRegionType() + "\t" +
-                                x.getStart() + "\t" +
-                                x.getEnd() + "\t" +
-                                x.getSequence()
-                ).collect(Collectors.joining("\n"));
+            StructureChainWithMarkup<E> structureChainWithMarkup) {
+        var prefix1 = prefix + "\t" + structureChainWithMarkup.getStructureChainId();
+        return structureChainWithMarkup.getMarkup().getAllRegions().values().stream()
+                .map(x -> convert(prefix1, x, structureChainWithMarkup))
+                .filter(x -> !x.isEmpty()) // for downstream impl of seqres writer
+                .collect(Collectors.joining("\n"));
+    }
+
+    protected <E extends Enum<E>> String convert(String prefix,
+                                                 SequenceRegion<AminoAcidSequence, E> sequenceRegion,
+                                                 StructureChainWithMarkup<E> structureChainWithMarkup) {
+        return prefix + "\t" +
+                sequenceRegion.getRegionType() + "\t" +
+                sequenceRegion.getStart() + "\t" +
+                sequenceRegion.getEnd() + "\t" +
+                sequenceRegion.getSequence();
     }
 }

@@ -30,13 +30,21 @@ public class Chain implements Comparable<Chain>, CoordinateSet<Chain> {
     }
 
     Chain(Chain toCopy, List<Residue> newResidues) {
+        this(toCopy, newResidues, 0);
+    }
+
+    Chain(Chain toCopy, List<Residue> newResidues, int position) {
         this.chainIdentifier = toCopy.chainIdentifier;
         this.residues = newResidues;
-        this.originalRange = getRange(newResidues);
+        this.originalRange = getRange(newResidues, position);
         this.sequence = getSequence(newResidues);
     }
 
-    private static Range getRange(Collection<Residue> residues) {
+    private static Range getRange(Collection<Residue> residues, int position) {
+        if (residues.isEmpty()) {
+            return new Range(position, position); // here is why we need position
+        }
+
         int minResidue = Integer.MAX_VALUE, maxResidue = Integer.MIN_VALUE;
         for (Residue residue : residues) {
             minResidue = Math.min(minResidue, residue.getSequentialResidueSequenceNumber());

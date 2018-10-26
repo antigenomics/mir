@@ -6,7 +6,7 @@ import com.milaboratory.mir.structure.*;
 import java.io.OutputStream;
 
 public class GeneralAnnotationWriter extends TableWriter<TcrPeptideMhcComplex> {
-    public static final String HEADER =
+    private static final String HEADER =
             "pdb.id\tcomplex.species\tchain.component\tchain.supertype\tchain.type\tchain.id\tallele.info\tseq.length";
 
     public GeneralAnnotationWriter(OutputStream os) {
