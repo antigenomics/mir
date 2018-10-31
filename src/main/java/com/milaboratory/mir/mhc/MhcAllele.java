@@ -1,6 +1,7 @@
 package com.milaboratory.mir.mhc;
 
 import com.milaboratory.core.sequence.AminoAcidSequence;
+import com.milaboratory.mir.mappers.markup.ArrayBasedSequenceRegionMarkup;
 import com.milaboratory.mir.mappers.markup.PrecomputedSequenceRegionMarkup;
 import com.milaboratory.mir.mappers.markup.SequenceRegionMarkup;
 import com.milaboratory.mir.segment.Species;

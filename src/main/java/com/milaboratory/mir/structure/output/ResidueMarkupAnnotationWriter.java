@@ -7,10 +7,10 @@ import com.milaboratory.mir.structure.StructureChainWithMarkup;
 import java.io.OutputStream;
 import java.util.stream.Collectors;
 
-public class SeqresMarkupAnnotationWriter extends MarkupAnnotationWriter {
+public class ResidueMarkupAnnotationWriter extends MarkupAnnotationWriter {
     public static final String HEADER = "pdb.id\tchain.id\tregion.type\tresidue.index\tresidue.index.pdb\tresidue.ins.code\tresidue.aa";
 
-    public SeqresMarkupAnnotationWriter(OutputStream os) {
+    public ResidueMarkupAnnotationWriter(OutputStream os) {
         super(os, HEADER);
     }
 

@@ -95,7 +95,7 @@ public final class ArrayBasedSequenceRegionMarkup<S extends Sequence<S>, E exten
                 arr1[i] = start2;
                 arr1[i + 1] = end2;
             }
-        } else if (start1 == arr1[arr1.length - 1]) {
+        } else if (start1 >= arr1[arr1.length - 1]) {
             // copy empty regions from second
             arr1[i] = start2;
             arr1[i + 1] = end2;

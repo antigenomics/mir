@@ -6,10 +6,11 @@ import com.milaboratory.mir.structure.pdb.parser.RawAtom;
 import com.milaboratory.mir.structure.pdb.parser.ResidueName;
 
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public final class Residue implements Comparable<Residue>, CoordinateSet<Residue> {
+public final class Residue implements Comparable<Residue>, CoordinateSet<Residue>, Iterable<AtomImpl> {
     private final Chain parent;
     private final ResidueName residueName;
     private final short sequentialResidueSequenceNumber;
@@ -127,5 +128,10 @@ public final class Residue implements Comparable<Residue>, CoordinateSet<Residue
                 .stream()
                 .limit(5)
                 .map(Atom::toString).collect(Collectors.joining("\n")) + "\n...";
+    }
+
+    @Override
+    public Iterator<AtomImpl> iterator() {
+        return atoms.iterator();
     }
 }

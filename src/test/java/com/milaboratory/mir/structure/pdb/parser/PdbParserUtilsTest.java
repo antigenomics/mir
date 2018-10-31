@@ -58,4 +58,9 @@ public class PdbParserUtilsTest {
         end = System.currentTimeMillis();
         System.out.println("BioJava reads " + n + " structures in " + (end - start) + "ms");
     }
+
+    @Test
+    public void parseTestAdditional1() throws IOException {
+        PdbParserUtils.parseStructure("2pxy_al", TestUtils.streamFrom("structures/2pxy_al.pdb"));
+    }
 }

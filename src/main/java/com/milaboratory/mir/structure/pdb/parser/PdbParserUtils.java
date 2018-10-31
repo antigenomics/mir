@@ -20,6 +20,7 @@ public class PdbParserUtils {
         structure
                 .getChains()
                 .stream()
+                .filter(x -> x != Chain.DUMMY)
                 .flatMap(x -> x.getResidues().stream())
                 .flatMap(x -> x.getAtoms().stream())
                 .sorted()
@@ -35,7 +36,8 @@ public class PdbParserUtils {
     private static Map<Character, Map<Short, List<RawAtom>>> parseStructureMap(InputStream stream) throws IOException {
         var atomMap = new HashMap<Character, Map<Short, List<RawAtom>>>();
         short newIndex = -1;
-        short previousAaId = -1;
+        short previousAaId = Short.MIN_VALUE;
+        char previousInsertionCode = ' ';
         char previousChain = ' ';
         try (BufferedReader br = new BufferedReader(new InputStreamReader(stream))) {
             String line;
@@ -44,16 +46,20 @@ public class PdbParserUtils {
                     var atom = parseAtom(line);
                     if (atom.getChainIdentifier() != previousChain) {
                         newIndex = -1;
-                        previousAaId = -1;
+                        previousAaId = Short.MIN_VALUE;
                         previousChain = atom.getChainIdentifier();
+                        previousInsertionCode = ' ';
                     }
+
                     if (atom.getResidueSequenceNumber() > previousAaId) {
                         newIndex++;
                         previousAaId = atom.getResidueSequenceNumber();
+                        previousInsertionCode = atom.getResidueInsertionCode();
                     }
                     if (atom.getResidueSequenceNumber() == previousAaId &&
-                            atom.getResidueInsertionCode() != ' ') {
+                            atom.getResidueInsertionCode() != previousInsertionCode) {
                         newIndex++;
+                        previousInsertionCode = atom.getResidueInsertionCode();
                     }
 
                     atom.sequentialResidueSequenceNumber = newIndex;

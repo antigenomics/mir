@@ -8,9 +8,11 @@ import com.milaboratory.mir.segment.VariableSegment;
 import com.milaboratory.mir.structure.PeptideChain;
 import com.milaboratory.mir.structure.PeptideMhcComplex;
 import com.milaboratory.mir.structure.TcrPeptideMhcComplex;
+import com.milaboratory.mir.structure.pdb.Chain;
 import com.milaboratory.mir.structure.pdb.Structure;
 
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.Optional;
 
@@ -40,9 +42,9 @@ public class PeptideMhcComplexMapper {
     public Optional<TcrPeptideMhcComplex> map(Structure structure) {
         var chains = structure.getChains();
 
-        if (chains.size() != 5) {
-            throw new IllegalArgumentException("Structure must have exactly 5 chains");
-        }
+        //if (chains.size() != 5) {
+        //    throw new IllegalArgumentException("Structure must have exactly 5 chains");
+        //}
 
         var tcrComplexOpt = antigenReceptorMapper.map(chains);
 
@@ -70,12 +72,19 @@ public class PeptideMhcComplexMapper {
             return Optional.empty();
         }
 
-        var antigenChain = chains.stream()
+        var antigenChainOpt = chains.stream()
                 .filter(x -> !mappedChains.contains(x.getChainIdentifier()))
-                .findFirst().get();
+                .min(Comparator.comparingInt(x -> x.getSequence().size()));
 
-        var peptide = new PeptideChain(antigenChain.getSequence(),
-                antigenChain);
+        PeptideChain peptide;
+        if (antigenChainOpt.isPresent()) {
+            var antigenChain = antigenChainOpt.get();
+            peptide = new PeptideChain(antigenChain.getSequence(),
+                    antigenChain);
+        } else {
+            peptide = PeptideChain.DUMMY;
+        }
+
 
         return Optional.of(new TcrPeptideMhcComplex(
                 antigenReceptorComplex,

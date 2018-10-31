@@ -11,7 +11,7 @@ import org.junit.Test;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
-public class SeqresMarkupAnnotationWriterTest {
+public class ResidueMarkupAnnotationWriterTest {
     @Test
     public void test() throws IOException {
         var mapper = new PeptideMhcComplexMapper(
@@ -21,7 +21,7 @@ public class SeqresMarkupAnnotationWriterTest {
         var mappingRes = mapper.map(TestStructureCache.get("1ao7")).get();
 
         var os = new ByteArrayOutputStream();
-        try (var writer = new SeqresMarkupAnnotationWriter(os)) {
+        try (var writer = new ResidueMarkupAnnotationWriter(os)) {
 
             writer.accept(mappingRes);
         }

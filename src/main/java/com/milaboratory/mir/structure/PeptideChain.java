@@ -10,6 +10,8 @@ public final class PeptideChain implements StructureChainWithMarkup<PeptideRegio
     private final Chain structureChain;
     private final SequenceRegionMarkup<AminoAcidSequence, PeptideRegionType, ? extends SequenceRegionMarkup> markup;
 
+    public static final PeptideChain DUMMY = new PeptideChain(AminoAcidSequence.EMPTY, Chain.DUMMY);
+
     public PeptideChain(AminoAcidSequence sequence, Chain structureChain) {
         this.sequence = sequence;
         this.structureChain = structureChain;

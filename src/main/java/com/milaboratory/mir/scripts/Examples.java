@@ -8,7 +8,8 @@ import picocli.CommandLine;
 public class Examples implements Runnable {
     public static void main(String[] args) {
         CommandLine cmd = new CommandLine(new Examples())
-                .addSubcommand("cdr3nt-graph", new RunCdr3NtScopedGraph());
+                .addSubcommand("cdr3nt-graph", new RunCdr3NtScopedGraph())
+                .addSubcommand("annotate-structures", new AnnotateStructures());
         cmd.parseWithHandler(new CommandLine.RunAll(), args);
     }
 

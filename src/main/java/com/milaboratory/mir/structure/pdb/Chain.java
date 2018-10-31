@@ -10,20 +10,26 @@ import com.milaboratory.mir.structure.pdb.parser.RawAtom;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class Chain implements Comparable<Chain>, CoordinateSet<Chain> {
+public class Chain implements Comparable<Chain>, CoordinateSet<Chain>, Iterable<Residue> {
     private final char chainIdentifier;
     private final List<Residue> residues;
     private final AminoAcidSequence sequence;
     private final Range originalRange;
 
+    public static final Chain DUMMY = new Chain('?', new HashMap<>(), false);
+
     Chain(char chainIdentifier, Map<Short, List<RawAtom>> residueMap) {
-        if (residueMap.isEmpty()) {
+        this(chainIdentifier, residueMap, true);
+    }
+
+    Chain(char chainIdentifier, Map<Short, List<RawAtom>> residueMap, boolean disallowEmpty) {
+        if (disallowEmpty && residueMap.isEmpty()) {
             throw new IllegalArgumentException("Empty residue map");
         }
         this.chainIdentifier = chainIdentifier;
         this.residues = new ArrayList<>(residueMap.size());
-        for (short i = 0; i < residueMap.size(); i++) {
-            residues.add(new Residue(this, residueMap.get(i)));
+        for (List<RawAtom> rawAtoms : residueMap.values()) {
+            residues.add(new Residue(this, rawAtoms));
         }
         this.sequence = getSequence(residues);
         this.originalRange = new Range(0, residueMap.size());
@@ -108,5 +114,10 @@ public class Chain implements Comparable<Chain>, CoordinateSet<Chain> {
                 residues.stream()
                         .limit(3)
                         .map(Residue::toString).collect(Collectors.joining("\n")) + "\n...";
+    }
+
+    @Override
+    public Iterator<Residue> iterator() {
+        return residues.iterator();
     }
 }
