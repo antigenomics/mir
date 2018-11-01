@@ -51,22 +51,6 @@ public final class GeometryUtils {
         return angle(t0, t1);
     }
 
-    public static Coordinates centerOfMass(Iterable<Residue> residues) {
-        float x = 0, y = 0, z = 0;
-
-        for (Residue residue : residues) {
-            for (Atom atom : residue) {
-                float wt = atom.getAtomName().getAtomicWeight();
-                Coordinates coordinates = atom.getCoordinates();
-                x += coordinates.getX() * wt;
-                y += coordinates.getY() * wt;
-                z += coordinates.getZ() * wt;
-            }
-        }
-
-        return new Coordinates(x, y, z);
-    }
-
     /*
     % Given a real symmetric 3x3 matrix A, compute the eigenvalues
 % Note that acos and cos operate on angles in radians

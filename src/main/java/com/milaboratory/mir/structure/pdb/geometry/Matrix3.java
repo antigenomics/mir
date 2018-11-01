@@ -1,57 +1,25 @@
 package com.milaboratory.mir.structure.pdb.geometry;
 
-public final class Matrix3 {
-    private final float xx, xy, xz,
-            yx, yy, yz,
-            zx, zy, zz;
+public interface Matrix3 {
+    float getXX();
 
-    public Matrix3(float xx, float xy, float xz,
-                   float yx, float yy, float yz,
-                   float zx, float zy, float zz) {
-        this.xx = xx;
-        this.xy = xy;
-        this.xz = xz;
-        this.yx = yx;
-        this.yy = yy;
-        this.yz = yz;
-        this.zx = zx;
-        this.zy = zy;
-        this.zz = zz;
-    }
+    float getXY();
 
-    public float getXX() {
-        return xx;
-    }
+    float getXZ();
 
-    public float getXY() {
-        return xy;
-    }
+    float getYX();
 
-    public float getXZ() {
-        return xz;
-    }
+    float getYY();
 
-    public float getYX() {
-        return yx;
-    }
+    float getYZ();
 
-    public float getYY() {
-        return yy;
-    }
+    float getZX();
 
-    public float getYZ() {
-        return yz;
-    }
+    float getZY();
 
-    public float getZX() {
-        return zx;
-    }
+    float getZZ();
 
-    public float getZY() {
-        return zy;
-    }
-
-    public float getZZ() {
-        return zz;
+    default float trace() {
+        return getXX() + getYY() + getZZ();
     }
 }
