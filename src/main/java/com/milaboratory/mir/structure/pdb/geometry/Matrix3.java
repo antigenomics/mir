@@ -22,4 +22,12 @@ public interface Matrix3 {
     default float trace() {
         return getXX() + getYY() + getZZ();
     }
+
+    default double[][] asArray() {
+        return new double[][]{
+                new double[]{getXX(), getXY(), getXZ()},
+                new double[]{getYX(), getYY(), getYZ()},
+                new double[]{getZX(), getZY(), getZZ()}
+        };
+    }
 }
