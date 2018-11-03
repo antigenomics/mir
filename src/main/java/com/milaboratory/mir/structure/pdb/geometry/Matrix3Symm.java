@@ -56,4 +56,11 @@ public final class Matrix3Symm implements Matrix3 {
     public float getZZ() {
         return zz;
     }
+
+    @Override
+    public String toString() {
+        return xx + "\t" + xy + "\t" + xz + "\n" +
+                ".\t" + yy + "\t" + yz + "\n" +
+                ".\t" + ".\t" + zz;
+    }
 }

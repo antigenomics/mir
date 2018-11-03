@@ -6,17 +6,15 @@ import com.milaboratory.mir.structure.pdb.parser.PdbParserUtils;
 
 import java.util.List;
 
-public final class ResidueBackBone {
+public final class ResidueBackbone {
+    private final Residue residue;
     private final Atom N, CA, C;
 
-    public ResidueBackBone(Residue residue) {
-        this(residue.getAtoms());
-    }
-
-    public ResidueBackBone(List<? extends Atom> atoms) {
+    public ResidueBackbone(Residue residue) {
+        this.residue = residue;
         Atom N = null, CA = null, C = null;
 
-        for (Atom atom : atoms) {
+        for (Atom atom : residue.getAtoms()) {
             if (atom.getAtomName().equals(PdbParserUtils.N_ATOM_NAME)) {
                 N = atom;
             } else if (atom.getAtomName().equals(PdbParserUtils.CA_ATOM_NAME)) {
@@ -31,6 +29,10 @@ public final class ResidueBackBone {
         this.C = C;
     }
 
+    public Residue getResidue() {
+        return residue;
+    }
+
     public Atom getN() {
         return N;
     }
@@ -41,5 +43,13 @@ public final class ResidueBackBone {
 
     public Atom getC() {
         return C;
+    }
+
+    @Override
+    public String toString() {
+        return residue.toShortString() + "\n" +
+                N + "\n" +
+                CA + "\n" +
+                C;
     }
 }

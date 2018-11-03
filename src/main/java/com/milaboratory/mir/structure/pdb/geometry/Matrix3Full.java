@@ -1,6 +1,6 @@
 package com.milaboratory.mir.structure.pdb.geometry;
 
-public final class Matrix3Full implements Matrix3{
+public final class Matrix3Full implements Matrix3 {
     private final float xx, xy, xz,
             yx, yy, yz,
             zx, zy, zz;
@@ -53,5 +53,12 @@ public final class Matrix3Full implements Matrix3{
 
     public float getZZ() {
         return zz;
+    }
+
+    @Override
+    public String toString() {
+        return xx + "\t" + xy + "\t" + xz + "\n" +
+                yx + "\t" + yy + "\t" + yz + "\n" +
+                zx + "\t" + zy + "\t" + zz;
     }
 }

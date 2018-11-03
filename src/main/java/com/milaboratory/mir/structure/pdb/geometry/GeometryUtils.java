@@ -1,8 +1,5 @@
 package com.milaboratory.mir.structure.pdb.geometry;
 
-import com.milaboratory.mir.structure.pdb.Atom;
-import com.milaboratory.mir.structure.pdb.Residue;
-
 public final class GeometryUtils {
     public static Coordinates vector(Coordinates start, Coordinates end) {
         return new Coordinates(end.getX() - start.getX(),
@@ -31,7 +28,13 @@ public final class GeometryUtils {
     }
 
     public static float angle(Coordinates u, Coordinates v) {
-        return (float) Math.acos(scalarProduct(u, v) / norm(u) / norm(v));
+        float x = scalarProduct(u, v) / norm(u) / norm(v);
+        if (x < -1) {
+            return (float) Math.PI;
+        } else if (x > 1) {
+            return 0.0f;
+        }
+        return (float) Math.acos(x);
     }
 
     public static Coordinates crossProduct(Coordinates u, Coordinates v) {
@@ -50,38 +53,4 @@ public final class GeometryUtils {
         final Coordinates t0 = vector(x0, x1), t1 = vector(x1, x2);
         return angle(t0, t1);
     }
-
-    /*
-    % Given a real symmetric 3x3 matrix A, compute the eigenvalues
-% Note that acos and cos operate on angles in radians
-
-p1 = A(1,2)^2 + A(1,3)^2 + A(2,3)^2
-if (p1 == 0)
-   % A is diagonal.
-   eig1 = A(1,1)
-   eig2 = A(2,2)
-   eig3 = A(3,3)
-else
-   q = trace(A)/3               % trace(A) is the sum of all diagonal values
-   p2 = (A(1,1) - q)^2 + (A(2,2) - q)^2 + (A(3,3) - q)^2 + 2 * p1
-   p = sqrt(p2 / 6)
-   B = (1 / p) * (A - q * I)    % I is the identity matrix
-   r = det(B) / 2
-
-   % In exact arithmetic for a symmetric matrix  -1 <= r <= 1
-   % but computation error can leave it slightly outside this range.
-   if (r <= -1)
-      phi = pi / 3
-   elseif (r >= 1)
-      phi = 0
-   else
-      phi = acos(r) / 3
-   end
-
-   % the eigenvalues satisfy eig3 <= eig2 <= eig1
-   eig1 = q + 2 * p * cos(phi)
-   eig3 = q + 2 * p * cos(phi + (2*pi/3))
-   eig2 = 3 * q - eig1 - eig3     % since trace(A) = eig1 + eig2 + eig3
-end
-     */
 }

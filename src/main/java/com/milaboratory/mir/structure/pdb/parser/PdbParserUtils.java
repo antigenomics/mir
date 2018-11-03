@@ -12,7 +12,7 @@ public class PdbParserUtils {
 
     public static final AtomName CA_ATOM_NAME = atomNameCache.createField(" CA "),
             C_ATOM_NAME = atomNameCache.createField(" C  "),
-            N_ATOM_NAME = atomNameCache.createField(" C  ");
+            N_ATOM_NAME = atomNameCache.createField(" N  ");
 
     private static final int PDB_LINE_SZ = 80;
 

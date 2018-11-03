@@ -20,4 +20,13 @@ public final class Coordinates {
     public float getZ() {
         return z;
     }
+
+    public String toRow() {
+        return x + "\t" + y + "\t" + z;
+    }
+
+    @Override
+    public String toString() {
+        return x + "\t" + y + "\t" + z;
+    }
 }

@@ -122,6 +122,14 @@ public final class Residue implements Comparable<Residue>, CoordinateSet<Residue
         return Short.compare(sequentialResidueSequenceNumber, o.sequentialResidueSequenceNumber);
     }
 
+    public String toShortString() {
+        return getChainIdentifier() + "\t" +
+                sequentialResidueSequenceNumber + "\t(" +
+                residueSequenceNumber +
+                residueInsertionCode + ")\t" +
+                residueName.getLetter();
+    }
+
     @Override
     public String toString() {
         return atoms

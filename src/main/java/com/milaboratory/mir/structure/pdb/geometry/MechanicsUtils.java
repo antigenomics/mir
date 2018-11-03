@@ -7,20 +7,29 @@ public final class MechanicsUtils {
     private static final double M_SQRT3 = Math.sqrt(3),
             DBL_EPSILON = 2.2204460492503131e-16;
 
+
+    public static Matrix3Full principalAxes(Iterable<Residue> residues) {
+        var I = inertiaTensor(residues);
+        return matrix3SymmEigenvectors(I);
+    }
+
     public static Coordinates centerOfMass(Iterable<Residue> residues) {
-        float x = 0, y = 0, z = 0;
+        float x = 0, y = 0, z = 0, mTot = 0;
 
         for (Residue residue : residues) {
             for (Atom atom : residue) {
-                float wt = atom.getAtomName().getAtomicWeight();
-                Coordinates coordinates = atom.getCoordinates();
-                x += coordinates.getX() * wt;
-                y += coordinates.getY() * wt;
-                z += coordinates.getZ() * wt;
+                float mass = atom.getAtomName().getAtomicWeight();
+                if (mass > 0) {
+                    Coordinates coordinates = atom.getCoordinates();
+                    x += coordinates.getX() * mass;
+                    y += coordinates.getY() * mass;
+                    z += coordinates.getZ() * mass;
+                    mTot += mass;
+                }
             }
         }
 
-        return new Coordinates(x, y, z);
+        return new Coordinates(x / mTot, y / mTot, z / mTot);
     }
 
     public static Matrix3Symm inertiaTensor(Iterable<Residue> residues) {
@@ -32,25 +41,28 @@ public final class MechanicsUtils {
 
         for (Residue residue : residues) {
             for (Atom atom : residue) {
-                float wt = atom.getAtomName().getAtomicWeight();
-                Coordinates coordinates = atom.getCoordinates();
+                float mass = atom.getAtomName().getAtomicWeight();
 
-                float x = coordinates.getX(),
-                        y = coordinates.getY(),
-                        z = coordinates.getZ();
-                xCm += x * wt;
-                yCm += y * wt;
-                zCm += z * wt;
-                mTot += wt;
+                if (mass > 0) {
+                    Coordinates coordinates = atom.getCoordinates();
 
-                xxI += wt * (y * y + z * z);
-                xyI -= wt * x * y;
-                xzI -= wt * x * z;
+                    float x = coordinates.getX(),
+                            y = coordinates.getY(),
+                            z = coordinates.getZ();
+                    xCm += x * mass;
+                    yCm += y * mass;
+                    zCm += z * mass;
+                    mTot += mass;
 
-                yyI += wt * (z * z + x * x);
-                yzI -= wt * y * z;
+                    xxI += mass * (y * y + z * z);
+                    xyI -= mass * x * y;
+                    xzI -= mass * x * z;
 
-                zzI += wt * (x * x + y * y);
+                    yyI += mass * (z * z + x * x);
+                    yzI -= mass * y * z;
+
+                    zzI += mass * (x * x + y * y);
+                }
             }
         }
 
@@ -121,13 +133,17 @@ public final class MechanicsUtils {
         return new double[]{eig1, eig1 + s, eig1 + c};
     }
 
+    public static Matrix3Full matrix3SymmEigenvectors(Matrix3Symm mat) {
+        return matrix3SymmEigenvectors(mat, matrix3SymmEigenvalues(mat));
+    }
+
     public static Matrix3Full matrix3SymmEigenvectors(Matrix3Symm mat, double[] w) {
         double[][] Q = new double[3][3];
         double[][] A = mat.asArray();
 
         // Calculate eigenvalues
 
-        double wmax = Math.abs(w[0]; // The eigenvalue of maximum modulus
+        double wmax = Math.abs(w[0]); // The eigenvalue of maximum modulus
         wmax = Math.max(wmax, Math.abs(w[1]));
         wmax = Math.max(wmax, Math.abs(w[2]));
 
