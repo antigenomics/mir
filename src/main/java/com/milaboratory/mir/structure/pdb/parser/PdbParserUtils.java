@@ -51,13 +51,12 @@ public class PdbParserUtils {
                         previousInsertionCode = ' ';
                     }
 
-                    if (atom.getResidueSequenceNumber() > previousAaId) {
+                    if (atom.getResidueSequenceNumber() != previousAaId) {
                         newIndex++;
                         previousAaId = atom.getResidueSequenceNumber();
                         previousInsertionCode = atom.getResidueInsertionCode();
-                    }
-                    if (atom.getResidueSequenceNumber() == previousAaId &&
-                            atom.getResidueInsertionCode() != previousInsertionCode) {
+                        // todo: issue warning if residue numbers are not in order
+                    } else if (atom.getResidueInsertionCode() != previousInsertionCode) {
                         newIndex++;
                         previousInsertionCode = atom.getResidueInsertionCode();
                     }
