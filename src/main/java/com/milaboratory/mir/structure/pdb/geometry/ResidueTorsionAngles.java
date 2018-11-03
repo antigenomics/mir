@@ -1,5 +1,6 @@
 package com.milaboratory.mir.structure.pdb.geometry;
 
+import com.milaboratory.mir.structure.pdb.Atom;
 import com.milaboratory.mir.structure.pdb.Residue;
 
 public final class ResidueTorsionAngles {
@@ -12,26 +13,35 @@ public final class ResidueTorsionAngles {
 
     public ResidueTorsionAngles(ResidueBackbone previous, ResidueBackbone current, ResidueBackbone next) {
         this(previous, current, next,
-
                 // todo: can be optimized by storing previous t/b vectors
-                GeometryUtils.torsionAngle(
-                        previous.getC().getCoordinates(),
-                        current.getN().getCoordinates(),
-                        current.getCA().getCoordinates(),
-                        current.getC().getCoordinates()
+                computeTorsionAngleSafe(
+                        previous.getC(),
+                        current.getN(),
+                        current.getCA(),
+                        current.getC()
                 ),
-                GeometryUtils.torsionAngle(
-                        current.getN().getCoordinates(),
-                        current.getCA().getCoordinates(),
-                        current.getC().getCoordinates(),
-                        next.getN().getCoordinates()
+                computeTorsionAngleSafe(
+                        current.getN(),
+                        current.getCA(),
+                        current.getC(),
+                        next.getN()
                 ),
-                GeometryUtils.torsionAngle(
-                        current.getCA().getCoordinates(),
-                        current.getC().getCoordinates(),
-                        next.getN().getCoordinates(),
-                        next.getCA().getCoordinates()
+                computeTorsionAngleSafe(
+                        current.getCA(),
+                        current.getC(),
+                        next.getN(),
+                        next.getCA()
                 ));
+    }
+
+    private static float computeTorsionAngleSafe(Atom a1, Atom a2, Atom a3, Atom a4) {
+        if (a1 == null || a2 == null || a3 == null || a4 == null) {
+            return Float.NaN;
+        }
+        return GeometryUtils.torsionAngle(a1.getCoordinates(),
+                a2.getCoordinates(),
+                a3.getCoordinates(),
+                a4.getCoordinates());
     }
 
     ResidueTorsionAngles(ResidueBackbone previous, ResidueBackbone current, ResidueBackbone next,

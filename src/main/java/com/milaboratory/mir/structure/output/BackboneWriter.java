@@ -2,6 +2,7 @@ package com.milaboratory.mir.structure.output;
 
 import com.milaboratory.mir.TableWriter;
 import com.milaboratory.mir.structure.pdb.geometry.ChainTorsionAngles;
+import com.milaboratory.mir.structure.pdb.geometry.Coordinates;
 import com.milaboratory.mir.structure.pdb.geometry.ResidueTorsionAngles;
 import com.milaboratory.mir.structure.pdb.geometry.StructureAxesAndTorsions;
 
@@ -44,6 +45,7 @@ public class BackboneWriter extends TableWriter<StructureAxesAndTorsions> {
     }
 
     protected String writeBackboneRow(ResidueTorsionAngles residueTorsionAngles) {
-        return residueTorsionAngles.getCurrent().getCA().getCoordinates().toRow();
+        var ca = residueTorsionAngles.getCurrent().getCA();
+        return (ca == null ? new Coordinates(Float.NaN, Float.NaN, Float.NaN) : ca.getCoordinates()).toRow();
     }
 }
