@@ -45,8 +45,9 @@ public final class GeometryUtils {
 
     public static float torsionAngle(Coordinates x0, Coordinates x1, Coordinates x2, Coordinates x3) {
         final Coordinates t0 = vector(x0, x1), t1 = vector(x1, x2), t2 = vector(x2, x3);
-        final Coordinates b1 = crossProduct(t0, t1), b2 = crossProduct(t1, t2);
-        return angle(b1, b2);
+        final Coordinates b1 = crossProduct(t0, t1), b2 = crossProduct(t1, t2), n1 = crossProduct(b1, t1);
+        float angle = angle(b1, b2), direction = scalarProduct(n1, b2);
+        return direction < 0 ? angle : -angle; // sign so we get right (not transposed) Ramachandran plot
     }
 
     public static float curvatureAngle(Coordinates x0, Coordinates x1, Coordinates x2) {

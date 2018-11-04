@@ -15,7 +15,7 @@ public class ResidueTorsionAnglesTest {
                 res3 = chain.getResidue(51),
                 res4 = chain.getResidue(52);
 
-        // omega should be near 3.14
+        // omega should be near -3.14
         System.out.println(new ResidueTorsionAngles(res1, res2, res3));
         System.out.println(new ResidueTorsionAngles(res2, res3, res4));
     }
