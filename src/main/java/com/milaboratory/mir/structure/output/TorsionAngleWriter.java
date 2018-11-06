@@ -14,6 +14,9 @@ public class TorsionAngleWriter extends BackboneWriter {
 
     @Override
     protected String writeBackboneRow(ResidueTorsionAngles residueTorsionAngles) {
-        return residueTorsionAngles.asRow();
+        return residueTorsionAngles.asRow(); /*+ "\t" +
+                residueTorsionAngles.getPrevious().getResidue().getResidueName().getLetter() +
+                residueTorsionAngles.getCurrent().getResidue().getResidueName().getLetter() +
+                residueTorsionAngles.getNext().getResidue().getResidueName().getLetter();*/
     }
 }

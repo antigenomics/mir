@@ -2,11 +2,12 @@ package com.milaboratory.mir.structure.pdb;
 
 import com.milaboratory.mir.CommonUtils;
 import com.milaboratory.mir.structure.pdb.parser.RawAtom;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
 import java.util.stream.Collectors;
 
-public final class Structure {
+public final class Structure implements Iterable<Chain> {
     private final String id;
     private final Map<Character, Chain> chains;
 
@@ -58,5 +59,11 @@ public final class Structure {
                 .values()
                 .stream()
                 .map(Chain::toString).collect(Collectors.joining("\n"));
+    }
+
+    @NotNull
+    @Override
+    public Iterator<Chain> iterator() {
+        return chains.values().iterator();
     }
 }

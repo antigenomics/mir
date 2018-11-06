@@ -1,6 +1,10 @@
 package com.milaboratory.mir.structure.pdb.geometry;
 
 public final class GeometryUtils {
+    public static float distance(Coordinates u, Coordinates v) {
+        return norm(vector(u, v));
+    }
+
     public static Coordinates vector(Coordinates start, Coordinates end) {
         return new Coordinates(end.getX() - start.getX(),
                 end.getY() - start.getY(),
