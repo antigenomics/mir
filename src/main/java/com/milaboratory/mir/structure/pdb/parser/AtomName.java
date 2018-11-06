@@ -14,16 +14,22 @@ public class AtomName extends PdbField {
     }
 
     private final float atomicWeight;
+    private final Character letter;
 
     public AtomName(String value) {
         super(value);
         if (value.length() != 4) {
             throw new IllegalArgumentException("Should be 4 characters long");
         }
-        this.atomicWeight = atomicWeights.getOrDefault(value.charAt(1), 0.0f);
+        this.letter = value.charAt(1);
+        this.atomicWeight = atomicWeights.getOrDefault(letter, 0.0f);
     }
 
     public float getAtomicWeight() {
         return atomicWeight;
+    }
+
+    public Character getLetter() {
+        return letter;
     }
 }

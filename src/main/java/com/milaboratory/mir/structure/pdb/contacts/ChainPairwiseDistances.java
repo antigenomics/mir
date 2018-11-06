@@ -7,16 +7,16 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public final class ChainPairDistances {
+public final class ChainPairwiseDistances {
     private final Chain chain1, chain2;
     private final float maxCaDistance, maxAtomDistance;
     private final List<ResiduePairDistances> residuePairDistances = new ArrayList<>();
 
-    public ChainPairDistances(Chain chain1, Chain chain2) {
-        this(chain1, chain2, 30f, 6f);
+    public ChainPairwiseDistances(Chain chain1, Chain chain2) {
+        this(chain1, chain2, 25f, 6f);
     }
 
-    public ChainPairDistances(Chain chain1, Chain chain2, float maxCaDistance, float maxAtomDistance) {
+    public ChainPairwiseDistances(Chain chain1, Chain chain2, float maxCaDistance, float maxAtomDistance) {
         this.chain1 = chain1;
         this.chain2 = chain2;
         this.maxCaDistance = maxCaDistance;

@@ -8,18 +8,18 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-public final class StructurePairDistances {
+public final class StructurePairwiseDistances {
     private final Structure structure;
-    private final Map<String, ChainPairDistances> chainPairDistances = new HashMap<>();
+    private final Map<String, ChainPairwiseDistances> chainPairDistances = new HashMap<>();
     private final float maxCaDistance, maxAtomDistance;
     private final boolean allowSelf;
 
-    public StructurePairDistances(Structure structure) {
-        this(structure, false, 30f, 6f);
+    public StructurePairwiseDistances(Structure structure) {
+        this(structure, false, 25f, 6f);
     }
 
-    public StructurePairDistances(Structure structure, boolean allowSelf,
-                                  float maxCaDistance, float maxAtomDistance) {
+    public StructurePairwiseDistances(Structure structure, boolean allowSelf,
+                                      float maxCaDistance, float maxAtomDistance) {
         this.structure = structure;
         this.maxCaDistance = maxCaDistance;
         this.maxAtomDistance = maxAtomDistance;
@@ -31,7 +31,7 @@ public final class StructurePairDistances {
                         (allowSelf && chain1.getChainIdentifier() == chain2.getChainIdentifier())
                 ) {
                     chainPairDistances.put(getKey(chain1.getChainIdentifier(), chain2.getChainIdentifier()),
-                            new ChainPairDistances(chain1, chain2,
+                            new ChainPairwiseDistances(chain1, chain2,
                                     maxCaDistance, maxAtomDistance));
                 }
             }
@@ -42,7 +42,7 @@ public final class StructurePairDistances {
         return chainId1 + " " + chainId2;
     }
 
-    public ChainPairDistances get(Character chainId1, Character chainId2) {
+    public ChainPairwiseDistances get(Character chainId1, Character chainId2) {
         if (chainId1 > chainId2) {
             return get(chainId2, chainId1);
         }
@@ -52,7 +52,7 @@ public final class StructurePairDistances {
         return chainPairDistances.get(getKey(chainId1, chainId2));
     }
 
-    public Collection<ChainPairDistances> getChainPairDistances() {
+    public Collection<ChainPairwiseDistances> getChainPairDistances() {
         return Collections.unmodifiableCollection(chainPairDistances.values());
     }
 

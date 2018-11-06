@@ -61,4 +61,8 @@ public final class ResiduePairDistances {
     public Residue getResidue2() {
         return residue2;
     }
+
+    public float getCaDistance() {
+        return caDistance;
+    }
 }

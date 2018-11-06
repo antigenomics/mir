@@ -10,7 +10,8 @@ public class Examples implements Runnable {
         CommandLine cmd = new CommandLine(new Examples())
                 .addSubcommand("cdr3nt-graph", new RunCdr3NtScopedGraph())
                 .addSubcommand("annotate-structures", new AnnotateStructures())
-                .addSubcommand("compute-pdb-geom", new ComputePDBGeometry());
+                .addSubcommand("compute-pdb-geom", new ComputePDBGeometry())
+                .addSubcommand("compute-pdb-contacts", new ComputePDBContacts());
         cmd.parseWithHandler(new CommandLine.RunAll(), args);
     }
 
