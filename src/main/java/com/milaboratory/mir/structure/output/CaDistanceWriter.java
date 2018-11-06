@@ -40,7 +40,7 @@ public class CaDistanceWriter extends TableWriter<StructurePairwiseDistances> {
                 .map(x ->
                         writeResiduePairDistances(prefix + "\t" +
                                         x.getResidue1().getSequentialResidueSequenceNumber() + "\t" +
-                                        x.getResidue2().getSequentialResidueSequenceNumber() + "\t",
+                                        x.getResidue2().getSequentialResidueSequenceNumber(),
                                 x)
                 )
                 .filter(x -> !x.isEmpty())
