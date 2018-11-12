@@ -3,6 +3,8 @@ package com.milaboratory.mir.segment;
 import com.milaboratory.core.sequence.AminoAcidSequence;
 import com.milaboratory.core.sequence.NucleotideSequence;
 
+import java.util.Objects;
+
 public class ConstantSegmentImpl implements ConstantSegment {
     private final String id;
     private final NucleotideSequence germlineSequenceNt;
@@ -44,5 +46,20 @@ public class ConstantSegmentImpl implements ConstantSegment {
     @Override
     public String toString() {
         return id;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        ConstantSegmentImpl that = (ConstantSegmentImpl) o;
+        return majorAllele == that.majorAllele &&
+                Objects.equals(id, that.id) &&
+                Objects.equals(germlineSequenceNt, that.germlineSequenceNt);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, germlineSequenceNt, majorAllele);
     }
 }

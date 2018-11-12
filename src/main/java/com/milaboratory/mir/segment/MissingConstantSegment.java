@@ -3,7 +3,7 @@ package com.milaboratory.mir.segment;
 import com.milaboratory.core.sequence.AminoAcidSequence;
 import com.milaboratory.core.sequence.NucleotideSequence;
 
-public class MissingConstantSegment implements ConstantSegment {
+public final class MissingConstantSegment implements ConstantSegment {
     public static MissingConstantSegment INSTANCE = new MissingConstantSegment();
 
     private MissingConstantSegment() {
@@ -32,5 +32,15 @@ public class MissingConstantSegment implements ConstantSegment {
     @Override
     public AminoAcidSequence getGermlineSequenceAa() {
         return AminoAcidSequence.EMPTY;
+    }
+
+    @Override
+    public int hashCode() {
+        return System.identityHashCode(this);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        return this == obj;
     }
 }

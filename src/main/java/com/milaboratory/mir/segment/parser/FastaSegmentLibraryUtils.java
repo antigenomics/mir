@@ -6,9 +6,11 @@ import com.milaboratory.core.io.sequence.fasta.FastaRecord;
 import com.milaboratory.core.sequence.NucleotideSequence;
 import com.milaboratory.mir.mappers.SequenceMapperFactory;
 import com.milaboratory.mir.mappers.align.SimpleExhaustiveMapperFactory;
+import com.milaboratory.mir.mappers.markup.PrecomputedSequenceRegionMarkup;
 import com.milaboratory.mir.mappers.markup.SegmentMarkupRealignerNt;
 import com.milaboratory.mir.rearrangement.parser.MuruganModelParserUtils;
 import com.milaboratory.mir.segment.*;
+import com.milaboratory.mir.structure.AntigenReceptorRegionType;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -140,7 +142,7 @@ public final class FastaSegmentLibraryUtils {
                                     .recomputeMarkup(sequence)
                                     .ifPresent(vRes ->
                                             variableSegmentMap.put(segmentName,
-                                                    VariableSegmentImpl.fromMarkup(segmentName,
+                                                    vFromMarkup(segmentName,
                                                             vRes.getMarkup().getFullSequence(),
                                                             vRes.getMarkup(), majorAllele
                                                     )));
@@ -149,15 +151,15 @@ public final class FastaSegmentLibraryUtils {
                                     .recomputeMarkup(sequence)
                                     .ifPresent(jRes ->
                                             joiningSegmentMap.put(segmentName,
-                                                    JoiningSegmentImpl.fromMarkup(segmentName,
+                                                    jFromMarkup(segmentName,
                                                             jRes.getMarkup().getFullSequence(),
                                                             jRes.getMarkup(), majorAllele
                                                     )));
                         } else if (segmentName.contains(dToken)) {
-                            diversitySegmentMap.put(segmentName, new DiversitySegmentImpl(segmentName,
+                            diversitySegmentMap.put(segmentName, new CachedDiversitySegment(segmentName,
                                     sequence, majorAllele));
                         } else if (segmentName.contains(cToken)) {
-                            constantSegmentMap.put(segmentName, new ConstantSegmentImpl(segmentName,
+                            constantSegmentMap.put(segmentName, new CachedConstantSegment(segmentName,
                                     sequence, majorAllele));
                         }
                     }
@@ -166,5 +168,33 @@ public final class FastaSegmentLibraryUtils {
 
         return new SegmentLibraryImpl(template.getSpecies(), template.getGene(),
                 variableSegmentMap, diversitySegmentMap, joiningSegmentMap, constantSegmentMap);
+    }
+
+
+    private static JoiningSegmentImpl jFromMarkup
+            (String id,
+             NucleotideSequence germlineNt,
+             PrecomputedSequenceRegionMarkup<NucleotideSequence, AntigenReceptorRegionType> markup,
+             boolean majorAllele) {
+        var cdr3Markup = markup.getRegion(AntigenReceptorRegionType.CDR3);
+        return new CachedJoiningSegment(id, germlineNt,
+                cdr3Markup.getEnd() - 4,
+                majorAllele);
+    }
+
+
+    private static VariableSegmentImpl vFromMarkup
+            (String id,
+             NucleotideSequence germlineNt,
+             PrecomputedSequenceRegionMarkup<NucleotideSequence, AntigenReceptorRegionType> markup,
+             boolean majorAllele) {
+        var cdr1Markup = markup.getRegion(AntigenReceptorRegionType.CDR1);
+        var cdr2Markup = markup.getRegion(AntigenReceptorRegionType.CDR2);
+        var cdr3Markup = markup.getRegion(AntigenReceptorRegionType.CDR3);
+        return new CachedVariableSegment(id, germlineNt,
+                cdr1Markup.getStart(), cdr1Markup.getEnd(),
+                cdr2Markup.getStart(), cdr2Markup.getEnd(),
+                cdr3Markup.getStart() + 3,
+                majorAllele);
     }
 }

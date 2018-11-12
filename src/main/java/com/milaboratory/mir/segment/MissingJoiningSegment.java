@@ -5,7 +5,7 @@ import com.milaboratory.core.sequence.NucleotideSequence;
 import com.milaboratory.mir.mappers.markup.PrecomputedSequenceRegionMarkup;
 import com.milaboratory.mir.structure.AntigenReceptorRegionType;
 
-public class MissingJoiningSegment implements JoiningSegment {
+public final class MissingJoiningSegment implements JoiningSegment {
     public static MissingJoiningSegment INSTANCE = new MissingJoiningSegment();
 
     private MissingJoiningSegment() {
@@ -64,5 +64,15 @@ public class MissingJoiningSegment implements JoiningSegment {
     @Override
     public PrecomputedSequenceRegionMarkup<NucleotideSequence, AntigenReceptorRegionType> getRegionMarkupNt() {
         return PrecomputedSequenceRegionMarkup.empty(NucleotideSequence.ALPHABET, AntigenReceptorRegionType.class);
+    }
+
+    @Override
+    public int hashCode() {
+        return System.identityHashCode(this);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        return this == obj;
     }
 }

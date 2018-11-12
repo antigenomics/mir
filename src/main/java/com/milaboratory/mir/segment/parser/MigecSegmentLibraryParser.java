@@ -76,7 +76,7 @@ final class MigecSegmentLibraryParser {
                             int referencePoint = Integer.parseInt(splitLine[H.refPointColIndex]);
 
                             Consumer<String> putV = id1 -> variableSegmentMap.put(id1,
-                                    new VariableSegmentImpl(
+                                    new CachedVariableSegment(
                                             id1, seq,
                                             Math.max(0, cdr1Start), Math.max(0, cdr1End),
                                             Math.max(0, cdr2Start), Math.max(0, cdr2End),
@@ -93,7 +93,7 @@ final class MigecSegmentLibraryParser {
                             break;
 
                         case D:
-                            DiversitySegment diversitySegment = new DiversitySegmentImpl(
+                            DiversitySegment diversitySegment = new CachedDiversitySegment(
                                     id, seq, majorAllele
                             );
                             diversitySegmentMap.put(id, diversitySegment);
@@ -102,14 +102,14 @@ final class MigecSegmentLibraryParser {
                         case J:
                             referencePoint = Integer.parseInt(splitLine[H.refPointColIndex]);
 
-                            JoiningSegment joiningSegment = new JoiningSegmentImpl(
+                            JoiningSegment joiningSegment = new CachedJoiningSegment(
                                     id, seq, referencePoint, majorAllele
                             );
                             joiningSegmentMap.put(id, joiningSegment);
                             break;
 
                         case C:
-                            constantSegmentMap.put(id, new ConstantSegmentImpl(
+                            constantSegmentMap.put(id, new CachedConstantSegment(
                                     id, seq, majorAllele
                             ));
                             break;

@@ -5,7 +5,7 @@ import com.milaboratory.core.sequence.NucleotideSequence;
 import com.milaboratory.mir.mappers.markup.PrecomputedSequenceRegionMarkup;
 import com.milaboratory.mir.structure.AntigenReceptorRegionType;
 
-public class MissingVariableSegment implements VariableSegment {
+public final class MissingVariableSegment implements VariableSegment {
     public static MissingVariableSegment INSTANCE = new MissingVariableSegment();
 
     private MissingVariableSegment() {
@@ -64,5 +64,15 @@ public class MissingVariableSegment implements VariableSegment {
     @Override
     public PrecomputedSequenceRegionMarkup<NucleotideSequence, AntigenReceptorRegionType> getRegionMarkupNt() {
         return PrecomputedSequenceRegionMarkup.empty(NucleotideSequence.ALPHABET, AntigenReceptorRegionType.class);
+    }
+
+    @Override
+    public int hashCode() {
+        return System.identityHashCode(this);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        return this == obj;
     }
 }

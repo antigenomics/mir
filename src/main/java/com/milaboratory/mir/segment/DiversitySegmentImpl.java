@@ -4,6 +4,8 @@ import com.milaboratory.core.sequence.AminoAcidSequence;
 import com.milaboratory.core.sequence.NucleotideSequence;
 import com.milaboratory.mir.SequenceUtils;
 
+import java.util.Objects;
+
 public class DiversitySegmentImpl implements DiversitySegment {
     private final String id;
     private final NucleotideSequence cdr3Part, cdr3PartWithP;
@@ -53,7 +55,6 @@ public class DiversitySegmentImpl implements DiversitySegment {
         return majorAllele;
     }
 
-
     @Override
     public NucleotideSequence getGermlineSequenceNt() {
         return cdr3Part;
@@ -67,5 +68,20 @@ public class DiversitySegmentImpl implements DiversitySegment {
     @Override
     public String toString() {
         return id + "\t" + cdr3Part;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        DiversitySegmentImpl that = (DiversitySegmentImpl) o;
+        return majorAllele == that.majorAllele &&
+                Objects.equals(id, that.id) &&
+                Objects.equals(cdr3Part, that.cdr3Part);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, cdr3Part, majorAllele);
     }
 }

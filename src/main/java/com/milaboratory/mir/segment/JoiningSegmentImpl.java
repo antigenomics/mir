@@ -8,6 +8,8 @@ import com.milaboratory.mir.mappers.markup.PrecomputedSequenceRegionMarkup;
 import com.milaboratory.mir.mappers.markup.SequenceRegionMarkupUtils;
 import com.milaboratory.mir.structure.AntigenReceptorRegionType;
 
+import java.util.Objects;
+
 public class JoiningSegmentImpl implements JoiningSegment {
     private final String id;
     private final NucleotideSequence germlineNt, cdr3Part, cdr3PartWithP;
@@ -15,17 +17,6 @@ public class JoiningSegmentImpl implements JoiningSegment {
     private final PrecomputedSequenceRegionMarkup<AminoAcidSequence, AntigenReceptorRegionType> regionMarkupAa;
     private final int referencePoint;
     private final boolean majorAllele;
-
-    public static JoiningSegmentImpl fromMarkup
-            (String id,
-             NucleotideSequence germlineNt,
-             PrecomputedSequenceRegionMarkup<NucleotideSequence, AntigenReceptorRegionType> markup,
-             boolean majorAllele) {
-        var cdr3Markup = markup.getRegion(AntigenReceptorRegionType.CDR3);
-        return new JoiningSegmentImpl(id, germlineNt,
-                cdr3Markup.getEnd() - 4,
-                majorAllele);
-    }
 
     public JoiningSegmentImpl(String id,
                               NucleotideSequence germlineNt,
@@ -107,5 +98,20 @@ public class JoiningSegmentImpl implements JoiningSegment {
     @Override
     public String toString() {
         return id + "\t" + cdr3Part;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        JoiningSegmentImpl that = (JoiningSegmentImpl) o;
+        return majorAllele == that.majorAllele &&
+                Objects.equals(id, that.id) &&
+                Objects.equals(regionMarkupNt, that.regionMarkupNt);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, regionMarkupNt, majorAllele);
     }
 }

@@ -48,4 +48,14 @@ public final class AbsentDiversitySegment implements DiversitySegment {
     public boolean isMajorAllele() {
         return true;
     }
+
+    @Override
+    public int hashCode() {
+        return System.identityHashCode(this);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        return this == obj;
+    }
 }

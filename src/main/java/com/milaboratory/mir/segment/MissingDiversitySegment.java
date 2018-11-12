@@ -3,7 +3,7 @@ package com.milaboratory.mir.segment;
 import com.milaboratory.core.sequence.AminoAcidSequence;
 import com.milaboratory.core.sequence.NucleotideSequence;
 
-public class MissingDiversitySegment  implements DiversitySegment {
+public final class MissingDiversitySegment implements DiversitySegment {
     public static MissingDiversitySegment INSTANCE = new MissingDiversitySegment();
 
     private MissingDiversitySegment() {
@@ -47,5 +47,15 @@ public class MissingDiversitySegment  implements DiversitySegment {
     @Override
     public boolean isMajorAllele() {
         return true;
+    }
+
+    @Override
+    public int hashCode() {
+        return System.identityHashCode(this);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        return this == obj;
     }
 }

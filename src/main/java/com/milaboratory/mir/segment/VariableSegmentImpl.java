@@ -8,6 +8,8 @@ import com.milaboratory.mir.mappers.markup.PrecomputedSequenceRegionMarkup;
 import com.milaboratory.mir.mappers.markup.SequenceRegionMarkupUtils;
 import com.milaboratory.mir.structure.AntigenReceptorRegionType;
 
+import java.util.Objects;
+
 public class VariableSegmentImpl implements VariableSegment {
     private final String id;
     private final NucleotideSequence germlineNt, cdr3Part, cdr3PartWithP;
@@ -15,21 +17,6 @@ public class VariableSegmentImpl implements VariableSegment {
     private final PrecomputedSequenceRegionMarkup<NucleotideSequence, AntigenReceptorRegionType> regionMarkupNt;
     private final PrecomputedSequenceRegionMarkup<AminoAcidSequence, AntigenReceptorRegionType> regionMarkupAa;
     private final boolean majorAllele;
-
-    public static VariableSegmentImpl fromMarkup
-            (String id,
-             NucleotideSequence germlineNt,
-             PrecomputedSequenceRegionMarkup<NucleotideSequence, AntigenReceptorRegionType> markup,
-             boolean majorAllele) {
-        var cdr1Markup = markup.getRegion(AntigenReceptorRegionType.CDR1);
-        var cdr2Markup = markup.getRegion(AntigenReceptorRegionType.CDR2);
-        var cdr3Markup = markup.getRegion(AntigenReceptorRegionType.CDR3);
-        return new VariableSegmentImpl(id, germlineNt,
-                cdr1Markup.getStart(), cdr1Markup.getEnd(),
-                cdr2Markup.getStart(), cdr2Markup.getEnd(),
-                cdr3Markup.getStart() + 3,
-                majorAllele);
-    }
 
     public VariableSegmentImpl(String id,
                                NucleotideSequence germlineNt,
@@ -111,5 +98,20 @@ public class VariableSegmentImpl implements VariableSegment {
     @Override
     public String toString() {
         return id + "\t" + cdr3Part;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        VariableSegmentImpl that = (VariableSegmentImpl) o;
+        return majorAllele == that.majorAllele &&
+                Objects.equals(id, that.id) &&
+                Objects.equals(regionMarkupNt, that.regionMarkupNt);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, regionMarkupNt, majorAllele);
     }
 }
