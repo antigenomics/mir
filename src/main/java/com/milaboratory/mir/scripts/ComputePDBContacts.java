@@ -53,11 +53,11 @@ public class ComputePDBContacts implements Callable<Void> {
 
     @Override
     public Void call() throws Exception {
-        // createBins all missing folders in output path
+        // create all missing folders in output path
         var targetPath = new File(createPath("tmp"));
         var parent = targetPath.getParentFile();
         if (!parent.exists() && !parent.mkdirs()) {
-            throw new IllegalStateException("Couldn't createBins dir: " + parent);
+            throw new IllegalStateException("Couldn't create dir: " + parent);
         }
 
         try (var writer = new MultiTableWriter<>(Arrays.asList(

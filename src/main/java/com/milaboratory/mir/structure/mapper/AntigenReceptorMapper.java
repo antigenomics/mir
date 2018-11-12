@@ -41,6 +41,6 @@ public class AntigenReceptorMapper extends AbstractHeterodimerMapper<AntigenRece
 
     @Override
     protected AntigenReceptorChain createDummy(ChainMapperResult<AntigenReceptorRegionType> template) {
-        throw new UnsupportedOperationException("Cannot createBins dummy chain for TCR");
+        throw new UnsupportedOperationException("Cannot create dummy chain for TCR");
     }
 }
