@@ -51,7 +51,7 @@ public class MhcComplexMapper extends AbstractHeterodimerMapper<MhcRegionType, M
                     Chain.DUMMY
             );
         }
-        throw new UnsupportedOperationException("Cannot create dummy MHC chain for class II / " +
+        throw new UnsupportedOperationException("Cannot createBins dummy MHC chain for class II / " +
                 "dummy MHC class I alpha chain");
     }
 }

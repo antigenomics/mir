@@ -48,7 +48,7 @@ public class MixcrClonotypeParser extends AbstractClonotypeTableParser<ReadlessC
     public ClonotypeCall<ReadlessClonotypeImpl> parse(String[] splitLine) {
         // todo: ask Dima if its long or int
         int id = Integer.parseInt(splitLine[headerInfo.cloneIdColIndex]);
-        int count = Integer.parseInt(splitLine[headerInfo.countColIndex]);
+        int count = Math.round(Float.parseFloat(splitLine[headerInfo.countColIndex]));
         double freq = Double.parseDouble(splitLine[headerInfo.freqColIndex]);
 
         NucleotideSequence cdr3Nt = new NucleotideSequence(splitLine[headerInfo.cdr3NtColIndex]);
@@ -57,15 +57,15 @@ public class MixcrClonotypeParser extends AbstractClonotypeTableParser<ReadlessC
                 AminoAcidSequence.translateFromCenter(cdr3Nt) :
                 new AminoAcidSequence(splitLine[headerInfo.cdr3AaColIndex]);
 
-        List<SegmentCall<VariableSegment>> vCalls  = streamSegmentCalls(splitLine, headerInfo.vColIndex)
+        List<SegmentCall<VariableSegment>> vCalls = streamSegmentCalls(splitLine, headerInfo.vColIndex)
                 .map(x -> getV(x[0], Float.parseFloat(x[1])))
                 .collect(Collectors.toList());
 
-        List<SegmentCall<DiversitySegment>> dCalls  = streamSegmentCalls(splitLine, headerInfo.dColIndex)
+        List<SegmentCall<DiversitySegment>> dCalls = streamSegmentCalls(splitLine, headerInfo.dColIndex)
                 .map(x -> getD(x[0], Float.parseFloat(x[1])))
                 .collect(Collectors.toList());
 
-        List<SegmentCall<JoiningSegment>> jCalls  = streamSegmentCalls(splitLine, headerInfo.jColIndex)
+        List<SegmentCall<JoiningSegment>> jCalls = streamSegmentCalls(splitLine, headerInfo.jColIndex)
                 .map(x -> getJ(x[0], Float.parseFloat(x[1])))
                 .collect(Collectors.toList());
 

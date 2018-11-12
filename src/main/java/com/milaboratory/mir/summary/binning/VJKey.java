@@ -1,7 +1,8 @@
-package com.milaboratory.mir.summary.bin;
+package com.milaboratory.mir.summary.binning;
 
 import com.milaboratory.mir.segment.JoiningSegment;
 import com.milaboratory.mir.segment.VariableSegment;
+import com.milaboratory.mir.summary.ClonotypeKey;
 
 import java.util.Objects;
 

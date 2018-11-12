@@ -1,16 +1,18 @@
-package com.milaboratory.mir.summary.bin;
+package com.milaboratory.mir.summary.binning;
 
 import com.milaboratory.mir.clonotype.Clonotype;
 import com.milaboratory.mir.segment.JoiningSegment;
 import com.milaboratory.mir.segment.SegmentCall;
 import com.milaboratory.mir.segment.VariableSegment;
+import com.milaboratory.mir.summary.BinnedClonotype;
+import com.milaboratory.mir.summary.ClonotypeBinner;
 
 import java.util.ArrayList;
 import java.util.Collection;
 
-public class VJBinFactory<T extends Clonotype> implements ClonotypeBinFactory<T> {
+public abstract class AbstractVJBinner<T extends Clonotype, K extends VJKey> implements ClonotypeBinner<T, K> {
     @Override
-    public Collection<ClonotypeBin> create(T clonotype) {
+    public Collection<BinnedClonotype<T, K>> createBins(T clonotype) {
         float vWeightSum = 0, jWeightSum = 0;
         for (SegmentCall<VariableSegment> variableSegmentCall : clonotype.getVariableSegmentCalls()) {
             vWeightSum += variableSegmentCall.getWeight();
@@ -19,23 +21,22 @@ public class VJBinFactory<T extends Clonotype> implements ClonotypeBinFactory<T>
             jWeightSum += joiningSegmentSegmentCall.getWeight();
         }
         float weightSum = vWeightSum * jWeightSum;
-        var res = new ArrayList<ClonotypeBin>();
+        var res = new ArrayList<BinnedClonotype<T, K>>();
         for (SegmentCall<VariableSegment> variableSegmentCall : clonotype.getVariableSegmentCalls()) {
             for (SegmentCall<JoiningSegment> joiningSegmentSegmentCall : clonotype.getJoiningSegmentCalls()) {
-                res.add(new ClonotypeBin(
+                res.add(new BinnedClonotype<>(
                         createKey(variableSegmentCall.getSegment(),
                                 joiningSegmentSegmentCall.getSegment(),
                                 clonotype),
-                        variableSegmentCall.getWeight() * joiningSegmentSegmentCall.getWeight() / weightSum
+                        // todo: check nan
+                        variableSegmentCall.getWeight() * joiningSegmentSegmentCall.getWeight() / weightSum,
+                        clonotype
                 ));
             }
         }
         return res;
     }
 
-    protected ClonotypeKey createKey(VariableSegment variableSegment, JoiningSegment joiningSegment,
-                                     T clonotype) {
-        return new VJKey(variableSegment,
-                joiningSegment);
-    }
+    protected abstract K createKey(VariableSegment variableSegment, JoiningSegment joiningSegment,
+                                   T clonotype);
 }
