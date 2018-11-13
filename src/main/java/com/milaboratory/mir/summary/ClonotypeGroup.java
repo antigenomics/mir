@@ -1,5 +1,5 @@
 package com.milaboratory.mir.summary;
 
-public interface ClonotypeKey {
+public interface ClonotypeGroup {
 
 }

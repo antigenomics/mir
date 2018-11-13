@@ -4,6 +4,7 @@ import com.milaboratory.mir.structure.pdb.*;
 
 import java.io.*;
 import java.util.*;
+import java.util.stream.StreamSupport;
 
 public class PdbParserUtils {
     private static final PdbFieldCache<AtomName> atomNameCache = new PdbFieldCache<>(AtomName::new);
@@ -17,9 +18,11 @@ public class PdbParserUtils {
     private static final int PDB_LINE_SZ = 80;
 
     public static void writeStructure(Structure structure, PrintWriter pw) {
-        structure
-                .getChains()
-                .stream()
+        writeStructure(structure.getChains(), pw);
+    }
+
+    public static void writeStructure(Iterable<Chain> chains, PrintWriter pw) {
+        StreamSupport.stream(chains.spliterator(), false)
                 .filter(x -> x != Chain.DUMMY)
                 .flatMap(x -> x.getResidues().stream())
                 .flatMap(x -> x.getAtoms().stream())

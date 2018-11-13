@@ -4,15 +4,15 @@ import com.milaboratory.mir.clonotype.Clonotype;
 import com.milaboratory.mir.segment.JoiningSegment;
 import com.milaboratory.mir.segment.SegmentCall;
 import com.milaboratory.mir.segment.VariableSegment;
-import com.milaboratory.mir.summary.BinnedClonotype;
-import com.milaboratory.mir.summary.ClonotypeBinner;
+import com.milaboratory.mir.summary.WrappedClonotype;
+import com.milaboratory.mir.summary.ClonotypeGroupWrapper;
 
 import java.util.ArrayList;
 import java.util.Collection;
 
-public abstract class AbstractVJBinner<T extends Clonotype, K extends VJKey> implements ClonotypeBinner<T, K> {
+public abstract class AbstractVJGroupWrapper<T extends Clonotype, G extends VJGroup> implements ClonotypeGroupWrapper<T, G> {
     @Override
-    public Collection<BinnedClonotype<T, K>> createBins(T clonotype) {
+    public Collection<WrappedClonotype<T, G>> create(T clonotype) {
         float vWeightSum = 0, jWeightSum = 0;
         for (SegmentCall<VariableSegment> variableSegmentCall : clonotype.getVariableSegmentCalls()) {
             vWeightSum += variableSegmentCall.getWeight();
@@ -21,10 +21,10 @@ public abstract class AbstractVJBinner<T extends Clonotype, K extends VJKey> imp
             jWeightSum += joiningSegmentSegmentCall.getWeight();
         }
         float weightSum = vWeightSum * jWeightSum;
-        var res = new ArrayList<BinnedClonotype<T, K>>();
+        var res = new ArrayList<WrappedClonotype<T, G>>();
         for (SegmentCall<VariableSegment> variableSegmentCall : clonotype.getVariableSegmentCalls()) {
             for (SegmentCall<JoiningSegment> joiningSegmentSegmentCall : clonotype.getJoiningSegmentCalls()) {
-                res.add(new BinnedClonotype<>(
+                res.add(new WrappedClonotype<>(
                         createKey(variableSegmentCall.getSegment(),
                                 joiningSegmentSegmentCall.getSegment(),
                                 clonotype),
@@ -37,6 +37,6 @@ public abstract class AbstractVJBinner<T extends Clonotype, K extends VJKey> imp
         return res;
     }
 
-    protected abstract K createKey(VariableSegment variableSegment, JoiningSegment joiningSegment,
+    protected abstract G createKey(VariableSegment variableSegment, JoiningSegment joiningSegment,
                                    T clonotype);
 }

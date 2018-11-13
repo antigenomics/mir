@@ -2,12 +2,12 @@ package com.milaboratory.mir.summary;
 
 import com.milaboratory.mir.clonotype.Clonotype;
 
-public final class BinnedClonotype<T extends Clonotype, K extends ClonotypeKey> {
+public final class WrappedClonotype<T extends Clonotype, K extends ClonotypeGroup> {
     private final K clonotypeKey;
     private final double weight;
     private final T clonotype;
 
-    public BinnedClonotype(K clonotypeKey, double weight, T clonotype) {
+    public WrappedClonotype(K clonotypeKey, double weight, T clonotype) {
         this.clonotypeKey = clonotypeKey;
         this.weight = weight;
         this.clonotype = clonotype;
@@ -25,7 +25,7 @@ public final class BinnedClonotype<T extends Clonotype, K extends ClonotypeKey> 
         return clonotype;
     }
 
-    public BinnedClonotype<T, K> scaleWeight(double scalar) {
-        return new BinnedClonotype<>(clonotypeKey, weight * scalar, clonotype);
+    public WrappedClonotype<T, K> scaleWeight(double scalar) {
+        return new WrappedClonotype<>(clonotypeKey, weight * scalar, clonotype);
     }
 }

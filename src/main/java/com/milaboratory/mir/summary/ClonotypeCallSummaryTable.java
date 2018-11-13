@@ -3,14 +3,14 @@ package com.milaboratory.mir.summary;
 import com.milaboratory.mir.clonotype.Clonotype;
 import com.milaboratory.mir.clonotype.ClonotypeCall;
 
-public class ClonotypeCallSummaryTable<T extends Clonotype, K extends ClonotypeKey,
-        C extends ClonotypeCounter<ClonotypeCall<T>, K>> extends ClonotypeSummaryTable<ClonotypeCall<T>, K, C> {
+public final class ClonotypeCallSummaryTable<T extends Clonotype, G extends ClonotypeGroup, E extends GroupSummaryEntry<G>,
+        C extends ClonotypeGroupSummary<ClonotypeCall<T>, G, E>> extends ClonotypeSummaryTable<ClonotypeCall<T>, G, E, C> {
     private final boolean weightByFrequency;
 
-    public ClonotypeCallSummaryTable(ClonotypeBinner<ClonotypeCall<T>, K> clonotypeBinner,
-                                     ClonotypeCounterFactory<ClonotypeCall<T>, K, C> clonotypeCounterFactory,
+    public ClonotypeCallSummaryTable(ClonotypeGroupWrapper<ClonotypeCall<T>, G> clonotypeGroupWrapper,
+                                     ClonotypeGroupSummaryFactory<ClonotypeCall<T>, G, E, C> clonotypeGroupSummaryFactory,
                                      boolean weightByFrequency) {
-        super(clonotypeBinner, clonotypeCounterFactory,
+        super(clonotypeGroupWrapper, clonotypeGroupSummaryFactory,
                 weightByFrequency ?
                         subject -> subject :
                         subject -> subject.scaleWeight(subject.getClonotype().getFrequency()));

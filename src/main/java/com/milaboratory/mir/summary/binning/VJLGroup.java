@@ -5,10 +5,10 @@ import com.milaboratory.mir.segment.VariableSegment;
 
 import java.util.Objects;
 
-public class VJLKey extends VJKey {
+public class VJLGroup extends VJGroup {
     private final int len;
 
-    public VJLKey(VariableSegment variableSegment, JoiningSegment joiningSegment, int len) {
+    public VJLGroup(VariableSegment variableSegment, JoiningSegment joiningSegment, int len) {
         super(variableSegment, joiningSegment);
         this.len = len;
     }
@@ -22,7 +22,7 @@ public class VJLKey extends VJKey {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         if (!super.equals(o)) return false;
-        VJLKey vjlKey = (VJLKey) o;
+        VJLGroup vjlKey = (VJLGroup) o;
         return len == vjlKey.len;
     }
 

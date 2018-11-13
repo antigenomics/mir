@@ -2,15 +2,15 @@ package com.milaboratory.mir.summary.binning;
 
 import com.milaboratory.mir.segment.JoiningSegment;
 import com.milaboratory.mir.segment.VariableSegment;
-import com.milaboratory.mir.summary.ClonotypeKey;
+import com.milaboratory.mir.summary.ClonotypeGroup;
 
 import java.util.Objects;
 
-public class VJKey implements ClonotypeKey {
+public class VJGroup implements ClonotypeGroup {
     private final VariableSegment variableSegment;
     private final JoiningSegment joiningSegment;
 
-    public VJKey(VariableSegment variableSegment, JoiningSegment joiningSegment) {
+    public VJGroup(VariableSegment variableSegment, JoiningSegment joiningSegment) {
         this.variableSegment = variableSegment;
         this.joiningSegment = joiningSegment;
     }
@@ -27,7 +27,7 @@ public class VJKey implements ClonotypeKey {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        VJKey vjKey = (VJKey) o;
+        VJGroup vjKey = (VJGroup) o;
         return Objects.equals(variableSegment, vjKey.variableSegment) &&
                 Objects.equals(joiningSegment, vjKey.joiningSegment);
     }
