@@ -1,6 +1,8 @@
 package com.milaboratory.mir.clonotype.rearrangement;
 
 public class JunctionMarkup {
+    public static final JunctionMarkup DUMMY = new JunctionMarkup(-1, -1);
+
     private final int vEnd, jStart, dStart, dEnd;
 
     public JunctionMarkup(int vEnd, int jStart,
@@ -31,8 +33,12 @@ public class JunctionMarkup {
         return dEnd;
     }
 
+    public String asRow() {
+        return vEnd + "\t" + dStart + "\t" + dEnd + "\t" + jStart;
+    }
+
     @Override
     public String toString() {
-        return vEnd + "\t" + dStart + "\t" + dEnd + "\t" + jStart;
+        return asRow();
     }
 }

@@ -1,8 +1,8 @@
 package com.milaboratory.mir.structure.output;
 
 import com.milaboratory.mir.TableWriter;
-import com.milaboratory.mir.structure.pdb.geometry.ChainPrincipalAxes;
-import com.milaboratory.mir.structure.pdb.geometry.StructureAxesAndTorsions;
+import com.milaboratory.mir.structure.pdb.geometry.summary.ChainPrincipalAxes;
+import com.milaboratory.mir.structure.pdb.geometry.summary.StructureAxesAndTorsions;
 
 import java.io.OutputStream;
 import java.util.stream.Collectors;
@@ -25,9 +25,10 @@ public class PrincipalAxesWriter extends TableWriter<StructureAxesAndTorsions> {
     }
 
     private String writeChain(String prefix, ChainPrincipalAxes cpr) {
-        return prefix + "\tCM\t" + cpr.getCenterOfMass().toRow() + "\n" +
-                prefix + "\tPR1\t" + cpr.getPrincipalAxis1().toRow() + "\n" +
-                prefix + "\tPR2\t" + cpr.getPrincipalAxis2().toRow() + "\n" +
-                prefix + "\tPR3\t" + cpr.getPrincipalAxis3().toRow();
+        return prefix + "\tCM\t" + cpr.getPrincipalAxes().getInertiaTensor().getCenterOfMass().toRow() + "\n" +
+                prefix + "\tPR1\t" + cpr.getPrincipalAxes().getPrincipalAxis1().toRow() + "\n" +
+                prefix + "\tPR2\t" + cpr.getPrincipalAxes().getPrincipalAxis2().toRow() + "\n" +
+                prefix + "\tPR3\t" + cpr.getPrincipalAxes().getPrincipalAxis3().toRow() + "\n" +
+                prefix + "\tI\t" + cpr.getPrincipalAxes().getPrincipalMoments().toRow();
     }
 }

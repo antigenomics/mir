@@ -48,6 +48,6 @@ public class CaDistanceWriter extends TableWriter<StructurePairwiseDistances> {
     }
 
     protected String writeResiduePairDistances(String prefix, ResiduePairDistances residuePairDistances) {
-        return prefix + "\t" + residuePairDistances.getCaDistance();
+        return prefix + "\t" + (float)residuePairDistances.getCaDistance();
     }
 }

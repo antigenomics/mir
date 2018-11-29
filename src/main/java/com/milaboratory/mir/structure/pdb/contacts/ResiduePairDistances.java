@@ -11,10 +11,10 @@ import java.util.stream.Collectors;
 public final class ResiduePairDistances {
     private final List<AtomPairDistance> atomDistances;
     private final Residue residue1, residue2;
-    private final float caDistance;
+    private final double caDistance;
 
     private ResiduePairDistances(List<AtomPairDistance> atomDistances,
-                                 Residue residue1, Residue residue2, float caDistance) {
+                                 Residue residue1, Residue residue2, double caDistance) {
         this.atomDistances = atomDistances;
         this.residue1 = residue1;
         this.residue2 = residue2;
@@ -27,10 +27,10 @@ public final class ResiduePairDistances {
     }
 
     public ResiduePairDistances(Residue residue1, Residue residue2) {
-        this(residue1, residue2, Float.NaN);
+        this(residue1, residue2, Double.NaN);
     }
 
-    public ResiduePairDistances(Residue residue1, Residue residue2, float caDistance) {
+    public ResiduePairDistances(Residue residue1, Residue residue2, double caDistance) {
         this.residue1 = residue1;
         this.residue2 = residue2;
         this.atomDistances = new ArrayList<>();
@@ -43,7 +43,7 @@ public final class ResiduePairDistances {
         }
     }
 
-    public ResiduePairDistances filter(float maxDist) {
+    public ResiduePairDistances filter(double maxDist) {
         return new ResiduePairDistances(
                 atomDistances.stream().filter(x -> x.getDistance() <= maxDist).collect(Collectors.toList()),
                 residue1, residue2, caDistance
@@ -62,7 +62,7 @@ public final class ResiduePairDistances {
         return residue2;
     }
 
-    public float getCaDistance() {
+    public double getCaDistance() {
         return caDistance;
     }
 }

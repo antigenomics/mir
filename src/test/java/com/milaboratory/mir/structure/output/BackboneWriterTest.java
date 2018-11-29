@@ -1,13 +1,11 @@
 package com.milaboratory.mir.structure.output;
 
 import com.milaboratory.mir.structure.TestStructureCache;
-import com.milaboratory.mir.structure.pdb.geometry.StructureAxesAndTorsions;
+import com.milaboratory.mir.structure.pdb.geometry.summary.StructureAxesAndTorsions;
 import org.junit.Test;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-
-import static org.junit.Assert.*;
 
 public class BackboneWriterTest {
     @Test

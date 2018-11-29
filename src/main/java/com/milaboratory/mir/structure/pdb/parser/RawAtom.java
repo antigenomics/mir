@@ -2,7 +2,7 @@ package com.milaboratory.mir.structure.pdb.parser;
 
 import com.milaboratory.mir.structure.pdb.Atom;
 import com.milaboratory.mir.structure.pdb.geometry.CoordinateTransformation;
-import com.milaboratory.mir.structure.pdb.geometry.Coordinates;
+import com.milaboratory.mir.structure.pdb.geometry.Vector3;
 
 public final class RawAtom implements Atom<RawAtom> {
     private final AtomType atomType;
@@ -13,7 +13,7 @@ public final class RawAtom implements Atom<RawAtom> {
     private final char chainIdentifier;
     private final short residueSequenceNumber;
     private final char residueInsertionCode;
-    private final Coordinates coordinates;
+    private final Vector3 coordinates;
     private final float occupancy;
     private final float temperatureFactor;
     private final ElementSymbolWithCharge elementSymbolWithCharge;
@@ -39,14 +39,14 @@ public final class RawAtom implements Atom<RawAtom> {
         this.chainIdentifier = chainIdentifier;
         this.residueSequenceNumber = residueSequenceNumber;
         this.residueInsertionCode = residueInsertionCode;
-        this.coordinates = new Coordinates(x, y, z);
+        this.coordinates = new Vector3(x, y, z);
         this.occupancy = occupancy;
         this.temperatureFactor = temperatureFactor;
         this.elementSymbolWithCharge = elementSymbolWithCharge;
         this.sequentialResidueSequenceNumber = residueSequenceNumber;
     }
 
-    private RawAtom(RawAtom toCopy, Coordinates newCoordinates) {
+    private RawAtom(RawAtom toCopy, Vector3 newCoordinates) {
         this.atomType = toCopy.atomType;
         this.atomSerialNumber = toCopy.atomSerialNumber;
         this.atomName = toCopy.atomName;
@@ -102,7 +102,7 @@ public final class RawAtom implements Atom<RawAtom> {
     }
 
     @Override
-    public Coordinates getCoordinates() {
+    public Vector3 getCoordinates() {
         return coordinates;
     }
 

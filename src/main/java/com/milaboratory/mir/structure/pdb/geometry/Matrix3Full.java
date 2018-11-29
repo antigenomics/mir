@@ -1,13 +1,13 @@
 package com.milaboratory.mir.structure.pdb.geometry;
 
 public final class Matrix3Full implements Matrix3 {
-    private final float xx, xy, xz,
+    private final double xx, xy, xz,
             yx, yy, yz,
             zx, zy, zz;
 
-    public Matrix3Full(float xx, float xy, float xz,
-                       float yx, float yy, float yz,
-                       float zx, float zy, float zz) {
+    public Matrix3Full(double xx, double xy, double xz,
+                       double yx, double yy, double yz,
+                       double zx, double zy, double zz) {
         this.xx = xx;
         this.xy = xy;
         this.xz = xz;
@@ -19,46 +19,58 @@ public final class Matrix3Full implements Matrix3 {
         this.zz = zz;
     }
 
-    public float getXX() {
+    public Matrix3Full(double[][] values) {
+        this.xx = values[0][0];
+        this.xy = values[0][1];
+        this.xz = values[0][2];
+        this.yx = values[1][0];
+        this.yy = values[1][1];
+        this.yz = values[1][2];
+        this.zx = values[2][0];
+        this.zy = values[2][1];
+        this.zz = values[2][2];
+    }
+
+    public double getXX() {
         return xx;
     }
 
-    public float getXY() {
+    public double getXY() {
         return xy;
     }
 
-    public float getXZ() {
+    public double getXZ() {
         return xz;
     }
 
-    public float getYX() {
+    public double getYX() {
         return yx;
     }
 
-    public float getYY() {
+    public double getYY() {
         return yy;
     }
 
-    public float getYZ() {
+    public double getYZ() {
         return yz;
     }
 
-    public float getZX() {
+    public double getZX() {
         return zx;
     }
 
-    public float getZY() {
+    public double getZY() {
         return zy;
     }
 
-    public float getZZ() {
+    public double getZZ() {
         return zz;
     }
 
     @Override
     public String toString() {
-        return xx + "\t" + xy + "\t" + xz + "\n" +
-                yx + "\t" + yy + "\t" + yz + "\n" +
-                zx + "\t" + zy + "\t" + zz;
+        return "[[" + (float) xx + "," + (float) xy + "," + (float) xz + "],\n" +
+                "[" + (float) yx + "," + (float) yy + "," + (float) yz + "],\n" +
+                "[" + (float) zx + "," + (float) zy + "," + (float) zz + "]]";
     }
 }

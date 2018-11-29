@@ -1,8 +1,13 @@
 package com.milaboratory.mir.scripts;
 
+import com.milaboratory.core.mutations.Mutations;
+import com.milaboratory.core.sequence.NucleotideSequence;
 import com.milaboratory.mir.CommonUtils;
+import com.milaboratory.mir.clonotype.Clonotype;
 import com.milaboratory.mir.clonotype.parser.ClonotypeTableParserUtils;
 import com.milaboratory.mir.clonotype.parser.Software;
+import com.milaboratory.mir.clonotype.rearrangement.ClonotypeWithRearrangementInfo;
+import com.milaboratory.mir.clonotype.rearrangement.JunctionMarkup;
 import com.milaboratory.mir.graph.Cdr3NtScopedGraph;
 import com.milaboratory.mir.segment.Gene;
 import com.milaboratory.mir.segment.Species;
@@ -54,6 +59,18 @@ public class RunCdr3NtScopedGraph implements Callable<Void> {
             description = "Maximal number of NT indels allowed (default: ${DEFAULT-VALUE})")
     private int maxIndels;
 
+    @CommandLine.Option(names = {"-U", "--max-aa-substs"},
+            paramLabel = "<int>",
+            defaultValue = "-1",
+            description = "Maximal number of AA substitutions allowed, if set to (default: ${DEFAULT-VALUE}) will be recomputed from NT substitutions")
+    private int maxAaSubstitutions;
+
+    @CommandLine.Option(names = {"-D", "--max-aa-indels"},
+            paramLabel = "<int>",
+            defaultValue = "-1",
+            description = "Maximal number of AA indels allowed, if set to (default: ${DEFAULT-VALUE}) will be recomputed from NT substitutions")
+    private int maxAaIndels;
+
     @CommandLine.Option(names = {"-S", "--species"},
             required = true,
             paramLabel = "<id>",
@@ -74,23 +91,65 @@ public class RunCdr3NtScopedGraph implements Callable<Void> {
 
         var output = CommonUtils.createFileAsStream(outputPath);
         try (var pw = new PrintWriter(output)) {
-            pw.println("from.id\tto.id\tfrom.cdr3nt.aln\tto.cdr3nt.aln\tsubsts\tindels");
-            new Cdr3NtScopedGraph<>(input, kNn, maxSubstitutions, maxIndels)
+            pw.println("from.id\tto.id\tfrom.cdr3nt.aln\tto.cdr3nt.aln\tsubsts\tindels\t" +
+                    "from.v.end\tfrom.d.start\tfrom.d.end\tfrom.j.start\t" +
+                    "to.v.end\tto.d.start\tto.d.end\tto.j.start");
+            new Cdr3NtScopedGraph<>(input, kNn,
+                    maxSubstitutions, maxIndels,
+                    maxAaSubstitutions, maxAaIndels)
                     .parallelStream()
                     .forEach(edge -> {
                         var helper = edge.getAlignment().getAlignmentHelper();
                         int totalMut = edge.getAlignment().getAbsoluteMutations().size(),
                                 indels = edge.getAlignment().getAbsoluteMutations().countOfIndels();
+
+                        String seq1String = helper.getSeq1String();
+                        String seq2String = helper.getSeq2String();
+
                         pw.println(edge.getFrom().getId() + "\t" +
                                 edge.getTo().getId() + "\t" +
-                                helper.getSeq1String() + "\t" +
-                                helper.getSeq2String() + "\t" +
+                                seq1String + "\t" +
+                                seq2String + "\t" +
                                 (totalMut - indels) + "\t" +
-                                indels
+                                indels + "\t" +
+                                shiftMarkup(edge.getFrom().getClonotype(), seq1String).asRow() + "\t" +
+                                shiftMarkup(edge.getTo().getClonotype(), seq2String).asRow()
                         );
                     });
         }
 
         return null;
+    }
+
+    private static <T extends Clonotype> JunctionMarkup shiftMarkup(T clonotype,
+                                                                    String seq) {
+        // quick and dirty way to get new coords
+        JunctionMarkup junctionMarkup = clonotype instanceof ClonotypeWithRearrangementInfo ?
+                ((ClonotypeWithRearrangementInfo) clonotype).getJunctionMarkup() :
+                JunctionMarkup.DUMMY;
+
+        int vEnd = junctionMarkup.getVEnd(),
+                dStart = junctionMarkup.getDStart(),
+                dEnd = junctionMarkup.getDEnd(),
+                jStart = junctionMarkup.getJStart();
+
+        for (int i = 0; i < seq.length(); i++) {
+            if (seq.charAt(i) == '-') {
+                if (vEnd > i) {
+                    vEnd++;
+                }
+                if (dStart >= i) {
+                    dStart++;
+                }
+                if (dEnd > i) {
+                    dEnd++;
+                }
+                if (jStart >= i) {
+                    jStart++;
+                }
+            }
+        }
+
+        return new JunctionMarkup(vEnd, jStart, dStart, dEnd);
     }
 }

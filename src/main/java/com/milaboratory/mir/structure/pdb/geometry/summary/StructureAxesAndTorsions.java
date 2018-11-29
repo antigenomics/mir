@@ -1,4 +1,4 @@
-package com.milaboratory.mir.structure.pdb.geometry;
+package com.milaboratory.mir.structure.pdb.geometry.summary;
 
 import com.milaboratory.mir.structure.pdb.Chain;
 import com.milaboratory.mir.structure.pdb.Structure;

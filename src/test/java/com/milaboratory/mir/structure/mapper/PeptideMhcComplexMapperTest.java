@@ -48,6 +48,13 @@ public class PeptideMhcComplexMapperTest {
     }
 
     @Test
+    public void test4() {
+        var resOpt = map("4ozh");
+
+        Assert.assertTrue(resOpt.isPresent());
+    }
+
+    @Test
     public void test5() {
         var resOpt = map("3mbe");
 
@@ -55,8 +62,15 @@ public class PeptideMhcComplexMapperTest {
     }
 
     @Test
-    public void test4() {
-        var resOpt = map("4ozh");
+    public void test6() {
+        var resOpt = map("3pl6");
+
+        Assert.assertTrue(resOpt.isPresent());
+    }
+
+    @Test
+    public void test7() {
+        var resOpt = map("4grl");
 
         Assert.assertTrue(resOpt.isPresent());
     }

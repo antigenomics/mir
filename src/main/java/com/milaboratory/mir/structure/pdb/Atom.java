@@ -1,10 +1,10 @@
 package com.milaboratory.mir.structure.pdb;
 
 import com.milaboratory.mir.structure.pdb.geometry.CoordinateSet;
-import com.milaboratory.mir.structure.pdb.geometry.Coordinates;
+import com.milaboratory.mir.structure.pdb.geometry.PointMass;
 import com.milaboratory.mir.structure.pdb.parser.*;
 
-public interface Atom<T extends Atom<T>> extends Comparable<T>, CoordinateSet<T> {
+public interface Atom<T extends Atom<T>> extends Comparable<T>, CoordinateSet<T>, PointMass {
     AtomType getAtomType();
 
     short getAtomSerialNumber();
@@ -27,7 +27,9 @@ public interface Atom<T extends Atom<T>> extends Comparable<T>, CoordinateSet<T>
 
     float getTemperatureFactor();
 
-    Coordinates getCoordinates();
-
     ElementSymbolWithCharge getElementSymbolWithCharge();
+
+    default double getMass() {
+        return getAtomName().getAtomicWeight();
+    }
 }

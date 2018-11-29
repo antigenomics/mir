@@ -2,9 +2,8 @@ package com.milaboratory.mir.structure.pdb.geometry;
 
 import com.milaboratory.mir.structure.TestStructureCache;
 import com.milaboratory.mir.structure.pdb.Residue;
+import com.milaboratory.mir.structure.pdb.geometry.summary.ResidueBackbone;
 import org.junit.Test;
-
-import static org.junit.Assert.*;
 
 public class ResidueBackboneTest {
     @Test

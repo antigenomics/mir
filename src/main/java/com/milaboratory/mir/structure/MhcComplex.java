@@ -1,6 +1,10 @@
 package com.milaboratory.mir.structure;
 
 import com.milaboratory.mir.mhc.MhcClassType;
+import com.milaboratory.mir.structure.pdb.ChainRegion;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public final class MhcComplex implements HeterodimerComplex<MhcRegionType, MhcChain> {
     private final MhcChain firstChain, secondChain;

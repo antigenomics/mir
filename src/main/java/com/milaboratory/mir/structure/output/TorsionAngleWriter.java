@@ -1,6 +1,6 @@
 package com.milaboratory.mir.structure.output;
 
-import com.milaboratory.mir.structure.pdb.geometry.ResidueTorsionAngles;
+import com.milaboratory.mir.structure.pdb.geometry.summary.ResidueTorsionAngles;
 
 import java.io.OutputStream;
 

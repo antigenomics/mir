@@ -2,7 +2,7 @@ package com.milaboratory.mir.scripts;
 
 import com.milaboratory.mir.MultiTableWriter;
 import com.milaboratory.mir.structure.output.*;
-import com.milaboratory.mir.structure.pdb.geometry.StructureAxesAndTorsions;
+import com.milaboratory.mir.structure.pdb.geometry.summary.StructureAxesAndTorsions;
 import com.milaboratory.mir.structure.pdb.parser.PdbParserUtils;
 import picocli.CommandLine;
 

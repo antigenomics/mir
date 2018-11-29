@@ -7,6 +7,7 @@ import com.milaboratory.mir.mappers.align.SimpleExhaustiveMapperFactory;
 import com.milaboratory.mir.segment.Gene;
 import com.milaboratory.mir.segment.Species;
 import com.milaboratory.mir.segment.parser.MigecSegmentLibraryUtils;
+import com.milaboratory.mir.structure.TestStructureCache;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -127,4 +128,18 @@ public class ReceptorMarkupRealignerAaTest {
                 new SequenceRegion<>(FR4, new AminoAcidSequence("GPGTRLTVT"), 106, 115),
                 resUnboxed.getRegion(FR4));
     }
+
+//    @Test
+//    public void test3() {
+//        var struct = TestStructureCache.get("3vxu");
+//        var realigner = new ReceptorMarkupRealignerAa(
+//                MigecSegmentLibraryUtils.getLibraryFromResources(Species.Human, Gene.TRA),
+//                new SimpleExhaustiveMapperFactory<>(
+//                AffineGapAlignmentScoring.getAminoAcidBLASTScoring(BLASTMatrix.BLOSUM62)
+//        ), true
+//        );
+//
+//        System.out.println(struct.getChain('D').getSequence());
+//        realigner.recomputeMarkup(struct.getChain('D').getSequence());
+//    }
 }

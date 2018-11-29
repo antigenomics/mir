@@ -13,14 +13,15 @@ public final class SequenceRegionMarkupUtils {
 
     }
 
-    public static <S extends Sequence<S>> int targetToQueryPosition(int pos, Alignment<S> alignment) {
+    public static <S extends Sequence<S>> int targetToQueryPosition(int pos,
+                                                                    Alignment<S> alignment) {
         if (pos <= alignment.getSequence1Range().getFrom()) {
             return alignment.getSequence2Range().getFrom();
         } else if (pos >= alignment.getSequence1Range().getTo()) {
             return alignment.getSequence2Range().getTo();
         } else {
             int newPos = alignment.convertToSeq2Position(pos);
-            return newPos < 0 ? 2 - newPos : newPos;
+            return newPos < 0 ? -newPos : newPos;
         }
     }
 

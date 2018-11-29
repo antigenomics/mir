@@ -1,28 +1,28 @@
 package com.milaboratory.mir.structure.pdb.geometry;
 
 import java.util.Arrays;
-import java.util.List;
+import java.util.stream.Collectors;
 
 public interface Matrix3 {
-    float getXX();
+    double getXX();
 
-    float getXY();
+    double getXY();
 
-    float getXZ();
+    double getXZ();
 
-    float getYX();
+    double getYX();
 
-    float getYY();
+    double getYY();
 
-    float getYZ();
+    double getYZ();
 
-    float getZX();
+    double getZX();
 
-    float getZY();
+    double getZY();
 
-    float getZZ();
+    double getZZ();
 
-    default float trace() {
+    default double trace() {
         return getXX() + getYY() + getZZ();
     }
 
@@ -34,11 +34,11 @@ public interface Matrix3 {
         };
     }
 
-    default Coordinates[] asVectors() {
-        return new Coordinates[]{
-                new Coordinates(getXX(), getYX(), getZX()),
-                new Coordinates(getXY(), getYY(), getZY()),
-                new Coordinates(getXZ(), getYZ(), getZZ())
+    default Vector3[] asVectors() {
+        return new Vector3[]{
+                new Vector3(getXX(), getYX(), getZX()),
+                new Vector3(getXY(), getYY(), getZY()),
+                new Vector3(getXZ(), getYZ(), getZZ())
         };
     }
 }

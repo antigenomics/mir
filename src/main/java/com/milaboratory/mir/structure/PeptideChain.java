@@ -33,6 +33,11 @@ public final class PeptideChain implements StructureChainWithMarkup<PeptideRegio
     }
 
     @Override
+    public String getAlleleInfoStr() {
+        return sequence.toString();
+    }
+
+    @Override
     public String getChainTypeStr() {
         return ComplexComponentType.PEPTIDE.toString();
     }

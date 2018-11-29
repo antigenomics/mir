@@ -2,11 +2,11 @@ package com.milaboratory.mir.structure.pdb.contacts;
 
 import com.milaboratory.mir.structure.pdb.Residue;
 import com.milaboratory.mir.structure.pdb.geometry.GeometryUtils;
-import com.milaboratory.mir.structure.pdb.geometry.ResidueBackbone;
+import com.milaboratory.mir.structure.pdb.geometry.summary.ResidueBackbone;
 
 public final class ResiduePairCaDistance {
     private final Residue residue1, residue2;
-    private final float caDistance;
+    private final double caDistance;
 
     public ResiduePairCaDistance(Residue residue1, Residue residue2, float caDistance) {
         this.residue1 = residue1;
@@ -20,7 +20,7 @@ public final class ResiduePairCaDistance {
         this.caDistance = caDistanceSafe(residue1, residue2);
     }
 
-    private static float caDistanceSafe(Residue residue1, Residue residue2) {
+    private static double caDistanceSafe(Residue residue1, Residue residue2) {
         var ca1 = new ResidueBackbone(residue1).getCA();
         var ca2 = new ResidueBackbone(residue2).getCA();
 
@@ -47,7 +47,7 @@ public final class ResiduePairCaDistance {
         return residue2;
     }
 
-    public float getCaDistance() {
+    public double getCaDistance() {
         return caDistance;
     }
 }

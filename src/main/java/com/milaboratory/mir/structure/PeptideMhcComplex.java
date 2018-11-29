@@ -1,5 +1,10 @@
 package com.milaboratory.mir.structure;
 
+import com.milaboratory.mir.structure.pdb.ChainRegion;
+
+import java.util.ArrayList;
+import java.util.List;
+
 public final class PeptideMhcComplex {
     private final PeptideChain peptideChain;
     private final MhcComplex mhcComplex;
@@ -15,5 +20,14 @@ public final class PeptideMhcComplex {
 
     public MhcComplex getMhcComplex() {
         return mhcComplex;
+    }
+
+    public List<ChainRegion> getRegions() {
+        var regions = new ArrayList<ChainRegion>();
+
+        regions.addAll(getMhcComplex().getRegions());
+        regions.addAll(getPeptideChain().getRegions());
+
+        return regions;
     }
 }

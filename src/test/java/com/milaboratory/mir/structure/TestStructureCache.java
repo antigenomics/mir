@@ -5,6 +5,8 @@ import com.milaboratory.mir.structure.pdb.Structure;
 import com.milaboratory.mir.structure.pdb.parser.PdbParserUtils;
 
 import java.io.IOException;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -28,6 +30,15 @@ public class TestStructureCache {
             cache.put("3mbe",
                     PdbParserUtils.parseStructure("3mbe_al", TestUtils.streamFrom("structures/3mbe_al.pdb"))
             );
+            cache.put("3pl6",
+                    PdbParserUtils.parseStructure("3pl6_al", TestUtils.streamFrom("structures/3pl6_al.pdb"))
+            );
+            //cache.put("3vxu",
+            //        PdbParserUtils.parseStructure("3vxu_al", TestUtils.streamFrom("structures/3vxu_al.pdb"))
+            //); // todo
+            cache.put("4grl",
+                    PdbParserUtils.parseStructure("4grl_al", TestUtils.streamFrom("structures/4grl_al.pdb"))
+            );
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -35,5 +46,9 @@ public class TestStructureCache {
 
     public static Structure get(String id) {
         return cache.get(id);
+    }
+
+    public static Collection<String> getNames() {
+        return Collections.unmodifiableSet(cache.keySet());
     }
 }

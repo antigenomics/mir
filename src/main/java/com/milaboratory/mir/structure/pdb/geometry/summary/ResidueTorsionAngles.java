@@ -1,11 +1,12 @@
-package com.milaboratory.mir.structure.pdb.geometry;
+package com.milaboratory.mir.structure.pdb.geometry.summary;
 
 import com.milaboratory.mir.structure.pdb.Atom;
 import com.milaboratory.mir.structure.pdb.Residue;
+import com.milaboratory.mir.structure.pdb.geometry.GeometryUtils;
 
 public final class ResidueTorsionAngles {
     private final ResidueBackbone previous, current, next;
-    private final float phi, psi, omega;
+    private final double phi, psi, omega;
 
     public ResidueTorsionAngles(Residue previous, Residue current, Residue next) {
         this(new ResidueBackbone(previous), new ResidueBackbone(current), new ResidueBackbone(next));
@@ -34,7 +35,7 @@ public final class ResidueTorsionAngles {
                 ));
     }
 
-    private static float computeTorsionAngleSafe(Atom a1, Atom a2, Atom a3, Atom a4) {
+    private static double computeTorsionAngleSafe(Atom a1, Atom a2, Atom a3, Atom a4) {
         if (a1 == null || a2 == null || a3 == null || a4 == null) {
             return Float.NaN;
         }
@@ -45,7 +46,7 @@ public final class ResidueTorsionAngles {
     }
 
     ResidueTorsionAngles(ResidueBackbone previous, ResidueBackbone current, ResidueBackbone next,
-                         float phi, float psi, float omega) {
+                         double phi, double psi, double omega) {
         this.previous = previous;
         this.current = current;
         this.next = next;
@@ -66,24 +67,26 @@ public final class ResidueTorsionAngles {
         return next;
     }
 
-    public float getPhi() {
+    public double getPhi() {
         return phi;
     }
 
-    public float getPsi() {
+    public double getPsi() {
         return psi;
     }
 
-    public float getOmega() {
+    public double getOmega() {
         return omega;
     }
 
     public String asRow() {
-        return phi + "\t" + psi + "\t" + omega;
+        return (float) phi + "\t" + (float) psi + "\t" + (float) omega;
     }
 
     @Override
     public String toString() {
-        return current.getResidue().toShortString() + "\t" + phi + "\t" + psi + "\t" + omega;
+        return current.getResidue().toShortString() + " [" + (float) (phi * 180 / Math.PI) + ", " +
+                (float) (psi * 180 / Math.PI) + ", " +
+                (float) (omega * 180 / Math.PI) + "]";
     }
 }

@@ -21,13 +21,14 @@ public class PdbParserUtils {
         writeStructure(structure.getChains(), pw);
     }
 
-    public static void writeStructure(Iterable<Chain> chains, PrintWriter pw) {
-        StreamSupport.stream(chains.spliterator(), false)
-                .filter(x -> x != Chain.DUMMY)
+    public static void writeStructure(Iterable<? extends Chain> chains, PrintWriter pw) {
+        StreamSupport.stream(
+                chains.spliterator(), false)
+                .filter(x -> x != Chain.DUMMY && !x.getResidues().isEmpty())
                 .flatMap(x -> x.getResidues().stream())
                 .flatMap(x -> x.getAtoms().stream())
                 .sorted()
-                .forEach(PdbParserUtils::writeAtom);
+                .forEach(x -> pw.println(writeAtom(x)));
         pw.write("END");
         pw.close();
     }
@@ -119,9 +120,9 @@ public class PdbParserUtils {
                 String.valueOf(writeShort(atom.getResidueSequenceNumber(), 4)) +
                 atom.getResidueInsertionCode() +
                 "   " +
-                String.valueOf(writeFloat(atom.getCoordinates().getX(), 8, 3)) +
-                String.valueOf(writeFloat(atom.getCoordinates().getY(), 8, 3)) +
-                String.valueOf(writeFloat(atom.getCoordinates().getZ(), 8, 3)) +
+                String.valueOf(writeFloat((float) atom.getCoordinates().getX(), 8, 3)) +
+                String.valueOf(writeFloat((float) atom.getCoordinates().getY(), 8, 3)) +
+                String.valueOf(writeFloat((float) atom.getCoordinates().getZ(), 8, 3)) +
                 String.valueOf(writeFloat(atom.getOccupancy(), 6, 2)) +
                 String.valueOf(writeFloat(atom.getTemperatureFactor(), 6, 2)) +
                 //     0123456789

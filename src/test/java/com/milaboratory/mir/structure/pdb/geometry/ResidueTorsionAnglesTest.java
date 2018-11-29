@@ -3,6 +3,7 @@ package com.milaboratory.mir.structure.pdb.geometry;
 import com.milaboratory.mir.structure.TestStructureCache;
 import com.milaboratory.mir.structure.pdb.Chain;
 import com.milaboratory.mir.structure.pdb.Residue;
+import com.milaboratory.mir.structure.pdb.geometry.summary.ResidueTorsionAngles;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -28,6 +29,6 @@ public class ResidueTorsionAnglesTest {
                 res3 = chain.getResidue(76);
 
         ResidueTorsionAngles x = new ResidueTorsionAngles(res1, res2, res3);
-        Assert.assertTrue(!Float.isNaN(x.getOmega()));
+        Assert.assertTrue(!Double.isNaN(x.getOmega()));
     }
 }

@@ -4,16 +4,16 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class AtomName extends PdbField {
-    private static final Map<Character, Float> atomicWeights = new ConcurrentHashMap<>();
+    private static final Map<Character, Double> atomicWeights = new ConcurrentHashMap<>();
 
     static {
-        atomicWeights.put('C', 12.011f);
-        atomicWeights.put('N', 14.007f);
-        atomicWeights.put('O', 15.999f);
-        atomicWeights.put('S', 32.06f);
+        atomicWeights.put('C', 12.011);
+        atomicWeights.put('N', 14.007);
+        atomicWeights.put('O', 15.999);
+        atomicWeights.put('S', 32.060);
     }
 
-    private final float atomicWeight;
+    private final double atomicWeight;
     private final Character letter;
 
     public AtomName(String value) {
@@ -22,10 +22,10 @@ public class AtomName extends PdbField {
             throw new IllegalArgumentException("Should be 4 characters long");
         }
         this.letter = value.charAt(1);
-        this.atomicWeight = atomicWeights.getOrDefault(letter, 0.0f);
+        this.atomicWeight = atomicWeights.getOrDefault(letter, 0.0d);
     }
 
-    public float getAtomicWeight() {
+    public double getAtomicWeight() {
         return atomicWeight;
     }
 

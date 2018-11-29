@@ -5,7 +5,7 @@ import com.milaboratory.mir.structure.pdb.geometry.GeometryUtils;
 
 public final class AtomPairDistance {
     private final Atom atom1, atom2;
-    private final float distance;
+    private final double distance;
 
     public AtomPairDistance(Atom atom1, Atom atom2) {
         this.atom1 = atom1;
@@ -21,7 +21,7 @@ public final class AtomPairDistance {
         return atom2;
     }
 
-    public float getDistance() {
+    public double getDistance() {
         return distance;
     }
 }

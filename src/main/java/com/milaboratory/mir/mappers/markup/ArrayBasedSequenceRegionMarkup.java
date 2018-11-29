@@ -119,10 +119,12 @@ public final class ArrayBasedSequenceRegionMarkup<S extends Sequence<S>, E exten
         }
 
         int[] newMarkup = new int[markup.length];
-
-        for (int i = 0; i < markup.length; i++) {
+        int lastPos = markup.length - 1;
+        for (int i = 0; i < lastPos; i++) {
             newMarkup[i] = SequenceRegionMarkupUtils.targetToQueryPosition(markup[i], alignment);
         }
+
+        newMarkup[lastPos] = SequenceRegionMarkupUtils.targetToQueryPosition(markup[lastPos], alignment);
 
         return new ArrayBasedSequenceRegionMarkup<>(fullSequence, newMarkup, regionTypeClass, true);
     }

@@ -1,7 +1,7 @@
 package com.milaboratory.mir.structure.pdb;
 
 import com.milaboratory.mir.structure.pdb.geometry.CoordinateTransformation;
-import com.milaboratory.mir.structure.pdb.geometry.Coordinates;
+import com.milaboratory.mir.structure.pdb.geometry.Vector3;
 import com.milaboratory.mir.structure.pdb.parser.*;
 
 public final class AtomImpl implements Atom<AtomImpl> {
@@ -10,7 +10,7 @@ public final class AtomImpl implements Atom<AtomImpl> {
     private final short atomSerialNumber;
     private final AtomName atomName;
     private final char alternativeLocationIdentifier;
-    private final Coordinates coordinates;
+    private final Vector3 coordinates;
     private final float occupancy;
     private final float temperatureFactor;
     private final ElementSymbolWithCharge elementSymbolWithCharge;
@@ -20,7 +20,7 @@ public final class AtomImpl implements Atom<AtomImpl> {
                     short atomSerialNumber,
                     AtomName atomName,
                     char alternativeLocationIdentifier,
-                    Coordinates coordinates,
+                    Vector3 coordinates,
                     float occupancy,
                     float temperatureFactor,
                     ElementSymbolWithCharge elementSymbolWithCharge) {
@@ -35,7 +35,7 @@ public final class AtomImpl implements Atom<AtomImpl> {
         this.elementSymbolWithCharge = elementSymbolWithCharge;
     }
 
-    private AtomImpl(AtomImpl toCopy, Coordinates newCoordinates) {
+    private AtomImpl(AtomImpl toCopy, Vector3 newCoordinates) {
         this.parent = toCopy.parent;
         this.atomType = toCopy.atomType;
         this.atomSerialNumber = toCopy.atomSerialNumber;
@@ -103,7 +103,7 @@ public final class AtomImpl implements Atom<AtomImpl> {
     }
 
     @Override
-    public Coordinates getCoordinates() {
+    public Vector3 getCoordinates() {
         return coordinates;
     }
 

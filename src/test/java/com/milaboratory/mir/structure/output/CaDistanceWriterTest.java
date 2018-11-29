@@ -2,13 +2,10 @@ package com.milaboratory.mir.structure.output;
 
 import com.milaboratory.mir.structure.TestStructureCache;
 import com.milaboratory.mir.structure.pdb.contacts.StructurePairwiseDistances;
-import com.milaboratory.mir.structure.pdb.geometry.StructureAxesAndTorsions;
 import org.junit.Test;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-
-import static org.junit.Assert.*;
 
 public class CaDistanceWriterTest {
     @Test

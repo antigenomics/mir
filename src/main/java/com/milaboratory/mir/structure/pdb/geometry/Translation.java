@@ -2,15 +2,15 @@ package com.milaboratory.mir.structure.pdb.geometry;
 
 public final class Translation implements CoordinateTransformation {
 
-    private final Coordinates offset;
+    private final Vector3 offset;
 
-    public Translation(Coordinates offset) {
+    public Translation(Vector3 offset) {
         this.offset = offset;
     }
 
     @Override
-    public Coordinates apply(Coordinates coordinates) {
-        return new Coordinates(coordinates.getX() + offset.getX(),
+    public Vector3 apply(Vector3 coordinates) {
+        return new Vector3(coordinates.getX() + offset.getX(),
                 coordinates.getY() + offset.getY(),
                 coordinates.getZ() + offset.getZ());
     }

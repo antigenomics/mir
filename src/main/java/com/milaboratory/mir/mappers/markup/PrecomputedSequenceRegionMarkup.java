@@ -81,6 +81,7 @@ public final class PrecomputedSequenceRegionMarkup<S extends Sequence<S>, E exte
         for (SequenceRegion<S, E> region : regionMap.values()) {
             int start = SequenceRegionMarkupUtils.targetToQueryPosition(region.getStart(), alignment),
                     end = SequenceRegionMarkupUtils.targetToQueryPosition(region.getEnd(), alignment);
+
             newRegionMap.put(region.getRegionType(),
                     SequenceRegion.cutFrom(region.getRegionType(), querySequence, start, end));
         }

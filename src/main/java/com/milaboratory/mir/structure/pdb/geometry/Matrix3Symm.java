@@ -1,9 +1,9 @@
 package com.milaboratory.mir.structure.pdb.geometry;
 
 public final class Matrix3Symm implements Matrix3 {
-    private final float xx, xy, xz, yy, yz, zz;
+    private final double xx, xy, xz, yy, yz, zz;
 
-    public Matrix3Symm(float xx, float xy, float xz, float yy, float yz, float zz) {
+    public Matrix3Symm(double xx, double xy, double xz, double yy, double yz, double zz) {
         this.xx = xx;
         this.xy = xy;
         this.xz = xz;
@@ -13,54 +13,54 @@ public final class Matrix3Symm implements Matrix3 {
     }
 
     @Override
-    public float getXX() {
+    public double getXX() {
         return xx;
     }
 
     @Override
-    public float getXY() {
+    public double getXY() {
         return xy;
     }
 
     @Override
-    public float getXZ() {
+    public double getXZ() {
         return xz;
     }
 
     @Override
-    public float getYX() {
+    public double getYX() {
         return xy;
     }
 
     @Override
-    public float getYY() {
+    public double getYY() {
         return yy;
     }
 
     @Override
-    public float getYZ() {
+    public double getYZ() {
         return yz;
     }
 
     @Override
-    public float getZX() {
+    public double getZX() {
         return xz;
     }
 
     @Override
-    public float getZY() {
+    public double getZY() {
         return yz;
     }
 
     @Override
-    public float getZZ() {
+    public double getZZ() {
         return zz;
     }
 
     @Override
     public String toString() {
-        return xx + "\t" + xy + "\t" + xz + "\n" +
-                ".\t" + yy + "\t" + yz + "\n" +
-                ".\t" + ".\t" + zz;
+        return "[[" + (float) xx + "," + (float) xy + "," + (float) xz + "],\n" +
+                "[" + "_," + "_," + (float) yz + "],\n" +
+                "[" + "_," + "_," + (float) zz + "]]";
     }
 }

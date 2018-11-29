@@ -1,10 +1,10 @@
 package com.milaboratory.mir.structure.output;
 
 import com.milaboratory.mir.TableWriter;
-import com.milaboratory.mir.structure.pdb.geometry.ChainTorsionAngles;
-import com.milaboratory.mir.structure.pdb.geometry.Coordinates;
-import com.milaboratory.mir.structure.pdb.geometry.ResidueTorsionAngles;
-import com.milaboratory.mir.structure.pdb.geometry.StructureAxesAndTorsions;
+import com.milaboratory.mir.structure.pdb.geometry.summary.ChainTorsionAngles;
+import com.milaboratory.mir.structure.pdb.geometry.Vector3;
+import com.milaboratory.mir.structure.pdb.geometry.summary.ResidueTorsionAngles;
+import com.milaboratory.mir.structure.pdb.geometry.summary.StructureAxesAndTorsions;
 
 import java.io.OutputStream;
 import java.util.stream.Collectors;
@@ -46,6 +46,6 @@ public class BackboneWriter extends TableWriter<StructureAxesAndTorsions> {
 
     protected String writeBackboneRow(ResidueTorsionAngles residueTorsionAngles) {
         var ca = residueTorsionAngles.getCurrent().getCA();
-        return (ca == null ? new Coordinates(Float.NaN, Float.NaN, Float.NaN) : ca.getCoordinates()).toRow();
+        return (ca == null ? new Vector3(Double.NaN, Double.NaN, Double.NaN) : ca.getCoordinates()).toRow();
     }
 }

@@ -18,17 +18,17 @@ import java.util.List;
 import java.util.stream.Stream;
 
 public class Cdr3NtScopedGraph<T extends Clonotype>
-        implements Pipe<ClonotypeEdgeWithAlignment<T, NucleotideSequence>> {
+        implements Pipe<ClonotypeEdgeWithCdr3Alignment<T, NucleotideSequence>> {
     private final StmMapper<T, AminoAcidSequence> stmMapper;
-    private final SequenceSearchScope ntSearchScope;
+    private final SequenceSearchScope ntSearchScope, aaSearchScope;
     private final boolean requireSegmentMatch;
     private final int k;
 
     public Cdr3NtScopedGraph(Pipe<T> clonotypes,
                              int k,
                              SequenceSearchScope ntSearchScope,
-                             boolean requireSegmentMatch,
-                             SequenceSearchScope aaSearchScope) {
+                             SequenceSearchScope aaSearchScope,
+                             boolean requireSegmentMatch) {
         this.stmMapper = new StmMapper<>(
                 clonotypes.stream(),
                 Clonotype::getCdr3Aa,
@@ -37,49 +37,55 @@ public class Cdr3NtScopedGraph<T extends Clonotype>
                 DummyExplicitAlignmentScoring.instance()
         );
         this.ntSearchScope = ntSearchScope;
+        this.aaSearchScope = aaSearchScope;
         this.requireSegmentMatch = requireSegmentMatch;
         this.k = k;
     }
 
     public Cdr3NtScopedGraph(Pipe<T> clonotypes,
                              int k,
-                             SequenceSearchScope ntSearchScope,
+                             int maxSubstitutions, int maxIndels,
+                             int maxAaSubstitutions, int maxAaIndels,
                              boolean requireSegmentMatch) {
-        this(clonotypes, k, ntSearchScope, requireSegmentMatch,
-                new SequenceSearchScope(ntSearchScope.getMaxSubstitutions() / 3,
-                        getAaCount(ntSearchScope.getMaxDeletions()),
-                        getAaCount(ntSearchScope.getMaxInsertions()),
-                        getAaCount(ntSearchScope.getMaxTotal()),
-                        ntSearchScope.isExhaustive(),
-                        ntSearchScope.isGreedy()));
-    }
-
-    private static int getAaCount(int ntCount) {
-        return ntCount / 3 + (ntCount % 3 == 0 ? 0 : 1);
+        this(clonotypes, k,
+                getSearchScope(maxSubstitutions, maxIndels),
+                getSearchScope(
+                        calcOrGetAaCount(maxSubstitutions, maxAaSubstitutions),
+                        calcOrGetAaCount(maxIndels, maxAaIndels)),
+                requireSegmentMatch
+        );
     }
 
     public Cdr3NtScopedGraph(Pipe<T> clonotypes,
                              int k,
-                             int maxSubstitutions, int maxIndels, int maxTotal,
-                             boolean requireSegmentMatch) {
-        this(clonotypes, k, new
-                        SequenceSearchScope(maxSubstitutions, maxIndels, maxTotal, false, true),
-                requireSegmentMatch);
-    }
-
-    public Cdr3NtScopedGraph(Pipe<T> clonotypes,
-                             int k,
-                             int maxSubstitutions, int maxIndels, int maxTotal) {
-        this(clonotypes, k, maxSubstitutions, maxIndels, maxTotal, true);
+                             int maxSubstitutions, int maxIndels,
+                             int maxAaSubstitutions, int maxAaIndels) {
+        this(clonotypes, k, maxSubstitutions, maxIndels, maxAaSubstitutions, maxAaIndels, true);
     }
 
     public Cdr3NtScopedGraph(Pipe<T> clonotypes,
                              int k,
                              int maxSubstitutions, int maxIndels) {
-        this(clonotypes, k, maxSubstitutions, maxIndels, maxIndels + maxSubstitutions);
+        this(clonotypes, k, maxSubstitutions, maxIndels, calcAaCount(maxSubstitutions), calcAaCount(maxIndels));
     }
 
-    private Stream<ClonotypeEdgeWithAlignment<T, NucleotideSequence>> flatMap(Stream<T> stream) {
+    private static SequenceSearchScope getSearchScope(int maxSubstitutions, int maxIndels) {
+        return new SequenceSearchScope(maxSubstitutions,
+                maxIndels,
+                maxSubstitutions + maxIndels,
+                false,
+                true);
+    }
+
+    private static int calcOrGetAaCount(int ntCount, int aaCount) {
+        return aaCount < 0 ? calcAaCount(ntCount) : aaCount;
+    }
+
+    private static int calcAaCount(int ntCount) {
+        return ntCount / 3 + (ntCount % 3 == 0 ? 0 : 1);
+    }
+
+    private Stream<ClonotypeEdgeWithCdr3Alignment<T, NucleotideSequence>> flatMap(Stream<T> stream) {
         return stream
                 .flatMap(from ->
                         stmMapper
@@ -90,7 +96,7 @@ public class Cdr3NtScopedGraph<T extends Clonotype>
                                 .limit(k)
                                 .map(hit -> {
                                             var to = hit.getTarget();
-                                            return new ClonotypeEdgeWithAlignment<>(
+                                            return new ClonotypeEdgeWithCdr3Alignment<>(
                                                     from, to,
                                                     getAlignment(from, to)
                                             );
@@ -127,7 +133,7 @@ public class Cdr3NtScopedGraph<T extends Clonotype>
         return false;
     }
 
-    private boolean passesFilter(ClonotypeEdgeWithAlignment<T, NucleotideSequence> edge) {
+    private boolean passesFilter(ClonotypeEdgeWithCdr3Alignment<T, NucleotideSequence> edge) {
         return (!requireSegmentMatch ||
                 (segmentsMatch(edge.getFrom().getVariableSegmentCalls(), edge.getTo().getVariableSegmentCalls()) &&
                         segmentsMatch(edge.getFrom().getJoiningSegmentCalls(), edge.getTo().getJoiningSegmentCalls()))) &&
@@ -135,13 +141,28 @@ public class Cdr3NtScopedGraph<T extends Clonotype>
     }
 
     @Override
-    public Stream<ClonotypeEdgeWithAlignment<T, NucleotideSequence>> stream() {
+    public Stream<ClonotypeEdgeWithCdr3Alignment<T, NucleotideSequence>> stream() {
         return flatMap(stmMapper.stream());
-
     }
 
     @Override
-    public Stream<ClonotypeEdgeWithAlignment<T, NucleotideSequence>> parallelStream() {
+    public Stream<ClonotypeEdgeWithCdr3Alignment<T, NucleotideSequence>> parallelStream() {
         return flatMap(stmMapper.parallelStream());
+    }
+
+    public SequenceSearchScope getNtSearchScope() {
+        return ntSearchScope;
+    }
+
+    public SequenceSearchScope getAaSearchScope() {
+        return aaSearchScope;
+    }
+
+    public boolean isRequireSegmentMatch() {
+        return requireSegmentMatch;
+    }
+
+    public int getK() {
+        return k;
     }
 }

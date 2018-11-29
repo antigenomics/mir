@@ -1,7 +1,11 @@
 package com.milaboratory.mir.structure;
 
 import com.milaboratory.mir.segment.Species;
+import com.milaboratory.mir.structure.pdb.ChainRegion;
 import com.milaboratory.mir.structure.pdb.Structure;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public final class TcrPeptideMhcComplex {
     private final AntigenReceptor antigenReceptor;
@@ -35,5 +39,14 @@ public final class TcrPeptideMhcComplex {
 
     public Structure getStructure() {
         return structure;
+    }
+
+    public List<ChainRegion> getRegions() {
+        var regions = new ArrayList<ChainRegion>();
+
+        regions.addAll(antigenReceptor.getRegions());
+        regions.addAll(peptideMhcComplex.getRegions());
+
+        return regions;
     }
 }

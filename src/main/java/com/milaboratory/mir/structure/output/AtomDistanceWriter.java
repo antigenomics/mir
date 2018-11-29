@@ -21,7 +21,7 @@ public class AtomDistanceWriter extends CaDistanceWriter {
                 .map(x -> prefix + "\t" +
                         x.getAtom1().getAtomName().getLetter() + "\t" +
                         x.getAtom2().getAtomName().getLetter() + "\t" +
-                        x.getDistance())
+                        (float) x.getDistance())
                 .collect(Collectors.joining("\n"));
     }
 }
