@@ -3,6 +3,8 @@ package com.milaboratory.mir.clonotype.rearrangement;
 public class SegmentTrimming {
     private final int vTrimming, jTrimming, dTrimming5, dTrimming3;
 
+    public static final SegmentTrimming DUMMY = new SegmentTrimming(-1, -1);
+
     public SegmentTrimming(int vTrimming, int jTrimming, int dTrimming5, int dTrimming3) {
         this.vTrimming = vTrimming;
         this.jTrimming = jTrimming;

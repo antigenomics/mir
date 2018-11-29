@@ -18,6 +18,28 @@ public class ReadlessClonotypeImpl implements ClonotypeWithRearrangementInfo {
     private final List<SegmentCall<JoiningSegment>> joiningSegmentCalls;
     private final List<SegmentCall<ConstantSegment>> constantSegmentCalls;
 
+    public ReadlessClonotypeImpl(NucleotideSequence cdr3nt
+    ) {
+        this(cdr3nt,
+                MissingVariableSegment.INSTANCE,
+                MissingDiversitySegment.INSTANCE,
+                MissingJoiningSegment.INSTANCE,
+                MissingConstantSegment.INSTANCE);
+    }
+
+    public ReadlessClonotypeImpl(NucleotideSequence cdr3nt,
+                                 VariableSegment variableSegment,
+                                 DiversitySegment diversitySegment,
+                                 JoiningSegment joiningSegment,
+                                 ConstantSegment constantSegment) {
+        this(cdr3nt,
+                variableSegment,
+                diversitySegment,
+                joiningSegment,
+                constantSegment,
+                SegmentTrimming.DUMMY, JunctionMarkup.DUMMY);
+    }
+
     public ReadlessClonotypeImpl(NucleotideSequence cdr3nt,
                                  VariableSegment variableSegment,
                                  DiversitySegment diversitySegment,

@@ -45,8 +45,7 @@ public final class Cdr3NtLenSummary<T extends Clonotype, G extends ClonotypeGrou
     public void accept(WrappedClonotype<T, G> wrappedClonotype) {
         NucleotideSequence cdr3Nn = wrappedClonotype.getClonotype().getCdr3Nt();
         double weight = wrappedClonotype.getWeight();
-        counters.addAndGet(min(cdr3Nn.size(), COLS-1), weight);
-
+        counters.addAndGet(min(cdr3Nn.size(), COLS - 1), weight);
     }
 
 

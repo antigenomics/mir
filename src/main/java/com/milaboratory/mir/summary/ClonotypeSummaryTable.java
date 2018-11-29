@@ -33,7 +33,7 @@ public class ClonotypeSummaryTable<T extends Clonotype, G extends ClonotypeGroup
                 .create(clonotype)
                 .forEach(binnedClonotype ->
                         countersByClonotypeKey.computeIfAbsent(
-                                binnedClonotype.getClonotypeKey(),
+                                binnedClonotype.getGroup(),
                                 clonotypeGroupSummaryFactory::create
                         ).accept(clonotypeWeighter.weight(binnedClonotype)));
     }
