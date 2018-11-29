@@ -1,6 +1,7 @@
 package com.milaboratory.mir;
 
 import com.milaboratory.core.Range;
+import com.milaboratory.core.sequence.AminoAcidAlphabet;
 import com.milaboratory.core.sequence.AminoAcidSequence;
 import com.milaboratory.core.sequence.NucleotideSequence;
 import com.milaboratory.core.sequence.Sequence;
@@ -21,6 +22,16 @@ public final class SequenceUtils {
     public static Range stickToBoundaries(int from, int to, Range parentRange) {
         return new Range(stickToBoundaries(from, parentRange),
                 stickToBoundaries(to, parentRange));
+    }
+
+    public static boolean isNonCoding(AminoAcidSequence sequence) {
+        for (int i = 0; i < sequence.size(); i++) {
+            byte code = sequence.codeAt(i);
+            if (code == AminoAcidAlphabet.STOP || code == AminoAcidAlphabet.INCOMPLETE_CODON)
+                return true;
+        }
+
+        return false;
     }
 
     // TODO: can be moved to milib
