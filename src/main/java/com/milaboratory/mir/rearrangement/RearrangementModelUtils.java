@@ -22,6 +22,6 @@ public final class RearrangementModelUtils {
     }
 
     public static RearrangementModel createEmptyModel(SegmentLibrary segmentLibrary) {
-        throw new UnsupportedOperationException(); // todo: creating empty model for training
+        return loadMuruganModel(segmentLibrary).getModelTemplate();
     }
 }

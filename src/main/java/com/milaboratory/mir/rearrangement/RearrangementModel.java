@@ -18,4 +18,6 @@ public interface RearrangementModel<T extends RearrangementModel<T>> extends Gen
     }
 
     T getUpdatedModel();
+
+    T getModelTemplate();
 }
