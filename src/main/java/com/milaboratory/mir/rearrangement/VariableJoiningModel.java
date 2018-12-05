@@ -59,17 +59,26 @@ public class VariableJoiningModel implements RearrangementModel<VariableJoiningM
         );
     }
 
+    private VariableJoiningModel copyAll(boolean fromAccumulator) {
+        return new VariableJoiningModel(
+                variableSegmentDistribution.copy(fromAccumulator),
+                joiningVariableDistribution.copy(fromAccumulator),
+                joiningTrimmingDistribution.copy(fromAccumulator),
+                variableTrimmingDistribution.copy(fromAccumulator),
+                insertSizeDistribution.copy(fromAccumulator),
+                nucleotideDistribution.copy(fromAccumulator),
+                nucleotidePairDistribution.copy(fromAccumulator)
+        );
+    }
+
     @Override
     public VariableJoiningModel getUpdatedModel() {
-        return new VariableJoiningModel(
-                variableSegmentDistribution.copy(true),
-                joiningVariableDistribution.copy(true),
-                joiningTrimmingDistribution.copy(true),
-                variableTrimmingDistribution.copy(true),
-                insertSizeDistribution.copy(true),
-                nucleotideDistribution.copy(true),
-                nucleotidePairDistribution.copy(true)
-        );
+        return copyAll(true);
+    }
+
+    @Override
+    public VariableJoiningModel getModelTemplate() {
+        return copyAll(false);
     }
 
     public VariableJoiningModel withSegmentDistribution(VariableDistribution variableSegmentDistribution,

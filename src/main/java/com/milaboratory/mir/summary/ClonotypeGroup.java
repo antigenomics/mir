@@ -1,5 +1,7 @@
 package com.milaboratory.mir.summary;
 
-public interface ClonotypeGroup {
+import com.milaboratory.mir.TableRow;
+
+public interface ClonotypeGroup extends TableRow {
 
 }

@@ -69,6 +69,11 @@ public class ClonotypeCall<T extends Clonotype> implements Clonotype {
     }
 
     @Override
+    public double getWeight() {
+        return frequency;
+    }
+
+    @Override
     public String toString() {
         return id + "\t" + count + "\t" + frequency + "\t" + clonotype;
     }

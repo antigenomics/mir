@@ -33,7 +33,6 @@ public class ClonotypeTableBufferedPipe<T extends Clonotype> extends ClonotypeTa
         this.entityBufferSize = entityBufferSize;
     }
 
-
     @Override
     public ClonotypeCall<T> getPoison() {
         return ClonotypeCall.getDummy();

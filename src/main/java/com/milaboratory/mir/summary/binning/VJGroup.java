@@ -7,6 +7,8 @@ import com.milaboratory.mir.summary.ClonotypeGroup;
 import java.util.Objects;
 
 public class VJGroup implements ClonotypeGroup {
+    public static String HEADER = "v\tj";
+
     private final VariableSegment variableSegment;
     private final JoiningSegment joiningSegment;
 
@@ -33,7 +35,17 @@ public class VJGroup implements ClonotypeGroup {
     }
 
     @Override
+    public String asRow() {
+        return variableSegment.getId() + "\t" + joiningSegment.getId();
+    }
+
+    @Override
     public int hashCode() {
         return Objects.hash(variableSegment, joiningSegment);
+    }
+
+    @Override
+    public String toString() {
+        return asRow();
     }
 }

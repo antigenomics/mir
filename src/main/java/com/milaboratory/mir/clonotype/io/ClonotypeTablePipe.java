@@ -11,7 +11,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
-public class ClonotypeTablePipe<T extends Clonotype> implements SinglePassPipe<ClonotypeCall<T>> {
+public class ClonotypeTablePipe<T extends Clonotype>
+        implements SinglePassPipe<ClonotypeCall<T>>, AutoCloseable {
     public static final String TOKEN = "\t";
     public static final int DEFAULT_READER_BUFFER_SIZE = 8192;
 
@@ -60,5 +61,10 @@ public class ClonotypeTablePipe<T extends Clonotype> implements SinglePassPipe<C
     @Override
     public ClonotypeCall<T> next() {
         return parser.parse(line.split(TOKEN));
+    }
+
+    @Override
+    public void close() throws Exception {
+        bufferedReader.close();
     }
 }

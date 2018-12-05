@@ -16,7 +16,14 @@ public class ClonotypeSummaryTable<T extends Clonotype, G extends ClonotypeGroup
 
     public ClonotypeSummaryTable(ClonotypeGroupWrapper<T, G> clonotypeGroupWrapper,
                                  ClonotypeGroupSummaryFactory<T, G, E, C> clonotypeGroupSummaryFactory) {
-        this(clonotypeGroupWrapper, clonotypeGroupSummaryFactory, subject -> subject);
+        this(clonotypeGroupWrapper, clonotypeGroupSummaryFactory, false);
+    }
+
+    public ClonotypeSummaryTable(ClonotypeGroupWrapper<T, G> clonotypeGroupWrapper,
+                                 ClonotypeGroupSummaryFactory<T, G, E, C> clonotypeGroupSummaryFactory,
+                                 boolean weightByFrequency) {
+        this(clonotypeGroupWrapper, clonotypeGroupSummaryFactory,
+                weightByFrequency ? WrappedClonotype::scaleWeight : subject -> subject);
     }
 
     public ClonotypeSummaryTable(ClonotypeGroupWrapper<T, G> clonotypeGroupWrapper,
@@ -53,7 +60,7 @@ public class ClonotypeSummaryTable<T extends Clonotype, G extends ClonotypeGroup
     public List<E> getCounters() {
         return countersByClonotypeKey.values()
                 .stream()
-                .flatMap(x -> x.getEntries().stream())
+                .flatMap(x -> x.getCounters().stream())
                 .collect(Collectors.toUnmodifiableList());
     }
 }

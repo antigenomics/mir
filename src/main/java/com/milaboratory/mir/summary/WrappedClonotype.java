@@ -33,4 +33,8 @@ public final class WrappedClonotype<T extends Clonotype, G extends ClonotypeGrou
     public WrappedClonotype<T, G> scaleWeight(double scalar) {
         return new WrappedClonotype<>(group, weight * scalar, clonotype);
     }
+
+    public WrappedClonotype<T, G> scaleWeight() {
+        return scaleWeight(this.clonotype.getWeight());
+    }
 }

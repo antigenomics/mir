@@ -20,7 +20,6 @@ public class ClonotypeTablePipeTest {
         var library = MigecSegmentLibraryUtils.getLibraryFromResources(Species.Human, Gene.TRA);
         var parserFactory = new VDJtoolsClonotypeParserFactory(library, true);
 
-
         var clonotypeIterator = new ClonotypeTablePipe<>(sampleSupplier.get(), parserFactory);
         assertEquals(1051, clonotypeIterator.stream().count());
 
@@ -36,6 +35,7 @@ public class ClonotypeTablePipeTest {
         clonotypeIterator = new ClonotypeTableBufferedPipe<>(sampleSupplier.get(), parserFactory);
         assertEquals(1051, clonotypeIterator.parallelStream().count());
     }
+
     @Test
     public void mixcrReadTest() {
         var sampleSupplier = TestUtils.streamSupplierFrom("samples/mixcr_1.txt.gz");

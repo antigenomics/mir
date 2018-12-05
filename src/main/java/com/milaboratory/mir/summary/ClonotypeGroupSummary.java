@@ -11,5 +11,5 @@ public interface ClonotypeGroupSummary<T extends Clonotype,
         extends Consumer<WrappedClonotype<T, G>> {
     G getClonotypeGroup();
 
-    Collection<E> getEntries();
+    Collection<E> getCounters();
 }

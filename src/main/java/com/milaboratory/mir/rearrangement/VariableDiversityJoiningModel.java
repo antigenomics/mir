@@ -95,23 +95,32 @@ public class VariableDiversityJoiningModel implements RearrangementModel {
         );
     }
 
+    private VariableDiversityJoiningModel copyAll(boolean fromAccumulator) {
+        return new VariableDiversityJoiningModel(
+                variableSegmentDistribution.copy(fromAccumulator),
+                joiningVariableDistribution.copy(fromAccumulator),
+                diversityJoiningVariableDistribution.copy(fromAccumulator),
+                joiningTrimmingDistribution.copy(fromAccumulator),
+                variableTrimmingDistribution.copy(fromAccumulator),
+                diversityTrimming5Distribution.copy(fromAccumulator),
+                diversityTrimming3Distribution.copy(fromAccumulator),
+                insertSizeDistributionVD.copy(fromAccumulator),
+                insertSizeDistributionDJ.copy(fromAccumulator),
+                nucleotideDistributionVD.copy(fromAccumulator),
+                nucleotideDistributionDJ.copy(fromAccumulator),
+                nucleotidePairDistributionVD.copy(fromAccumulator),
+                nucleotidePairDistributionDJ.copy(fromAccumulator)
+        );
+    }
+
     @Override
     public VariableDiversityJoiningModel getUpdatedModel() {
-        return new VariableDiversityJoiningModel(
-                variableSegmentDistribution.copy(true),
-                joiningVariableDistribution.copy(true),
-                diversityJoiningVariableDistribution.copy(true),
-                joiningTrimmingDistribution.copy(true),
-                variableTrimmingDistribution.copy(true),
-                diversityTrimming5Distribution.copy(true),
-                diversityTrimming3Distribution.copy(true),
-                insertSizeDistributionVD.copy(true),
-                insertSizeDistributionDJ.copy(true),
-                nucleotideDistributionVD.copy(true),
-                nucleotideDistributionDJ.copy(true),
-                nucleotidePairDistributionVD.copy(true),
-                nucleotidePairDistributionDJ.copy(true)
-        );
+        return copyAll(true);
+    }
+
+    @Override
+    public RearrangementModel getModelTemplate() {
+        return copyAll(false);
     }
 
     public VariableDiversityJoiningModel withSegmentDistribution(VariableDistribution variableSegmentDistribution,

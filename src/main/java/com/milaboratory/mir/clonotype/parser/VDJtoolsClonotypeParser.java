@@ -95,6 +95,31 @@ public class VDJtoolsClonotypeParser extends AbstractClonotypeTableParser<Readle
                         cdr3Aa));
     }
 
+    private static String addAllele(String segment) {
+        int length = segment.length();
+        return (length > 4 && segment.charAt(length - 3) != '*') ? (segment + "*01") : segment;
+    }
+
+    @Override
+    protected SegmentCall<VariableSegment> getV(String id, float score) {
+        return super.getV(addAllele(id), score);
+    }
+
+    @Override
+    protected SegmentCall<DiversitySegment> getD(String id, float score) {
+        return super.getD(addAllele(id), score);
+    }
+
+    @Override
+    protected SegmentCall<JoiningSegment> getJ(String id, float score) {
+        return super.getJ(addAllele(id), score);
+    }
+
+    @Override
+    protected SegmentCall<ConstantSegment> getC(String id, float score) {
+        return super.getC(addAllele(id), score);
+    }
+
     private static class HeaderInfo {
         final int countColIndex, freqColIndex,
                 cdr3NtColIndex, cdr3AaColIndex,

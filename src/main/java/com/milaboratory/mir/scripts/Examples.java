@@ -12,7 +12,8 @@ public class Examples implements Runnable {
                 .addSubcommand("annotate-structures", new AnnotateStructures())
                 .addSubcommand("compute-pdb-geom", new ComputePDBGeometry())
                 .addSubcommand("compute-pdb-contacts", new ComputePDBContacts())
-                .addSubcommand("filter-structures", new FilterStructures());
+                .addSubcommand("filter-structures", new FilterStructures())
+                .addSubcommand("clonotype-summary-stats", new ClonotypeSummaryStatistics());
         cmd.parseWithHandler(new CommandLine.RunAll(), args);
     }
 

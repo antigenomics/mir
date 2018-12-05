@@ -18,4 +18,8 @@ public interface Clonotype {
     List<SegmentCall<JoiningSegment>> getJoiningSegmentCalls();
 
     List<SegmentCall<ConstantSegment>> getConstantSegmentCalls();
+
+    default double getWeight() {
+        return 1.0;
+    }
 }
