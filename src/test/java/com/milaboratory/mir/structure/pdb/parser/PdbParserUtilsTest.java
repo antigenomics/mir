@@ -37,6 +37,15 @@ public class PdbParserUtilsTest {
         Assert.assertEquals("1ao7_al", struct.getId());
     }
 
+    @Test
+    public void parseStructureChimeraTest() throws IOException {
+        var stream = TestUtils.streamFrom("structures/2vlj_TRB_CASSTRASYEQYF_min.pdb");
+        var struct = PdbParserUtils.parseStructure("2vlj_mut", stream);
+        System.out.println(struct);
+        //Assert.assertEquals(5, struct.getChains().size());
+        //Assert.assertEquals("1ao7_al", struct.getId());
+    }
+
     // todo
     @Test
     public void parseStructSpeedTest() throws IOException {
@@ -58,6 +67,7 @@ public class PdbParserUtilsTest {
         end = System.currentTimeMillis();
         System.out.println("BioJava reads " + n + " structures in " + (end - start) + "ms");
     }
+
 
     @Test
     public void parseTestAdditional1() throws IOException {

@@ -39,39 +39,59 @@ public class PdbParserUtils {
 
     private static Map<Character, Map<Short, List<RawAtom>>> parseStructureMap(InputStream stream) throws IOException {
         var atomMap = new HashMap<Character, Map<Short, List<RawAtom>>>();
+
+        RawAtom prevAtom = null;
         short newIndex = -1;
         short previousAaId = Short.MIN_VALUE;
         char previousInsertionCode = ' ';
         char previousChain = ' ';
+
         try (BufferedReader br = new BufferedReader(new InputStreamReader(stream))) {
-            String line;
-            while ((line = br.readLine()) != null) {
-                if (getAtomType(line) != null) {
-                    var atom = parseAtom(line);
-                    if (atom.getChainIdentifier() != previousChain) {
-                        newIndex = -1;
-                        previousAaId = Short.MIN_VALUE;
-                        previousChain = atom.getChainIdentifier();
-                        previousInsertionCode = ' ';
+            String line = null;
+            try {
+                while ((line = br.readLine()) != null) {
+                    AtomType atomType = getAtomType(line);
+                    if (atomType != null) {
+                        if (atomType == AtomType.TER && line.trim().length() == 3) {
+                            // Impute data -- Chimera allows just 'TER'
+                            if (prevAtom != null) {
+                                line = writeAtomIndexData(prevAtom.incrementAtomSerialNumber());
+                            } else {
+                                throw new RuntimeException("Orphan TER record");
+                            }
+                        }
+
+                        var atom = parseAtom(line);
+
+                        if (atom.getChainIdentifier() != previousChain) {
+                            newIndex = -1;
+                            previousAaId = Short.MIN_VALUE;
+                            previousChain = atom.getChainIdentifier();
+                            previousInsertionCode = ' ';
+                        }
+
+                        if (atom.getResidueSequenceNumber() != previousAaId) {
+                            newIndex++;
+                            previousAaId = atom.getResidueSequenceNumber();
+                            previousInsertionCode = atom.getResidueInsertionCode();
+                            // todo: issue warning if residue numbers are not in order
+                        } else if (atom.getResidueInsertionCode() != previousInsertionCode) {
+                            newIndex++;
+                            previousInsertionCode = atom.getResidueInsertionCode();
+                        }
+
+                        atom.sequentialResidueSequenceNumber = newIndex;
+
+                        atomMap
+                                .computeIfAbsent(atom.getChainIdentifier(), x -> new HashMap<>())
+                                .computeIfAbsent(atom.sequentialResidueSequenceNumber, x -> new ArrayList<>())
+                                .add(atom);
+
+                        prevAtom = atom;
                     }
-
-                    if (atom.getResidueSequenceNumber() != previousAaId) {
-                        newIndex++;
-                        previousAaId = atom.getResidueSequenceNumber();
-                        previousInsertionCode = atom.getResidueInsertionCode();
-                        // todo: issue warning if residue numbers are not in order
-                    } else if (atom.getResidueInsertionCode() != previousInsertionCode) {
-                        newIndex++;
-                        previousInsertionCode = atom.getResidueInsertionCode();
-                    }
-
-                    atom.sequentialResidueSequenceNumber = newIndex;
-
-                    atomMap
-                            .computeIfAbsent(atom.getChainIdentifier(), x -> new HashMap<>())
-                            .computeIfAbsent(atom.sequentialResidueSequenceNumber, x -> new ArrayList<>())
-                            .add(atom);
                 }
+            } catch (Exception e) {
+                throw new RuntimeException("Failed to parse line:\n" + line, e);
             }
         }
         return atomMap;
@@ -108,7 +128,7 @@ public class PdbParserUtils {
     ///// OUTPUT
     /////
 
-    public static String writeAtom(Atom atom) {
+    private static String writeAtomIndexData(Atom atom) {
         return atom.getAtomType().getId() +
                 String.valueOf(writeShort(atom.getAtomSerialNumber(), 5)) +
                 " " +
@@ -118,7 +138,11 @@ public class PdbParserUtils {
                 " " +
                 atom.getChainIdentifier() +
                 String.valueOf(writeShort(atom.getResidueSequenceNumber(), 4)) +
-                atom.getResidueInsertionCode() +
+                atom.getResidueInsertionCode();
+    }
+
+    public static String writeAtom(Atom atom) {
+        return writeAtomIndexData(atom) +
                 "   " +
                 String.valueOf(writeFloat((float) atom.getCoordinates().getX(), 8, 3)) +
                 String.valueOf(writeFloat((float) atom.getCoordinates().getY(), 8, 3)) +

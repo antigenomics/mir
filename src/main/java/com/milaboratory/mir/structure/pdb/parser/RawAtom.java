@@ -61,6 +61,25 @@ public final class RawAtom implements Atom<RawAtom> {
         this.elementSymbolWithCharge = toCopy.elementSymbolWithCharge;
     }
 
+    RawAtom(RawAtom toCopy, short newAtomSerialNumber) {
+        this.atomType = toCopy.atomType;
+        this.atomSerialNumber = newAtomSerialNumber;
+        this.atomName = toCopy.atomName;
+        this.alternativeLocationIdentifier = toCopy.alternativeLocationIdentifier;
+        this.residueName = toCopy.residueName;
+        this.chainIdentifier = toCopy.chainIdentifier;
+        this.residueSequenceNumber = toCopy.residueSequenceNumber;
+        this.residueInsertionCode = toCopy.residueInsertionCode;
+        this.coordinates = toCopy.coordinates;
+        this.occupancy = toCopy.occupancy;
+        this.temperatureFactor = toCopy.temperatureFactor;
+        this.elementSymbolWithCharge = toCopy.elementSymbolWithCharge;
+    }
+
+    RawAtom incrementAtomSerialNumber() {
+        return new RawAtom(this, (short) (atomSerialNumber + 1));
+    }
+
     @Override
     public AtomType getAtomType() {
         return atomType;
