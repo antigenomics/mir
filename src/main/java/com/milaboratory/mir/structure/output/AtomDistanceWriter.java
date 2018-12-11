@@ -15,13 +15,14 @@ public class AtomDistanceWriter extends CaDistanceWriter {
 
     @Override
     protected String writeResiduePairDistances(String prefix, ResiduePairDistances residuePairDistances) {
-        return residuePairDistances
-                .getAtomDistances()
-                .stream()
-                .map(x -> prefix + "\t" +
-                        x.getAtom1().getAtomName().getLetter() + "\t" +
-                        x.getAtom2().getAtomName().getLetter() + "\t" +
-                        (float) x.getDistance())
-                .collect(Collectors.joining("\n"));
+        var atomDistances = residuePairDistances.getAtomDistances();
+        return atomDistances.isEmpty() ? "" :
+                atomDistances
+                        .stream()
+                        .map(x -> prefix + "\t" +
+                                x.getAtom1().getAtomName().getLetter() + "\t" +
+                                x.getAtom2().getAtomName().getLetter() + "\t" +
+                                (float) x.getDistance())
+                        .collect(Collectors.joining("\n"));
     }
 }

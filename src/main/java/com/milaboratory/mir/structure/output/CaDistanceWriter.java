@@ -30,6 +30,7 @@ public class CaDistanceWriter extends TableWriter<StructurePairwiseDistances> {
                                 x.getChain1().getChainIdentifier() + "\t" +
                                 x.getChain2().getChainIdentifier(),
                         x))
+                .filter(x -> !x.isEmpty())
                 .collect(Collectors.joining("\n"));
     }
 
@@ -43,10 +44,11 @@ public class CaDistanceWriter extends TableWriter<StructurePairwiseDistances> {
                                         x.getResidue2().getSequentialResidueSequenceNumber(),
                                 x)
                 )
+                .filter(x -> !x.isEmpty())
                 .collect(Collectors.joining("\n"));
     }
 
     protected String writeResiduePairDistances(String prefix, ResiduePairDistances residuePairDistances) {
-        return prefix + "\t" + (float)residuePairDistances.getCaDistance();
+        return prefix + "\t" + (float) residuePairDistances.getCaDistance();
     }
 }
