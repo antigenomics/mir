@@ -2,6 +2,7 @@ package com.milaboratory.mir.structure.pdb.contacts;
 
 import com.milaboratory.mir.structure.pdb.Atom;
 import com.milaboratory.mir.structure.pdb.Residue;
+import com.milaboratory.mir.structure.pdb.parser.AtomType;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -37,8 +38,12 @@ public final class ResiduePairDistances {
         this.caDistance = caDistance;
 
         for (Atom atom1 : residue1) {
-            for (Atom atom2 : residue2) {
-                atomDistances.add(new AtomPairDistance(atom1, atom2));
+            if (atom1.getAtomType() == AtomType.ATOM) {
+                for (Atom atom2 : residue2) {
+                    if (atom2.getAtomType() == AtomType.ATOM) {
+                        atomDistances.add(new AtomPairDistance(atom1, atom2));
+                    }
+                }
             }
         }
     }
