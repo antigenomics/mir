@@ -2,10 +2,12 @@ package com.milaboratory.mir.structure.output;
 
 import com.milaboratory.mir.TableWriter;
 import com.milaboratory.mir.structure.pdb.contacts.ChainPairwiseDistances;
-import com.milaboratory.mir.structure.pdb.contacts.ResiduePairDistances;
+import com.milaboratory.mir.structure.pdb.contacts.ResiduePairAtomDistances;
+import com.milaboratory.mir.structure.pdb.contacts.ResiduePairDistance;
 import com.milaboratory.mir.structure.pdb.contacts.StructurePairwiseDistances;
 
 import java.io.OutputStream;
+import java.util.List;
 import java.util.stream.Collectors;
 
 public class CaDistanceWriter extends TableWriter<StructurePairwiseDistances> {
@@ -35,8 +37,7 @@ public class CaDistanceWriter extends TableWriter<StructurePairwiseDistances> {
     }
 
     private String writeChainPair(String prefix, ChainPairwiseDistances chainPairwiseDistances) {
-        return chainPairwiseDistances
-                .getResiduePairDistances()
+        return getDistanceList(chainPairwiseDistances)
                 .stream()
                 .map(x ->
                         writeResiduePairDistances(prefix + "\t" +
@@ -48,7 +49,11 @@ public class CaDistanceWriter extends TableWriter<StructurePairwiseDistances> {
                 .collect(Collectors.joining("\n"));
     }
 
-    protected String writeResiduePairDistances(String prefix, ResiduePairDistances residuePairDistances) {
-        return prefix + "\t" + (float) residuePairDistances.getCaDistance();
+    protected List<? extends ResiduePairDistance> getDistanceList(ChainPairwiseDistances chainPairwiseDistances) {
+        return chainPairwiseDistances.getResiduePairCaDistances();
+    }
+
+    protected String writeResiduePairDistances(String prefix, ResiduePairDistance residuePairDistance) {
+        return prefix + "\t" + (float) residuePairDistance.getDistance();
     }
 }

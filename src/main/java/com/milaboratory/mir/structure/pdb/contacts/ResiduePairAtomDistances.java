@@ -9,49 +9,48 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public final class ResiduePairDistances {
+public final class ResiduePairAtomDistances implements ResiduePairDistance{
     private final List<AtomPairDistance> atomDistances;
     private final Residue residue1, residue2;
-    private final double caDistance;
+    private final double minAtomDistance;
 
-    private ResiduePairDistances(List<AtomPairDistance> atomDistances,
-                                 Residue residue1, Residue residue2, double caDistance) {
+    private ResiduePairAtomDistances(List<AtomPairDistance> atomDistances,
+                                     Residue residue1, Residue residue2, double minAtomDistance) {
         this.atomDistances = atomDistances;
         this.residue1 = residue1;
         this.residue2 = residue2;
-        this.caDistance = caDistance;
+        this.minAtomDistance = minAtomDistance;
     }
 
-    public ResiduePairDistances(ResiduePairCaDistance residuePairCaDistance) {
-        this(residuePairCaDistance.getResidue1(), residuePairCaDistance.getResidue2(),
-                residuePairCaDistance.getCaDistance());
+    public ResiduePairAtomDistances(ResiduePairCaDistance residuePairCaDistance) {
+        this(residuePairCaDistance.getResidue1(), residuePairCaDistance.getResidue2());
     }
 
-    public ResiduePairDistances(Residue residue1, Residue residue2) {
-        this(residue1, residue2, Double.NaN);
-    }
-
-    public ResiduePairDistances(Residue residue1, Residue residue2, double caDistance) {
+    public ResiduePairAtomDistances(Residue residue1, Residue residue2) {
         this.residue1 = residue1;
         this.residue2 = residue2;
         this.atomDistances = new ArrayList<>();
-        this.caDistance = caDistance;
+        double minDist = Double.POSITIVE_INFINITY;
 
         for (Atom atom1 : residue1) {
             if (atom1.getAtomType() == AtomType.ATOM) {
                 for (Atom atom2 : residue2) {
                     if (atom2.getAtomType() == AtomType.ATOM) {
-                        atomDistances.add(new AtomPairDistance(atom1, atom2));
+                        var dist = new AtomPairDistance(atom1, atom2);
+                        minDist = Math.min(minDist, dist.getDistance());
+                        atomDistances.add(dist);
                     }
                 }
             }
         }
+
+        this.minAtomDistance = minDist;
     }
 
-    public ResiduePairDistances filter(double maxDist) {
-        return new ResiduePairDistances(
+    public ResiduePairAtomDistances filter(double maxDist) {
+        return new ResiduePairAtomDistances(
                 atomDistances.stream().filter(x -> x.getDistance() <= maxDist).collect(Collectors.toList()),
-                residue1, residue2, caDistance
+                residue1, residue2, minAtomDistance
         );
     }
 
@@ -59,15 +58,22 @@ public final class ResiduePairDistances {
         return Collections.unmodifiableList(atomDistances);
     }
 
+    @Override
     public Residue getResidue1() {
         return residue1;
     }
 
+    @Override
     public Residue getResidue2() {
         return residue2;
     }
 
-    public double getCaDistance() {
-        return caDistance;
+    @Override
+    public double getDistance() {
+        return minAtomDistance;
+    }
+
+    public double getMinAtomDistance() {
+        return minAtomDistance;
     }
 }

@@ -2,6 +2,7 @@ package com.milaboratory.mir.structure.output;
 
 import com.milaboratory.mir.structure.TestStructureCache;
 import com.milaboratory.mir.structure.pdb.contacts.StructurePairwiseDistances;
+import org.junit.Assert;
 import org.junit.Test;
 
 import java.io.ByteArrayOutputStream;
@@ -17,6 +18,9 @@ public class CaDistanceWriterTest {
         }
 
         //System.out.println(os.toString());
+        String res = os.toString();
+        //System.out.println(res);
+        Assert.assertTrue(!res.contains("\n\n"));
         System.out.println(os.toString().substring(0, 600) + "...");
     }
 }

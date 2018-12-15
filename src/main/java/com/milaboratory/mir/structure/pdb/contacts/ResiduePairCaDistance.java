@@ -4,7 +4,7 @@ import com.milaboratory.mir.structure.pdb.Residue;
 import com.milaboratory.mir.structure.pdb.geometry.GeometryUtils;
 import com.milaboratory.mir.structure.pdb.geometry.summary.ResidueBackbone;
 
-public final class ResiduePairCaDistance {
+public final class ResiduePairCaDistance implements ResiduePairDistance {
     private final Residue residue1, residue2;
     private final double caDistance;
 
@@ -25,7 +25,7 @@ public final class ResiduePairCaDistance {
         var ca2 = new ResidueBackbone(residue2).getCA();
 
         if (ca1 == null || ca2 == null) {
-            return Float.NaN;
+            return Double.NaN;
         }
 
         return GeometryUtils.distance(ca1.getCoordinates(), ca2.getCoordinates());
@@ -35,16 +35,23 @@ public final class ResiduePairCaDistance {
         return caDistance <= maxDist;
     }
 
-    public ResiduePairDistances computeAtomDistances() {
-        return new ResiduePairDistances(this);
+    public ResiduePairAtomDistances computeAtomDistances() {
+        return new ResiduePairAtomDistances(this);
     }
 
+    @Override
     public Residue getResidue1() {
         return residue1;
     }
 
+    @Override
     public Residue getResidue2() {
         return residue2;
+    }
+
+    @Override
+    public double getDistance() {
+        return caDistance;
     }
 
     public double getCaDistance() {

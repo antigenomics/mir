@@ -10,7 +10,8 @@ import java.util.List;
 public final class ChainPairwiseDistances {
     private final Chain chain1, chain2;
     private final float maxCaDistance, maxAtomDistance;
-    private final List<ResiduePairDistances> residuePairDistances = new ArrayList<>();
+    private final List<ResiduePairAtomDistances> residuePairAtomDistances = new ArrayList<>();
+    private final List<ResiduePairCaDistance> residuePairCaDistances = new ArrayList<>();
 
     public ChainPairwiseDistances(Chain chain1, Chain chain2) {
         this(chain1, chain2, 25f, 6f);
@@ -26,7 +27,8 @@ public final class ChainPairwiseDistances {
             for (Residue residue2 : chain2) {
                 var caDist = new ResiduePairCaDistance(residue1, residue2);
                 if (caDist.passesThreshold(maxCaDistance)) {
-                    residuePairDistances.add(caDist.computeAtomDistances().filter(maxAtomDistance));
+                    residuePairCaDistances.add(caDist);
+                    residuePairAtomDistances.add(caDist.computeAtomDistances().filter(maxAtomDistance));
                 }
             }
         }
@@ -48,7 +50,11 @@ public final class ChainPairwiseDistances {
         return maxAtomDistance;
     }
 
-    public List<ResiduePairDistances> getResiduePairDistances() {
-        return Collections.unmodifiableList(residuePairDistances);
+    public List<ResiduePairAtomDistances> getResiduePairAtomDistances() {
+        return Collections.unmodifiableList(residuePairAtomDistances);
+    }
+
+    public List<ResiduePairCaDistance> getResiduePairCaDistances() {
+        return Collections.unmodifiableList(residuePairCaDistances);
     }
 }
