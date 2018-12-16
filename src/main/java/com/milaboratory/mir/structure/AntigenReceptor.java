@@ -1,10 +1,5 @@
 package com.milaboratory.mir.structure;
 
-import com.milaboratory.mir.structure.pdb.ChainRegion;
-
-import java.util.ArrayList;
-import java.util.List;
-
 public final class AntigenReceptor implements HeterodimerComplex<AntigenReceptorRegionType, AntigenReceptorChain> {
     private final AntigenReceptorChain firstChain, secondChain;
     private final AntigenReceptorType antigenReceptorType;

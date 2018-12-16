@@ -30,9 +30,9 @@ public final class StructurePairwiseDistances {
                 if (chain1.getChainIdentifier() < chain2.getChainIdentifier() ||
                         (allowSelf && chain1.getChainIdentifier() == chain2.getChainIdentifier())
                 ) {
-                    chainPairDistances.put(getKey(chain1.getChainIdentifier(), chain2.getChainIdentifier()),
-                            new ChainPairwiseDistances(chain1, chain2,
-                                    maxCaDistance, maxAtomDistance));
+                    var key = getKey(chain1.getChainIdentifier(), chain2.getChainIdentifier());
+                    chainPairDistances.put(key,
+                            new ChainPairwiseDistances<>(chain1, chain2, maxCaDistance, maxAtomDistance));
                 }
             }
         }

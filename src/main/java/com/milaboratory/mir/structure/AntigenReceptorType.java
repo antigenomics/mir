@@ -2,6 +2,7 @@ package com.milaboratory.mir.structure;
 
 import com.milaboratory.mir.segment.Gene;
 
+import java.io.Closeable;
 import java.util.HashMap;
 import java.util.Map;
 

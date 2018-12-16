@@ -1,11 +1,8 @@
 package com.milaboratory.mir.structure.output;
 
-import com.milaboratory.mir.structure.pdb.contacts.ChainPairwiseDistances;
 import com.milaboratory.mir.structure.pdb.contacts.ResiduePairAtomDistances;
-import com.milaboratory.mir.structure.pdb.contacts.ResiduePairDistance;
 
 import java.io.OutputStream;
-import java.util.List;
 import java.util.stream.Collectors;
 
 public class AtomDistanceWriter extends CaDistanceWriter {
@@ -17,13 +14,8 @@ public class AtomDistanceWriter extends CaDistanceWriter {
     }
 
     @Override
-    protected List<? extends ResiduePairDistance> getDistanceList(ChainPairwiseDistances chainPairwiseDistances) {
-        return chainPairwiseDistances.getResiduePairAtomDistances();
-    }
-
-    @Override
-    protected String writeResiduePairDistances(String prefix, ResiduePairDistance residuePairAtomDistances) {
-        var atomDistances = ((ResiduePairAtomDistances) residuePairAtomDistances).getAtomDistances();
+    protected String writeResiduePairDistances(String prefix, ResiduePairAtomDistances residuePairAtomDistances) {
+        var atomDistances = residuePairAtomDistances.getAtomDistances();
         return atomDistances.isEmpty() ? "" :
                 atomDistances
                         .stream()

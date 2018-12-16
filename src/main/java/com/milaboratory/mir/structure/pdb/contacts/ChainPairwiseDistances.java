@@ -7,17 +7,17 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public final class ChainPairwiseDistances {
-    private final Chain chain1, chain2;
+public class ChainPairwiseDistances<C1 extends Chain, C2 extends Chain> {
+    protected final C1 chain1;
+    protected final C2 chain2;
     private final float maxCaDistance, maxAtomDistance;
     private final List<ResiduePairAtomDistances> residuePairAtomDistances = new ArrayList<>();
-    private final List<ResiduePairCaDistance> residuePairCaDistances = new ArrayList<>();
 
-    public ChainPairwiseDistances(Chain chain1, Chain chain2) {
-        this(chain1, chain2, 25f, 6f);
+    public ChainPairwiseDistances(C1 chain1, C2 chain2) {
+        this(chain1, chain2, 25f, 5f);
     }
 
-    public ChainPairwiseDistances(Chain chain1, Chain chain2, float maxCaDistance, float maxAtomDistance) {
+    public ChainPairwiseDistances(C1 chain1, C2 chain2, float maxCaDistance, float maxAtomDistance) {
         this.chain1 = chain1;
         this.chain2 = chain2;
         this.maxCaDistance = maxCaDistance;
@@ -26,19 +26,19 @@ public final class ChainPairwiseDistances {
         for (Residue residue1 : chain1) {
             for (Residue residue2 : chain2) {
                 var caDist = new ResiduePairCaDistance(residue1, residue2);
-                if (caDist.passesThreshold(maxCaDistance)) {
-                    residuePairCaDistances.add(caDist);
-                    residuePairAtomDistances.add(caDist.computeAtomDistances().filter(maxAtomDistance));
+                if (maxCaDistance < 0 || caDist.passesThreshold(maxCaDistance)) {
+                    var atomDistances = caDist.computeAtomDistances();
+                    this.residuePairAtomDistances.add(atomDistances.filter(maxAtomDistance));
                 }
             }
         }
     }
 
-    public Chain getChain1() {
+    public C1 getChain1() {
         return chain1;
     }
 
-    public Chain getChain2() {
+    public C2 getChain2() {
         return chain2;
     }
 
@@ -52,9 +52,5 @@ public final class ChainPairwiseDistances {
 
     public List<ResiduePairAtomDistances> getResiduePairAtomDistances() {
         return Collections.unmodifiableList(residuePairAtomDistances);
-    }
-
-    public List<ResiduePairCaDistance> getResiduePairCaDistances() {
-        return Collections.unmodifiableList(residuePairCaDistances);
     }
 }

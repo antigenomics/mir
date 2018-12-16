@@ -1,7 +1,7 @@
 package com.milaboratory.mir.mhc;
 
 public enum MhcChainType {
-    ALPHA(0), BETA(1);
+    MHCa(0), MHCb(1);
 
     private final int order;
 

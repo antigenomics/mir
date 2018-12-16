@@ -1,13 +1,12 @@
 package com.milaboratory.mir.structure.output;
 
 import com.milaboratory.mir.TableWriter;
+import com.milaboratory.mir.structure.pdb.Chain;
 import com.milaboratory.mir.structure.pdb.contacts.ChainPairwiseDistances;
 import com.milaboratory.mir.structure.pdb.contacts.ResiduePairAtomDistances;
-import com.milaboratory.mir.structure.pdb.contacts.ResiduePairDistance;
 import com.milaboratory.mir.structure.pdb.contacts.StructurePairwiseDistances;
 
 import java.io.OutputStream;
-import java.util.List;
 import java.util.stream.Collectors;
 
 public class CaDistanceWriter extends TableWriter<StructurePairwiseDistances> {
@@ -36,8 +35,11 @@ public class CaDistanceWriter extends TableWriter<StructurePairwiseDistances> {
                 .collect(Collectors.joining("\n"));
     }
 
-    private String writeChainPair(String prefix, ChainPairwiseDistances chainPairwiseDistances) {
-        return getDistanceList(chainPairwiseDistances)
+    private <C1 extends Chain, C2 extends Chain>
+    String writeChainPair(String prefix,
+                          ChainPairwiseDistances<C1, C2> chainPairwiseDistances) {
+        return chainPairwiseDistances
+                .getResiduePairAtomDistances()
                 .stream()
                 .map(x ->
                         writeResiduePairDistances(prefix + "\t" +
@@ -49,11 +51,7 @@ public class CaDistanceWriter extends TableWriter<StructurePairwiseDistances> {
                 .collect(Collectors.joining("\n"));
     }
 
-    protected List<? extends ResiduePairDistance> getDistanceList(ChainPairwiseDistances chainPairwiseDistances) {
-        return chainPairwiseDistances.getResiduePairCaDistances();
-    }
-
-    protected String writeResiduePairDistances(String prefix, ResiduePairDistance residuePairDistance) {
-        return prefix + "\t" + (float) residuePairDistance.getDistance();
+    protected String writeResiduePairDistances(String prefix, ResiduePairAtomDistances residuePairDistance) {
+        return prefix + "\t" + (float) residuePairDistance.getCaDistance();
     }
 }
