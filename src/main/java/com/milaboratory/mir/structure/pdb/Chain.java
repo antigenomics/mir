@@ -46,6 +46,13 @@ public class Chain implements Comparable<Chain>, CoordinateSet<Chain>, Iterable<
         this.sequence = getSequence(newResidues);
     }
 
+    Chain(Chain toCopy, char chainIdentifier) {
+        this.chainIdentifier = chainIdentifier;
+        this.residues = toCopy.residues;
+        this.originalRange = toCopy.originalRange;
+        this.sequence = toCopy.sequence;
+    }
+
     private static Range getRange(Collection<Residue> residues, int position) {
         if (residues.isEmpty()) {
             return new Range(position, position); // here is why we need position
@@ -97,6 +104,10 @@ public class Chain implements Comparable<Chain>, CoordinateSet<Chain>, Iterable<
     public Chain applyTransformation(CoordinateTransformation transformation) {
         return new Chain(this, residues.stream()
                 .map(x -> x.applyTransformation(transformation)).collect(Collectors.toList()));
+    }
+
+    public Chain withIdentifier(char newIdentifier) {
+        return new Chain(this, chainIdentifier);
     }
 
     @Override

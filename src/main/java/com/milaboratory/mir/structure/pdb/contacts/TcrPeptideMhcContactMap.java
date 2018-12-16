@@ -27,24 +27,34 @@ public final class TcrPeptideMhcContactMap {
         this(tcrPart.getAntigenReceptor(),
                 pMhcPart.getPeptideMhcComplex(),
                 tcrPart.getStructure().getId() + ":" + pMhcPart.getStructure().getId(),
-                maxCaDistance, maxAtomDistance, allCdrPeptide
+                maxCaDistance, maxAtomDistance, allCdrPeptide, true
         );
     }
 
     public TcrPeptideMhcContactMap(AntigenReceptor tcr, PeptideMhcComplex pMhc,
                                    String structureId,
                                    float maxCaDistance, float maxAtomDistance,
-                                   boolean allCdrPeptide) {
+                                   boolean allCdrPeptide,
+                                   boolean fixChainNameCollision) {
         this(new TcrPeptideMhcComplex(tcr, pMhc,
                         new Structure(structureId,
-                                Arrays.asList(tcr.getFirstChain().getStructureChain(),
-                                        tcr.getSecondChain().getStructureChain(),
-                                        pMhc.getPeptideChain().getStructureChain(),
-                                        pMhc.getMhcComplex().getFirstChain().getStructureChain(),
-                                        pMhc.getMhcComplex().getSecondChain().getStructureChain()
-                                ))),
+                                fixChainNameCollision ?
+                                        Arrays.asList(tcr.getFirstChain().getStructureChain().withIdentifier('A'),
+                                                tcr.getSecondChain().getStructureChain().withIdentifier('B'),
+                                                pMhc.getPeptideChain().getStructureChain().withIdentifier('C'),
+                                                pMhc.getMhcComplex().getFirstChain().getStructureChain().withIdentifier('D'),
+                                                pMhc.getMhcComplex().getSecondChain().getStructureChain().withIdentifier('E')
+                                        ) :
+                                        Arrays.asList(tcr.getFirstChain().getStructureChain(),
+                                                tcr.getSecondChain().getStructureChain(),
+                                                pMhc.getPeptideChain().getStructureChain(),
+                                                pMhc.getMhcComplex().getFirstChain().getStructureChain(),
+                                                pMhc.getMhcComplex().getSecondChain().getStructureChain()
+                                        ))
+                ),
                 maxCaDistance, maxAtomDistance, allCdrPeptide);
     }
+
 
     public TcrPeptideMhcContactMap(TcrPeptideMhcComplex tcrPeptideMhcComplex) {
         this(tcrPeptideMhcComplex, 25f, 5f, true);
