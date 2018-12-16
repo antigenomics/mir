@@ -43,8 +43,13 @@ public class ComputeTPMContacts extends IOPathBaseScript {
     private float maxAtomDist;
 
     @CommandLine.Option(names = {"-p", "--permute"},
-            description = "If set, will permute pMHCs replacing native pMHCs for TCRs of the same species.")
+            description = "If set, will permute pMHCs replacing native pMHCs for TCRs producing " +
+                    "all possible TCR:pMHC combinations")
     private boolean performPermutations;
+
+    @CommandLine.Option(names = {"-s", "--permute-species"},
+            description = "If set, allows permutations across species")
+    private boolean permuteCrossSpecies;
 
     @Override
     public Void call() throws Exception {
@@ -93,8 +98,11 @@ public class ComputeTPMContacts extends IOPathBaseScript {
 
                         otherMappedComplexes.parallelStream().forEach(
                                 otherMappedComplex -> {
-                                    var contactMap = new TcrPeptideMhcContactMap(mappedComplex, otherMappedComplex);
-                                    contactWriter.accept(contactMap);
+                                    if (permuteCrossSpecies ||
+                                            mappedComplex.getSpecies() == otherMappedComplex.getSpecies()) {
+                                        var contactMap = new TcrPeptideMhcContactMap(mappedComplex, otherMappedComplex);
+                                        contactWriter.accept(contactMap);
+                                    }
                                 }
                         );
 
