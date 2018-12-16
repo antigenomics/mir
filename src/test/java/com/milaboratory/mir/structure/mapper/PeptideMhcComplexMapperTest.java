@@ -75,13 +75,10 @@ public class PeptideMhcComplexMapperTest {
         Assert.assertTrue(resOpt.isPresent());
     }
 
-    private Optional<TcrPeptideMhcComplex> map(String internalId) {
+    public static Optional<TcrPeptideMhcComplex> map(String internalId) {
         var struct = TestStructureCache.get(internalId);
 
-        var mapper = new PeptideMhcComplexMapper(
-                new SimpleExhaustiveMapperFactory<>(
-                        AffineGapAlignmentScoring.getAminoAcidBLASTScoring(BLASTMatrix.BLOSUM62))
-        );
+        var mapper = PeptideMhcComplexMapper.DEFAULT;
 
         return mapper.map(struct);
     }

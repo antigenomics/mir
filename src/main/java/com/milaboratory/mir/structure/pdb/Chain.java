@@ -107,7 +107,7 @@ public class Chain implements Comparable<Chain>, CoordinateSet<Chain>, Iterable<
     }
 
     public Chain withIdentifier(char newIdentifier) {
-        return new Chain(this, chainIdentifier);
+        return new Chain(this, newIdentifier);
     }
 
     @Override

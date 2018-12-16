@@ -14,7 +14,7 @@ public final class TcrPeptideMhcContactMap {
 
     public TcrPeptideMhcContactMap(AntigenReceptor tcr, PeptideMhcComplex pMhc,
                                    String structureId) {
-        this(tcr, pMhc, structureId, 25f, 5f, true);
+        this(tcr, pMhc, structureId, 25f, 5f, true, true);
     }
 
     public TcrPeptideMhcContactMap(TcrPeptideMhcComplex tcrPart, TcrPeptideMhcComplex pMhcPart) {
