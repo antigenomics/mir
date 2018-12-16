@@ -13,7 +13,8 @@ public class Examples implements Runnable {
                 .addSubcommand("compute-pdb-geom", new ComputePDBGeometry())
                 .addSubcommand("compute-pdb-contacts", new ComputePDBContacts())
                 .addSubcommand("filter-structures", new FilterStructures())
-                .addSubcommand("clonotype-summary-stats", new ClonotypeSummaryStatistics());
+                .addSubcommand("clonotype-summary-stats", new ClonotypeSummaryStatistics())
+                .addSubcommand("compute-tpm-contacts", new ComputeTPMContacts());
         cmd.parseWithHandler(new CommandLine.RunAll(), args);
     }
 

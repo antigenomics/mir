@@ -1,7 +1,10 @@
 package com.milaboratory.mir.structure.mapper;
 
+import com.milaboratory.core.alignment.AffineGapAlignmentScoring;
+import com.milaboratory.core.alignment.BLASTMatrix;
 import com.milaboratory.core.sequence.AminoAcidSequence;
 import com.milaboratory.mir.mappers.SequenceMapperFactory;
+import com.milaboratory.mir.mappers.align.SimpleExhaustiveMapperFactory;
 import com.milaboratory.mir.mhc.MhcAllele;
 import com.milaboratory.mir.segment.JoiningSegment;
 import com.milaboratory.mir.segment.VariableSegment;
@@ -19,6 +22,13 @@ import java.util.Optional;
 public class PeptideMhcComplexMapper {
     private final AntigenReceptorMapper antigenReceptorMapper;
     private final MhcComplexMapper mhcComplexMapper;
+
+    // todo: rewrite simple mapper to kmer based
+    public static final PeptideMhcComplexMapper DEFAULT = new PeptideMhcComplexMapper(
+            new SimpleExhaustiveMapperFactory<>(
+                    AffineGapAlignmentScoring.getAminoAcidBLASTScoring(BLASTMatrix.BLOSUM62)
+            )
+    );
 
     public PeptideMhcComplexMapper(SequenceMapperFactory<AminoAcidSequence> mapperFactory) {
         this(DefaultComplexMapperLibrary.INSTANCE.getMhcAlleles(),
