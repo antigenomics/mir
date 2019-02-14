@@ -1,5 +1,8 @@
 package com.milaboratory.mir.clonotype;
 
+import com.milaboratory.core.sequence.AminoAcidSequence;
+import com.milaboratory.core.sequence.NucleotideSequence;
+import org.junit.Assert;
 import org.junit.Test;
 
 import static com.milaboratory.mir.clonotype.ClonotypeHelper.*;
@@ -10,14 +13,25 @@ public class ClonotypeHelperTest {
     public void clonotypeTest() {
         System.out.println(clonotypeFrom("TGTTGCGCTCCTGTCTCT"));
 
-        System.out.println(clonotypeFrom("TGTTGTCCGCTCGTCTCT", "TRBV1", "TRBJ1"));
+        var c = clonotypeFrom("TGTTGTCCGCTCGTCTCT", "TRBV1", "TRBJ1");
+        System.out.println(c);
+
+        Assert.assertEquals(new AminoAcidSequence("CCPLVS"), c.getCdr3Aa());
     }
 
     @Test
     public void clonotypeTableTest() {
-        System.out.println(
-                clonotypeTableFrom(clonotypeFrom("TGTTGCGCTCCTGTCTCT"),
-                        clonotypeFrom("TGTTGTCCGCTCGTCTCT", "TRBV1", "TRBJ1")
-                ));
+        var sample = clonotypeTableFrom(clonotypeFrom("TGTTGCGCTCCTGTCTCT"),
+                clonotypeFrom("TGTTGTCCGCTCGTCTCT", "TRBV1", "TRBJ1")
+        );
+        System.out.println(sample);
+        Assert.assertEquals(2, sample.size());
+    }
+
+    @Test
+    public void mockTranslateTest() {
+        var c = clonotypeFromAa("CASS");
+        System.out.println(c);
+        Assert.assertEquals(new NucleotideSequence("TGTGCTTCTTCT"), c.getCdr3Nt());
     }
 }

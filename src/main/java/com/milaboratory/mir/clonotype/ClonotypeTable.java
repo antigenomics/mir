@@ -48,6 +48,10 @@ public class ClonotypeTable<T extends Clonotype>
         return Collections.unmodifiableList(clonotypes);
     }
 
+    public int size() {
+        return clonotypes.size();
+    }
+
     @Override
     public String toString() {
         String res = "[Sample of " + clonotypes.size() + " clonotypes]\n";
