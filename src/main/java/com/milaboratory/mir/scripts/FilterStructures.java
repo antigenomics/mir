@@ -22,29 +22,9 @@ import java.util.stream.Collectors;
         sortOptions = false,
         description = "Filters PDB structures and retains the parts that were annotated as TCR:pMHC. ",
         mixinStandardHelpOptions = true)
-public class FilterStructures implements Callable<Void> {
-    @CommandLine.Option(names = {"-I", "--input"},
-            required = true,
-            paramLabel = "<path/to/pdb>",
-            arity = "1..*",
-            description = "Path to input file(s), space-separated")
-    private List<String> inputPaths;
-
-    @CommandLine.Option(names = {"-O", "--output"},
-            required = true,
-            paramLabel = "<path/prefix>",
-            description = "Path and prefix for output files")
-    private String outputPrefix;
-
+public class FilterStructures extends IOPathBaseScript {
     @Override
     public Void call() throws Exception {
-        // create all missing folders in output path
-        var targetPath = new File(createPath("tmp"));
-        var parent = targetPath.getParentFile();
-        if (!parent.exists() && !parent.mkdirs()) {
-            throw new IllegalStateException("Couldn't create dir: " + parent);
-        }
-
         // structure -> annotated structure mapper
         var mapper = new PeptideMhcComplexMapper(
                 // todo: rewrite simple mapper to kmer based
@@ -56,7 +36,7 @@ public class FilterStructures implements Callable<Void> {
         inputPaths.parallelStream().forEach(
                 inputFileName -> {
                     var inputFile = new File(inputFileName);
-                    try (PrintWriter pw = new PrintWriter(outputPrefix + "/" + inputFileName)) {
+                    try (PrintWriter pw = new PrintWriter(getOutputStream(inputFileName))) {
                         // read PDB
                         var structFile = PdbParserUtils.parseStructure(inputFile.getName(),
                                 new FileInputStream(inputFile));
@@ -78,11 +58,5 @@ public class FilterStructures implements Callable<Void> {
         );
 
         return null;
-    }
-
-    private String createPath(String suffix) {
-        return outputPrefix +
-                (outputPrefix.endsWith(File.separator) ? "" : ".") +
-                suffix + ".txt";
     }
 }

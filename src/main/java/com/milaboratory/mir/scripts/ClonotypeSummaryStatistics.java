@@ -31,7 +31,7 @@ public class ClonotypeSummaryStatistics extends ClonotypeTableBaseScript {
                 summaryType -> summaryType,
                 summaryType -> {
                     try {
-                        var res = new PrintWriter(getOutputStream(summaryType.toString().toLowerCase()));
+                        var res = new PrintWriter(getOutputStream(summaryType.toString().toLowerCase()  + ".txt"));
                         res.println("sample.id\t" + ClonotypeSummaryTableHelper.getHeader(summaryType));
                         return res;
                     } catch (FileNotFoundException e) {

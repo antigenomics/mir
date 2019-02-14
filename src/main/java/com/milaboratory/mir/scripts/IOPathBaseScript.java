@@ -38,7 +38,7 @@ public abstract class IOPathBaseScript implements Callable<Void> {
 
         return outputPrefix +
                 (outputPrefix.endsWith(File.separator) ? "" : ".") +
-                suffix + ".txt";
+                suffix;
     }
 
     protected OutputStream getOutputStream(String suffix) throws FileNotFoundException {

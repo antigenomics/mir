@@ -18,7 +18,7 @@ import java.util.stream.Collectors;
 @CommandLine.Command(name = "compute-tpm-contacts",
         sortOptions = false,
         description = "Computes residue-residue contacts provided a set of TCR:pMHC complexes. " +
-                "Can also permute pMHCs across structures to generate mock complexes" +
+                "Can also permute pMHCs across structures to generate mock complexes " +
                 "Will generate the following annotation file:" +
                 "[general] annotation of PDB structure chains, " +
                 "specifying TCR/peptide/MHC chains and corresponding alleles; " +
@@ -85,15 +85,16 @@ public class ComputeTPMContacts extends IOPathBaseScript {
         ).flatMap(Optional::stream).collect(Collectors.toList());
 
         try (var annotationWriter = new MultiTableWriter<>(Arrays.asList(
-                new GeneralAnnotationWriter(getOutputStream("general")),
-                new MarkupAnnotationWriter(getOutputStream("markup"))));
-             var contactWriter = new TcrPeptideMhcContactMapWriter(getOutputStream("contacts"))
+                new GeneralAnnotationWriter(getOutputStream("general.txt")),
+                new MarkupAnnotationWriter(getOutputStream("markup.txt"))));
+             var contactWriter = new TcrPeptideMhcContactMapWriter(getOutputStream("contacts.txt"))
         ) {
             mappedComplexes.parallelStream().forEach(
                     mappedComplex -> {
                         annotationWriter.accept(mappedComplex);
 
-                        var otherMappedComplexes = performPermutations ? mappedComplexes :
+                        var otherMappedComplexes = performPermutations ?
+                                mappedComplexes :
                                 Collections.singletonList(mappedComplex);
 
                         otherMappedComplexes.parallelStream().forEach(
