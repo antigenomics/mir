@@ -2,10 +2,10 @@ package com.milaboratory.mir.segment;
 
 import org.junit.Test;
 
-public class VariableSegmentImplTest {
+public class ConstantSegmentImplTest {
     // todo
     @Test
     public void mockTest() {
-        System.out.println(VariableSegmentImpl.mock("TRBV6"));
+        System.out.println(ConstantSegmentImpl.mock("TRBC1"));
     }
 }

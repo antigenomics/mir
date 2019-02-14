@@ -6,10 +6,10 @@ import java.util.stream.Collectors;
 public class SegmentLibraryImpl implements SegmentLibrary {
     private final Species species;
     private final Gene gene;
-    private final Map<String, VariableSegment> variableSegmentMap, variableSegmentMajorAlleleMap;
-    private final Map<String, DiversitySegment> diversitySegmentMap, diversitySegmentMajorAlleleMap;
-    private final Map<String, JoiningSegment> joiningSegmentMap, joiningSegmentMajorAlleleMap;
-    private final Map<String, ConstantSegment> constantSegmentMap, constantSegmentMajorAlleleMap;
+    protected final Map<String, VariableSegment> variableSegmentMap, variableSegmentMajorAlleleMap;
+    protected final Map<String, DiversitySegment> diversitySegmentMap, diversitySegmentMajorAlleleMap;
+    protected final Map<String, JoiningSegment> joiningSegmentMap, joiningSegmentMajorAlleleMap;
+    protected final Map<String, ConstantSegment> constantSegmentMap, constantSegmentMajorAlleleMap;
 
     public SegmentLibraryImpl(Species species, Gene gene,
                               Map<String, VariableSegment> variableSegmentMap,
@@ -34,10 +34,10 @@ public class SegmentLibraryImpl implements SegmentLibrary {
         return majorMap;
     }
 
-    private static Map<String, String> createMockMajorMap(Map<String, ? extends Segment> map){
+    private static Map<String, String> createMockMajorMap(Map<String, ? extends Segment> map) {
         var majorMap = new HashMap<String, String>();
 
-        for(String name : map.keySet()) {
+        for (String name : map.keySet()) {
             majorMap.put(name, name);
             for (String suffix : Arrays.asList("*00", "*01")) {
                 var majorName = name.replaceFirst("\\*\\d\\d$", suffix);
@@ -56,13 +56,27 @@ public class SegmentLibraryImpl implements SegmentLibrary {
                               Map<String, JoiningSegment> joiningSegmentMap,
                               Map<String, ConstantSegment> constantSegmentMap,
                               Map<String, String> majorAlleleAliases) {
+        this(species, gene,
+                variableSegmentMap, diversitySegmentMap, joiningSegmentMap, constantSegmentMap,
+                majorAlleleAliases, false);
+    }
+
+    SegmentLibraryImpl(Species species, Gene gene,
+                       Map<String, VariableSegment> variableSegmentMap,
+                       Map<String, DiversitySegment> diversitySegmentMap,
+                       Map<String, JoiningSegment> joiningSegmentMap,
+                       Map<String, ConstantSegment> constantSegmentMap,
+                       Map<String, String> majorAlleleAliases,
+                       boolean unsafe) {
         this.species = species;
         this.gene = gene;
-        if (variableSegmentMap.isEmpty()) {
-            throw new IllegalArgumentException("No Variable segments in library.");
-        }
-        if (joiningSegmentMap.isEmpty()) {
-            throw new IllegalArgumentException("No Joining segments in library.");
+        if (!unsafe) {
+            if (variableSegmentMap.isEmpty()) {
+                throw new IllegalArgumentException("No Variable segments in library.");
+            }
+            if (joiningSegmentMap.isEmpty()) {
+                throw new IllegalArgumentException("No Joining segments in library.");
+            }
         }
         this.variableSegmentMap = variableSegmentMap;
         this.diversitySegmentMap = diversitySegmentMap;

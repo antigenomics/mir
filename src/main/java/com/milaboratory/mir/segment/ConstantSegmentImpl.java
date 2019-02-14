@@ -11,6 +11,10 @@ public class ConstantSegmentImpl implements ConstantSegment {
     private final AminoAcidSequence germlineSequenceAa;
     private final boolean majorAllele;
 
+    public static ConstantSegmentImpl mock(String id) {
+        return new ConstantSegmentImpl(id, NucleotideSequence.EMPTY, true);
+    }
+
     public ConstantSegmentImpl(String id, NucleotideSequence germlineSequenceNt, boolean majorAllele) {
         this.id = id;
         this.germlineSequenceNt = germlineSequenceNt;

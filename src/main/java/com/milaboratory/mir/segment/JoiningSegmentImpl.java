@@ -18,6 +18,11 @@ public class JoiningSegmentImpl implements JoiningSegment {
     private final int referencePoint;
     private final boolean majorAllele;
 
+    public static JoiningSegmentImpl mock(String id) {
+        return new JoiningSegmentImpl(id, new NucleotideSequence("TTC"),
+                -1, true);
+    }
+
     public JoiningSegmentImpl(String id,
                               NucleotideSequence germlineNt,
                               int referencePoint,

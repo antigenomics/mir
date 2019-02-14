@@ -18,6 +18,12 @@ public class VariableSegmentImpl implements VariableSegment {
     private final PrecomputedSequenceRegionMarkup<AminoAcidSequence, AntigenReceptorRegionType> regionMarkupAa;
     private final boolean majorAllele;
 
+    public static VariableSegmentImpl mock(String id) {
+        return new VariableSegmentImpl(id, new NucleotideSequence("TGT"),
+                0, 0, 0, 0, 3,
+                true);
+    }
+
     public VariableSegmentImpl(String id,
                                NucleotideSequence germlineNt,
                                int cdr1Start, int cdr1End, int cdr2Start, int cdr2End, int referencePoint,

@@ -12,6 +12,10 @@ public class DiversitySegmentImpl implements DiversitySegment {
     private final AminoAcidSequence cdr3PartAa;
     private final boolean majorAllele;
 
+    public static DiversitySegmentImpl mock(String id) {
+        return new DiversitySegmentImpl(id, NucleotideSequence.EMPTY, true);
+    }
+
     public DiversitySegmentImpl(String id,
                                 NucleotideSequence cdr3Part,
                                 boolean majorAllele) {
