@@ -48,7 +48,7 @@ public class MixcrClonotypeParser extends AbstractClonotypeTableParser<ReadlessC
     public ClonotypeCall<ReadlessClonotypeImpl> parse(String[] splitLine) {
         // todo: ask Dima if its long or int
         int id = Integer.parseInt(splitLine[headerInfo.cloneIdColIndex]);
-        int count = Math.round(Float.parseFloat(splitLine[headerInfo.countColIndex]));
+        long count = Math.round(Float.parseFloat(splitLine[headerInfo.countColIndex]));
         double freq = Double.parseDouble(splitLine[headerInfo.freqColIndex]);
 
         NucleotideSequence cdr3Nt = new NucleotideSequence(splitLine[headerInfo.cdr3NtColIndex]);

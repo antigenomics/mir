@@ -11,11 +11,12 @@ public class ClonotypeCall<T extends Clonotype> implements Clonotype {
         return new ClonotypeCall<>(-1, -1, -1, null);
     }
 
-    private final int id, count;
+    private final int id;
+    private final long count;
     private final double frequency;
     private final T clonotype;
 
-    public ClonotypeCall(int id, int count, double frequency, T clonotype) {
+    public ClonotypeCall(int id, long count, double frequency, T clonotype) {
         this.id = id;
         this.count = count;
         this.frequency = frequency;
@@ -26,7 +27,7 @@ public class ClonotypeCall<T extends Clonotype> implements Clonotype {
         return id;
     }
 
-    public int getCount() {
+    public long getCount() {
         return count;
     }
 

@@ -27,7 +27,7 @@ public class VDJtoolsClonotypeParser extends AbstractClonotypeTableParser<Readle
     @Override
     public ClonotypeCall<ReadlessClonotypeImpl> parse(String[] splitLine) {
         int id = idCounter.incrementAndGet();
-        int count = Integer.parseInt(splitLine[headerInfo.countColIndex]);
+        long count = Integer.parseInt(splitLine[headerInfo.countColIndex]);
         double freq = Double.parseDouble(splitLine[headerInfo.freqColIndex]);
 
         NucleotideSequence cdr3Nt = new NucleotideSequence(splitLine[headerInfo.cdr3NtColIndex]);
