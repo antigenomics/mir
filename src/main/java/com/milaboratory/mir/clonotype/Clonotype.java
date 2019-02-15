@@ -4,7 +4,9 @@ import com.milaboratory.core.sequence.AminoAcidSequence;
 import com.milaboratory.core.sequence.NucleotideSequence;
 import com.milaboratory.mir.segment.*;
 
+import java.util.Comparator;
 import java.util.List;
+import java.util.function.Supplier;
 
 public interface Clonotype {
     NucleotideSequence getCdr3Nt();
@@ -18,6 +20,26 @@ public interface Clonotype {
     List<SegmentCall<JoiningSegment>> getJoiningSegmentCalls();
 
     List<SegmentCall<ConstantSegment>> getConstantSegmentCalls();
+
+    default VariableSegment getBestVariableSegment() {
+        return getVariableSegmentCalls().stream().max(Comparator.naturalOrder())
+                .map(SegmentCall::getSegment).orElseGet(() -> MissingVariableSegment.INSTANCE);
+    }
+
+    default DiversitySegment getBestDiversitySegment() {
+        return getDiversitySegmentCalls().stream().max(Comparator.naturalOrder())
+                .map(SegmentCall::getSegment).orElseGet(() -> MissingDiversitySegment.INSTANCE);
+    }
+
+    default JoiningSegment getBestJoiningSegment() {
+        return getJoiningSegmentCalls().stream().max(Comparator.naturalOrder())
+                .map(SegmentCall::getSegment).orElseGet(() -> MissingJoiningSegment.INSTANCE);
+    }
+
+    default ConstantSegment getBestConstantSegment() {
+        return getConstantSegmentCalls().stream().max(Comparator.naturalOrder())
+                .map(SegmentCall::getSegment).orElseGet(() -> MissingConstantSegment.INSTANCE);
+    }
 
     default double getWeight() {
         return 1.0;

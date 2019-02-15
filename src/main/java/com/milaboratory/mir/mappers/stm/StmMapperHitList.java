@@ -12,6 +12,6 @@ public final class StmMapperHitList<T, S extends Sequence<S>>
     }
 
     StmMapperHitList(List<StmMapperHit<T, S>> hits, boolean unsafe) {
-        super(hits, unsafe);
+        super(hits, unsafe, true);
     }
 }

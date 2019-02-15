@@ -3,7 +3,7 @@ package com.milaboratory.mir.segment;
 import java.util.Collections;
 import java.util.List;
 
-public class SegmentCall<T extends Segment> {
+public class SegmentCall<T extends Segment> implements Comparable<SegmentCall<T>> {
     private final T segment;
     private final float weight;
 
@@ -35,5 +35,10 @@ public class SegmentCall<T extends Segment> {
     @Override
     public String toString() {
         return segment.getId() + "(" + weight + ")";
+    }
+
+    @Override
+    public int compareTo(SegmentCall<T> o) {
+        return Float.compare(weight, o.weight);
     }
 }

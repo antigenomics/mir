@@ -12,7 +12,7 @@ public final class AlignerHitList<T, S extends Sequence<S>>
         super(hits);
     }
 
-    AlignerHitList(List<HitWithAlignmentImpl<T, S>> hits, boolean unsafe) {
-        super(hits, unsafe);
+    AlignerHitList(List<HitWithAlignmentImpl<T, S>> hits, boolean unsafe, boolean sorted) {
+        super(hits, unsafe, sorted); // todo: maybe just set sorted to false
     }
 }

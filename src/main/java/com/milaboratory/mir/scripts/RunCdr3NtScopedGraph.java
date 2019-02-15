@@ -1,7 +1,5 @@
 package com.milaboratory.mir.scripts;
 
-import com.milaboratory.core.mutations.Mutations;
-import com.milaboratory.core.sequence.NucleotideSequence;
 import com.milaboratory.mir.CommonUtils;
 import com.milaboratory.mir.clonotype.Clonotype;
 import com.milaboratory.mir.clonotype.parser.ClonotypeTableParserUtils;
@@ -9,6 +7,8 @@ import com.milaboratory.mir.clonotype.parser.Software;
 import com.milaboratory.mir.clonotype.rearrangement.ClonotypeWithRearrangementInfo;
 import com.milaboratory.mir.clonotype.rearrangement.JunctionMarkup;
 import com.milaboratory.mir.graph.Cdr3NtScopedGraph;
+import com.milaboratory.mir.graph.Scope2DParameters;
+import com.milaboratory.mir.graph.VJGroupedCdr3NtScopedGraph;
 import com.milaboratory.mir.segment.Gene;
 import com.milaboratory.mir.segment.Species;
 import picocli.CommandLine;
@@ -23,6 +23,7 @@ import java.util.concurrent.Callable;
                 "Only edges with number of substitutions and indels within search scope (-s/-d) will be returned.",
         mixinStandardHelpOptions = true)
 public class RunCdr3NtScopedGraph implements Callable<Void> {
+    // todo: reimplement using available parent classes
     @CommandLine.Option(names = {"-I", "--input"},
             required = true,
             paramLabel = "<path[.gz]>",
@@ -83,20 +84,33 @@ public class RunCdr3NtScopedGraph implements Callable<Void> {
             description = "Specify antigen receptor gene (allowed values: ${COMPLETION-CANDIDATES})")
     private Gene gene;
 
+    @CommandLine.Option(names = {"-V", "--vj-grouping"},
+            description = "If set, will only search for matches within the same VJ combination. " +
+                    "Applicable to lineage analysis of B-cells.")
+    private boolean groupByVJ;
+
+    @CommandLine.Option(names = {"-U", "--fuzzy-vj"},
+            description = "If set, assume that VJ mapping is done imprecisely " +
+                    "(real sample, not full length). Will use all possible combinations of inferred VJs." +
+                    "Takes effect only if VJ " +
+                    "grouping is set.")
+    private boolean fuzzyVJ;
+
     @Override
     public Void call() throws Exception {
         var input = ClonotypeTableParserUtils.streamFrom(
                 CommonUtils.getFileAsStream(inputPath),
                 software, species, gene);
-
+        var params = new Scope2DParameters(kNn,
+                maxSubstitutions, maxIndels,
+                maxAaSubstitutions, maxAaIndels);
         var output = CommonUtils.createFileAsStream(outputPath);
         try (var pw = new PrintWriter(output)) {
             pw.println("from.id\tto.id\tfrom.cdr3nt.aln\tto.cdr3nt.aln\tsubsts\tindels\t" +
                     "from.v.end\tfrom.d.start\tfrom.d.end\tfrom.j.start\t" +
                     "to.v.end\tto.d.start\tto.d.end\tto.j.start");
-            new Cdr3NtScopedGraph<>(input, kNn,
-                    maxSubstitutions, maxIndels,
-                    maxAaSubstitutions, maxAaIndels)
+            (groupByVJ ? new VJGroupedCdr3NtScopedGraph<>(input, params, fuzzyVJ) :
+                    new Cdr3NtScopedGraph<>(input, params, false)) // todo
                     .parallelStream()
                     .forEach(edge -> {
                         var helper = edge.getAlignment().getAlignmentHelper();

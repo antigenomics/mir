@@ -5,6 +5,7 @@ import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
 public interface SinglePassPipe<T> extends Iterator<T>, Pipe<T> {
+    // todo: ensure we only call this once?
     default Iterable<T> iterable() {
         return () -> this;
     }

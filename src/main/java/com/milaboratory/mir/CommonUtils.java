@@ -45,6 +45,8 @@ public final class CommonUtils {
         return path.toLowerCase().endsWith(".gz");
     }
 
+    // todo: transfer to collection utils
+
     public static <K1, V1, K2, V2> Map<K2, V2> map2map(Map<K1, V1> map,
                                                        Function<Map.Entry<K1, V1>, K2> keyMapper,
                                                        Function<Map.Entry<K1, V1>, V2> valueMapper) {

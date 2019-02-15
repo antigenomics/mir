@@ -40,7 +40,7 @@ public final class SimpleExhaustiveMapper<T, S extends Sequence<S>> implements S
                                         x.getSequence(), query))
                 )
                 .collect(Collectors.toList()),
-                true);
+                true, false);
     }
 
     public List<ObjectWithSequence<T, S>> getTargets() {
