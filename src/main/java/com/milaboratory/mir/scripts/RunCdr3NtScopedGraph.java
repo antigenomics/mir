@@ -2,6 +2,7 @@ package com.milaboratory.mir.scripts;
 
 import com.milaboratory.mir.CommonUtils;
 import com.milaboratory.mir.clonotype.Clonotype;
+import com.milaboratory.mir.clonotype.ClonotypeCall;
 import com.milaboratory.mir.clonotype.parser.ClonotypeTableParserUtils;
 import com.milaboratory.mir.clonotype.parser.Software;
 import com.milaboratory.mir.clonotype.rearrangement.ClonotypeWithRearrangementInfo;
@@ -84,12 +85,12 @@ public class RunCdr3NtScopedGraph implements Callable<Void> {
             description = "Specify antigen receptor gene (allowed values: ${COMPLETION-CANDIDATES})")
     private Gene gene;
 
-    @CommandLine.Option(names = {"-V", "--vj-grouping"},
+    @CommandLine.Option(names = {"-VJ", "--vj-grouping"},
             description = "If set, will only search for matches within the same VJ combination. " +
                     "Applicable to lineage analysis of B-cells.")
     private boolean groupByVJ;
 
-    @CommandLine.Option(names = {"-U", "--fuzzy-vj"},
+    @CommandLine.Option(names = {"-FVJ", "--fuzzy-vj"},
             description = "If set, assume that VJ mapping is done imprecisely " +
                     "(real sample, not full length). Will use all possible combinations of inferred VJs." +
                     "Takes effect only if VJ " +

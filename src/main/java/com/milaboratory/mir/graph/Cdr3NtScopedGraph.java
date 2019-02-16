@@ -60,7 +60,7 @@ public class Cdr3NtScopedGraph<T extends Clonotype>
                             .map(from.getCdr3Aa())
                             .getHits()
                             .stream()
-                            .filter(x -> x.getTarget() == from)
+                            .filter(x -> x.getTarget() != from)
                             .collect(Collectors.toList());
 
                     // 2) select k best hits

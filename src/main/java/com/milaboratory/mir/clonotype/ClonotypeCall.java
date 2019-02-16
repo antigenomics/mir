@@ -6,7 +6,8 @@ import com.milaboratory.mir.segment.*;
 
 import java.util.List;
 
-public class ClonotypeCall<T extends Clonotype> implements Clonotype {
+public class ClonotypeCall<T extends Clonotype> implements Clonotype,
+        Comparable<ClonotypeCall<T>> {
     public static <T extends Clonotype> ClonotypeCall<T> getDummy() {
         return new ClonotypeCall<>(-1, -1, -1, null);
     }
@@ -77,5 +78,10 @@ public class ClonotypeCall<T extends Clonotype> implements Clonotype {
     @Override
     public String toString() {
         return id + "\t" + count + "\t" + frequency + "\t" + clonotype;
+    }
+
+    @Override
+    public int compareTo(ClonotypeCall<T> o) {
+        return Long.compare(count, o.count);
     }
 }

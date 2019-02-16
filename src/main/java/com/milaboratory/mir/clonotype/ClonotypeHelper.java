@@ -56,7 +56,7 @@ public final class ClonotypeHelper {
                     Map.entry('Y', "TAT")
             );
 
-    private static  String mockTranslate(String cdr3aa) {
+    private static String mockTranslate(String cdr3aa) {
         StringBuilder res = new StringBuilder();
         for (int i = 0; i < cdr3aa.length(); i++) {
             res.append(mockCodons.get(cdr3aa.charAt(i)));
@@ -65,7 +65,7 @@ public final class ClonotypeHelper {
     }
 
     @SuppressWarnings("unchecked")
-    public static ClonotypeTable clonotypeTableFrom(Clonotype... clonotype) {
+    public static ClonotypeTable<? extends Clonotype> clonotypeTableFrom(Clonotype... clonotype) {
         var clonotypeList = new ArrayList<ClonotypeCall>();
         for (int i = 0; i < clonotype.length; i++) {
             var c = clonotype[i];

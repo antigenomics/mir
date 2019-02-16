@@ -1,6 +1,7 @@
 package com.milaboratory.mir.scripts;
 
 import com.milaboratory.mir.CommonUtils;
+import com.milaboratory.mir.clonotype.Clonotype;
 import com.milaboratory.mir.clonotype.ClonotypeCall;
 import com.milaboratory.mir.clonotype.io.ClonotypeTablePipe;
 import com.milaboratory.mir.clonotype.parser.ClonotypeTableParserUtils;
@@ -35,11 +36,11 @@ public abstract class ClonotypeTableBaseScript extends IOPathBaseScript {
 
     // todo: custom segment library?
 
-    protected Collection<ClonotypeTablePipe<? extends ClonotypeCall>> getClonotypePipes() {
+    protected Collection<ClonotypeTablePipe<? extends Clonotype>> getClonotypePipes() {
         return getClonotypePipesWithId().values();
     }
 
-    protected Map<String, ClonotypeTablePipe<? extends ClonotypeCall>> getClonotypePipesWithId() {
+    protected Map<String, ClonotypeTablePipe<? extends Clonotype>> getClonotypePipesWithId() {
         return inputPaths.stream().collect(Collectors.toMap(
                 inputPath -> inputPath,
                 inputPath ->
