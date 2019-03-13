@@ -30,6 +30,8 @@ public class VDJdbClonotypeParserTest {
         assertEquals(3, clonotype.getJunctionMarkup().getVEnd());
 
         assertTrue(!clonotype.getAnnotations().isEmpty());
+
+        System.out.println(clonotype);
     }
 
 }

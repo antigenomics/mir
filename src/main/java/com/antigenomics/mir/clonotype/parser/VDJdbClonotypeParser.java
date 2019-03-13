@@ -8,14 +8,15 @@ import com.antigenomics.mir.clonotype.rearrangement.ReadlessClonotypeImpl;
 import com.antigenomics.mir.clonotype.rearrangement.SegmentTrimming;
 import com.antigenomics.mir.segment.*;
 import com.google.gson.Gson;
+import com.google.gson.internal.LinkedTreeMap;
+import com.google.gson.reflect.TypeToken;
 import com.milaboratory.core.sequence.AminoAcidSequence;
 import com.milaboratory.core.sequence.NucleotideSequence;
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.lang.reflect.Type;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.function.Consumer;
 
 public class VDJdbClonotypeParser extends AbstractClonotypeTableParser<ReadlessClonotypeImpl> {
     private final HeaderInfo headerInfo;
@@ -53,7 +54,7 @@ public class VDJdbClonotypeParser extends AbstractClonotypeTableParser<ReadlessC
 
         JunctionMarkup junctionMarkup = new JunctionMarkup(vEnd, jStart, -1, -1);
 
-        Map<String, String> annotations = new HashMap<>() {{
+        HashMap<String, String> annotations = new HashMap<>() {{
             put("complex.id", splitLine[headerInfo.complexIdColIndex]);
             put("gene", splitLine[headerInfo.geneColIndex]);
             put("species", splitLine[headerInfo.geneColIndex]);
@@ -64,15 +65,19 @@ public class VDJdbClonotypeParser extends AbstractClonotypeTableParser<ReadlessC
             put("antigen.gene", splitLine[headerInfo.antigenGeneColIndex]);
             put("antigen.species", splitLine[headerInfo.antigenSpeciesColIndex]);
             put("reference.id", splitLine[headerInfo.referenceIdColIndex]);
-            put("method", splitLine[headerInfo.methodColIndex]);
-            put("meta", splitLine[headerInfo.metaColIndex]);
-            put("cdr3fix", splitLine[headerInfo.cdr3FixColIndex]);
             put("vdjdb.score", splitLine[headerInfo.vdjdbScoreColIndex]);
             put("web.method", splitLine[headerInfo.webMethodColIndex]);
             put("web.method.seq", splitLine[headerInfo.webMethodSeqColIndex]);
             put("web.cdr3fix.nc", splitLine[headerInfo.webCdr3FixNcColIndex]);
             put("web.cdr3fix.unmp", splitLine[headerInfo.webCdr3FixUnmpColIndex]);
         }};
+
+        Arrays.asList(headerInfo.methodColIndex, headerInfo.metaColIndex, headerInfo.cdr3FixColIndex).forEach(index -> {
+            HashMap<String, String> g = gson.fromJson(splitLine[index], new TypeToken<HashMap<String, String>>() {
+            }.getType());
+
+            g.forEach(annotations::put);
+        });
 
         return new ClonotypeCall<>(id, count, freq,
                 new ReadlessClonotypeImpl(cdr3Nt,
