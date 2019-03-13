@@ -3,10 +3,11 @@ package com.antigenomics.mir.clonotype.rearrangement;
 import com.antigenomics.mir.segment.*;
 import com.milaboratory.core.sequence.AminoAcidSequence;
 import com.milaboratory.core.sequence.NucleotideSequence;
-import com.antigenomics.mir.segment.*;
 
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 public class ReadlessClonotypeImpl implements ClonotypeWithRearrangementInfo {
@@ -18,6 +19,7 @@ public class ReadlessClonotypeImpl implements ClonotypeWithRearrangementInfo {
     private final List<SegmentCall<DiversitySegment>> diversitySegmentCalls;
     private final List<SegmentCall<JoiningSegment>> joiningSegmentCalls;
     private final List<SegmentCall<ConstantSegment>> constantSegmentCalls;
+    private final Map<String, String> annotations;
 
     public ReadlessClonotypeImpl(NucleotideSequence cdr3nt
     ) {
@@ -52,7 +54,7 @@ public class ReadlessClonotypeImpl implements ClonotypeWithRearrangementInfo {
                 SegmentCall.asCallList(diversitySegment),
                 SegmentCall.asCallList(joiningSegment),
                 SegmentCall.asCallList(constantSegment),
-                segmentTrimming, junctionMarkup, AminoAcidSequence.translateFromCenter(cdr3nt));
+                segmentTrimming, junctionMarkup);
     }
 
     public ReadlessClonotypeImpl(NucleotideSequence cdr3nt,
@@ -62,7 +64,7 @@ public class ReadlessClonotypeImpl implements ClonotypeWithRearrangementInfo {
                                  List<SegmentCall<ConstantSegment>> constantSegmentCalls,
                                  SegmentTrimming segmentTrimming, JunctionMarkup junctionMarkup) {
         this(cdr3nt,
-                variableSegmentCalls, diversitySegmentCalls, joiningSegmentCalls, constantSegmentCalls,
+                variableSegmentCalls, diversitySegmentCalls, joiningSegmentCalls, constantSegmentCalls, new HashMap<>(),
                 segmentTrimming, junctionMarkup, AminoAcidSequence.translateFromCenter(cdr3nt));
     }
 
@@ -73,6 +75,19 @@ public class ReadlessClonotypeImpl implements ClonotypeWithRearrangementInfo {
                                  List<SegmentCall<ConstantSegment>> constantSegmentCalls,
                                  SegmentTrimming segmentTrimming, JunctionMarkup junctionMarkup,
                                  AminoAcidSequence cdr3aa) {
+        this(cdr3nt,
+                variableSegmentCalls, diversitySegmentCalls, joiningSegmentCalls, constantSegmentCalls, new HashMap<>(),
+                segmentTrimming, junctionMarkup, cdr3aa);
+    }
+
+    public ReadlessClonotypeImpl(NucleotideSequence cdr3nt,
+                                 List<SegmentCall<VariableSegment>> variableSegmentCalls,
+                                 List<SegmentCall<DiversitySegment>> diversitySegmentCalls,
+                                 List<SegmentCall<JoiningSegment>> joiningSegmentCalls,
+                                 List<SegmentCall<ConstantSegment>> constantSegmentCalls,
+                                 Map<String, String> annotations,
+                                 SegmentTrimming segmentTrimming, JunctionMarkup junctionMarkup,
+                                 AminoAcidSequence cdr3aa) {
         this.segmentTrimming = segmentTrimming;
         this.junctionMarkup = junctionMarkup;
         this.cdr3nt = cdr3nt;
@@ -81,6 +96,7 @@ public class ReadlessClonotypeImpl implements ClonotypeWithRearrangementInfo {
         this.diversitySegmentCalls = Collections.unmodifiableList(diversitySegmentCalls);
         this.joiningSegmentCalls = Collections.unmodifiableList(joiningSegmentCalls);
         this.constantSegmentCalls = Collections.unmodifiableList(constantSegmentCalls);
+        this.annotations = annotations;
     }
 
     @Override
@@ -124,12 +140,18 @@ public class ReadlessClonotypeImpl implements ClonotypeWithRearrangementInfo {
     }
 
     @Override
+    public Map<String, String> getAnnotations() {
+        return annotations;
+    }
+
+    @Override
     public String toString() {
         return cdr3nt + "\t" + cdr3aa + "\t" +
                 variableSegmentCalls.stream().map(SegmentCall::toString).collect(Collectors.joining(",")) + "\t" +
                 diversitySegmentCalls.stream().map(SegmentCall::toString).collect(Collectors.joining(",")) + "\t" +
                 joiningSegmentCalls.stream().map(SegmentCall::toString).collect(Collectors.joining(",")) + "\t" +
                 constantSegmentCalls.stream().map(SegmentCall::toString).collect(Collectors.joining(",")) + "\t" +
+                annotations.entrySet().stream().map(Map.Entry::toString).collect(Collectors.joining(",")) + "\t" +
                 junctionMarkup.toString().replaceAll("\t", ":") + "\t" +
                 segmentTrimming.toString().replaceAll("\t", ":");
     }

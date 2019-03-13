@@ -5,8 +5,10 @@ import com.milaboratory.core.sequence.AminoAcidSequence;
 import com.milaboratory.core.sequence.NucleotideSequence;
 import com.antigenomics.mir.segment.*;
 
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
 
 public interface Clonotype {
     NucleotideSequence getCdr3Nt();
@@ -20,6 +22,10 @@ public interface Clonotype {
     List<SegmentCall<JoiningSegment>> getJoiningSegmentCalls();
 
     List<SegmentCall<ConstantSegment>> getConstantSegmentCalls();
+
+    default Map<String, String> getAnnotations() {
+        return Collections.emptyMap();
+    }
 
     default VariableSegment getBestVariableSegment() {
         return getVariableSegmentCalls().stream().max(Comparator.naturalOrder())
