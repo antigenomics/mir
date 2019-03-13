@@ -1,0 +1,4 @@
+MIXCR mutations parser
+Make post-alignment of CDR3 NDN part, penalize for D Markov probs
+Incorporate mutations in CDR3 graph -- IG lineage trees
+Learn VDJ model from rearrangements
