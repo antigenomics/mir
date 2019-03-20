@@ -2,6 +2,7 @@ package com.antigenomics.mir.clonotype.table;
 
 import com.antigenomics.mir.clonotype.Clonotype;
 import com.antigenomics.mir.clonotype.ClonotypeCall;
+import com.antigenomics.mir.clonotype.table.filters.Filter;
 import com.antigenomics.mir.pipe.Stream2Pipe;
 import com.antigenomics.mir.pipe.Pipe;
 
@@ -79,6 +80,10 @@ public class ClonotypeTable<T extends Clonotype>
 
     public int size() {
         return clonotypes.size();
+    }
+
+    public ClonotypeTable<T> filtered(List<Filter<T>> filters) {
+        return new ClonotypeTable<>(this.parallelStream().filter((c) -> filters.stream().allMatch((f) -> f.pass(c))).collect(Collectors.toList()));
     }
 
     @Override

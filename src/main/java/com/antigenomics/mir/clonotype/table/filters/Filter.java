@@ -11,11 +11,11 @@ public abstract class Filter<T extends Clonotype> {
         this.negative = negative;
     }
 
-    boolean pass(ClonotypeCall<T> clonotypeCall) {
+    public boolean pass(ClonotypeCall<T> clonotypeCall) {
         return negative ? !passInner(clonotypeCall) : passInner(clonotypeCall);
     }
 
-    boolean isNegative() {
+    public boolean isNegative() {
         return negative;
     }
 
