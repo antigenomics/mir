@@ -1,9 +1,9 @@
 package com.antigenomics.mir.clonotype;
 
+import com.antigenomics.mir.clonotype.table.ClonotypeTable;
 import com.antigenomics.mir.segment.*;
 import com.milaboratory.core.sequence.NucleotideSequence;
 import com.antigenomics.mir.clonotype.rearrangement.ReadlessClonotypeImpl;
-import com.antigenomics.mir.segment.*;
 
 import java.util.ArrayList;
 import java.util.Map;

@@ -1,5 +1,7 @@
-package com.antigenomics.mir.clonotype;
+package com.antigenomics.mir.clonotype.table;
 
+import com.antigenomics.mir.clonotype.Clonotype;
+import com.antigenomics.mir.clonotype.ClonotypeCall;
 import com.antigenomics.mir.pipe.Stream2Pipe;
 import com.antigenomics.mir.pipe.Pipe;
 
