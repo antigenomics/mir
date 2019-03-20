@@ -15,4 +15,5 @@ public class TextFilterAnnotationsValueGetter<T extends Clonotype> implements Te
     public String getValue(ClonotypeCall<T> clonotypeCall) {
         return clonotypeCall.getAnnotations().getOrDefault(key, "");
     }
+
 }

@@ -28,7 +28,9 @@ public abstract class TextFilter<T extends Clonotype> extends Filter<T> {
 
     @Override
     protected boolean passInner(ClonotypeCall<T> clonotypeCall) {
-        return this.passTextInner(this.getter.getValue(clonotypeCall));
+        return this.getter.isSingleValue() ?
+                this.passTextInner(this.getter.getValue(clonotypeCall)) :
+                this.getter.getValues(clonotypeCall).stream().anyMatch(this::passTextInner);
     }
 
     protected abstract boolean passTextInner(String value);
