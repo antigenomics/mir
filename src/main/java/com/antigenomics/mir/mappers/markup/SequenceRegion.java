@@ -21,6 +21,11 @@ public final class SequenceRegion<S extends Sequence<S>, E extends Enum<E>>
         return new SequenceRegion<>(regionType, alphabet.getEmptySequence(), position, position);
     }
 
+    public static <S extends Sequence<S>, E extends Enum<E>> SequenceRegion<S, E> full(E regionType,
+                                                                                       S sequence) {
+        return new SequenceRegion<>(regionType, sequence, 0, sequence.size());
+    }
+
     private final E regionType;
     private final S sequence;
     private final int start, end;

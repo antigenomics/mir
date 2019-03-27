@@ -1,10 +1,10 @@
 package com.antigenomics.mir.clonotype.parser;
 
 
-import com.antigenomics.mir.clonotype.rearrangement.ReadlessClonotypeImpl;
+import com.antigenomics.mir.clonotype.rearrangement.ClonotypeWithReadImpl;
 import com.antigenomics.mir.segment.SegmentLibrary;
 
-public class MixcrClonotypeParserFactory implements ClonotypeTableParserFactory<ReadlessClonotypeImpl> {
+public class MixcrClonotypeParserFactory implements ClonotypeTableParserFactory<ClonotypeWithReadImpl> {
     private final SegmentLibrary segmentLibrary;
     private final boolean majorAlleles, convertAlleles;
 

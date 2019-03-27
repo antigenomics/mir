@@ -1,5 +1,9 @@
 package com.antigenomics.mir.segment;
 
+import com.milaboratory.core.alignment.Alignment;
+import com.milaboratory.core.mutations.Mutations;
+import com.milaboratory.core.sequence.NucleotideSequence;
+
 import java.util.Collections;
 import java.util.List;
 

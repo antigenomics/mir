@@ -1,21 +1,23 @@
 package com.antigenomics.mir.clonotype.parser;
 
+import com.antigenomics.mir.clonotype.rearrangement.ClonotypeWithReadImpl;
 import com.antigenomics.mir.clonotype.rearrangement.JunctionMarkup;
-import com.antigenomics.mir.clonotype.rearrangement.ReadlessClonotypeImpl;
 import com.antigenomics.mir.clonotype.rearrangement.SegmentTrimming;
+import com.antigenomics.mir.mappers.markup.PrecomputedSequenceRegionMarkup;
+import com.antigenomics.mir.mappers.markup.SequenceRegion;
 import com.antigenomics.mir.segment.*;
-import com.milaboratory.core.sequence.AminoAcidSequence;
+import com.antigenomics.mir.structure.AntigenReceptorRegionType;
+import com.milaboratory.core.alignment.Alignment;
+import com.milaboratory.core.mutations.Mutations;
 import com.milaboratory.core.sequence.NucleotideSequence;
 import com.antigenomics.mir.StringArrayIndexer;
 import com.antigenomics.mir.clonotype.ClonotypeCall;
-import com.antigenomics.mir.segment.*;
 
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public class MixcrClonotypeParser extends AbstractClonotypeTableParser<ReadlessClonotypeImpl> {
+public class MixcrClonotypeParser extends AbstractClonotypeTableParser<ClonotypeWithReadImpl> {
     private static final int RP_CDR3_BEGIN = 9,
             RP_V_END_TRIMMED = 11,
             RP_D_START_TRIMMED = 12,
@@ -24,7 +26,14 @@ public class MixcrClonotypeParser extends AbstractClonotypeTableParser<ReadlessC
             RP_V_DEL = 10,
             RP_D5_DEL = 13,
             RP_D3_DEL = 14,
-            RP_J_DEL = 17;
+            RP_J_DEL = 17,
+            RP_FR1_BEGIN = 4,
+            RP_FR1_END = 5,
+            RP_CDR1_END = 6,
+            RP_FR2_END = 7,
+            RP_CDR2_END = 8,
+            RP_CDR3_END = 18,
+            RP_FR4_END = 19;
 
     private final HeaderInfo headerInfo;
     private final boolean convertAlleles;
@@ -45,18 +54,14 @@ public class MixcrClonotypeParser extends AbstractClonotypeTableParser<ReadlessC
     }
 
     @Override
-    public ClonotypeCall<ReadlessClonotypeImpl> parse(String[] splitLine) {
+    public ClonotypeCall<ClonotypeWithReadImpl> parse(String[] splitLine) {
+        // Quantity info
         // todo: ask Dima if its long or int
         int id = Integer.parseInt(splitLine[headerInfo.cloneIdColIndex]);
         long count = Math.round(Float.parseFloat(splitLine[headerInfo.countColIndex]));
         double freq = Double.parseDouble(splitLine[headerInfo.freqColIndex]);
 
-        NucleotideSequence cdr3Nt = new NucleotideSequence(splitLine[headerInfo.cdr3NtColIndex]);
-
-        AminoAcidSequence cdr3Aa = headerInfo.cdr3AaColIndex == -1 ?
-                AminoAcidSequence.translateFromCenter(cdr3Nt) :
-                new AminoAcidSequence(splitLine[headerInfo.cdr3AaColIndex]);
-
+        // Segment calls
         List<SegmentCall<VariableSegment>> vCalls = streamSegmentCalls(splitLine, headerInfo.vColIndex)
                 .map(x -> getV(x[0], Float.parseFloat(x[1])))
                 .collect(Collectors.toList());
@@ -74,30 +79,104 @@ public class MixcrClonotypeParser extends AbstractClonotypeTableParser<ReadlessC
                 .collect(Collectors.toList());
 
         // even if there are several ref point arrays joined by "," it will use first
-        String[] refPoints = splitLine[headerInfo.refPointColIndex].split("[,:]");
+        // todo: consider multiple comma-separated targetSequences
 
-        // todo: handle cases when critical fields are missing, e.g. CDR3 ref points -- show skip & issue a warning
-        int cdr3Start = Integer.parseInt(refPoints[RP_CDR3_BEGIN]),
-                vEnd = parseJunctionMarkup(refPoints[RP_V_END_TRIMMED], cdr3Start),
-                jStart = parseJunctionMarkup(refPoints[RP_J_START_TRIMMED], cdr3Start),
-                dStart = parseJunctionMarkup(refPoints[RP_D_START_TRIMMED], cdr3Start),
-                dEnd = parseJunctionMarkup(refPoints[RP_D_END_TRIMMED], cdr3Start);
-        JunctionMarkup junctionMarkup = new JunctionMarkup(vEnd, jStart, dStart, dEnd);
+        // Reference points/markup
+        String refPointsLine = splitLine[headerInfo.refPointColIndex];
+        boolean multiPartAlignment = refPointsLine.contains(",");
+        JunctionMarkup junctionMarkup;
+        SegmentTrimming segmentTrimming;
 
-        SegmentTrimming segmentTrimming = new SegmentTrimming(
-                parseSegmentTrimming(refPoints[RP_V_DEL]),
-                parseSegmentTrimming(refPoints[RP_J_DEL]),
-                parseSegmentTrimming(refPoints[RP_D5_DEL]),
-                parseSegmentTrimming(refPoints[RP_D3_DEL]));
+        List<SequenceRegion<NucleotideSequence, AntigenReceptorRegionType>> regions = new ArrayList<>();
+        if (multiPartAlignment) {
+            // Cannot parse meaningfully here
+            // todo: issue a warning
+            NucleotideSequence cdr3Nt = new NucleotideSequence(splitLine[headerInfo.cdr3NtColIndex]);
+            regions.add(SequenceRegion.full(AntigenReceptorRegionType.CDR3, cdr3Nt));
+            junctionMarkup = JunctionMarkup.DUMMY;
+            segmentTrimming = SegmentTrimming.DUMMY;
+        } else {
+            // todo: handle cases when critical fields are missing,
+            //  e.g. CDR3 ref points -- show skip & issue a warning
 
-        // todo: also parse contig
+            String[] refPoints = refPointsLine.split(":");
+            int cdr3Start = Integer.parseInt(refPoints[RP_CDR3_BEGIN]),
+                    vEnd = parseJunctionMarkup(refPoints[RP_V_END_TRIMMED], cdr3Start),
+                    jStart = parseJunctionMarkup(refPoints[RP_J_START_TRIMMED], cdr3Start),
+                    dStart = parseJunctionMarkup(refPoints[RP_D_START_TRIMMED], cdr3Start),
+                    dEnd = parseJunctionMarkup(refPoints[RP_D_END_TRIMMED], cdr3Start);
+
+            junctionMarkup = new JunctionMarkup(vEnd, jStart, dStart, dEnd);
+
+            int vDel = parseSegmentTrimming(refPoints[RP_V_DEL]),
+                    jDel = parseSegmentTrimming(refPoints[RP_J_DEL]),
+                    d5Del = parseSegmentTrimming(refPoints[RP_D5_DEL]),
+                    d3Del = parseSegmentTrimming(refPoints[RP_D3_DEL]);
+
+            segmentTrimming = new SegmentTrimming(vDel, jDel, d5Del, d3Del);
+
+            if (headerInfo.targetSequenceColIndex != -1) {
+                NucleotideSequence fullSequence = new NucleotideSequence(splitLine[headerInfo.targetSequenceColIndex]);
+                updateRegions(regions, fullSequence, refPoints[RP_FR1_BEGIN], refPoints[RP_FR1_END], AntigenReceptorRegionType.FR1);
+                updateRegions(regions, fullSequence, refPoints[RP_FR1_END], refPoints[RP_CDR1_END], AntigenReceptorRegionType.CDR1);
+                updateRegions(regions, fullSequence, refPoints[RP_CDR1_END], refPoints[RP_FR2_END], AntigenReceptorRegionType.FR2);
+                updateRegions(regions, fullSequence, refPoints[RP_FR2_END], refPoints[RP_CDR2_END], AntigenReceptorRegionType.CDR2);
+                updateRegions(regions, fullSequence, refPoints[RP_CDR2_END], refPoints[RP_CDR3_BEGIN], AntigenReceptorRegionType.FR3);
+                updateRegions(regions, fullSequence, refPoints[RP_CDR3_BEGIN], refPoints[RP_CDR3_END], AntigenReceptorRegionType.CDR3);
+                updateRegions(regions, fullSequence, refPoints[RP_CDR3_END], refPoints[RP_FR4_END], AntigenReceptorRegionType.FR4);
+            } else {
+                NucleotideSequence cdr3Nt = new NucleotideSequence(splitLine[headerInfo.cdr3NtColIndex]);
+                regions.add(SequenceRegion.full(AntigenReceptorRegionType.CDR3, cdr3Nt));
+            }
+        }
+
+        // Finally markup
+        PrecomputedSequenceRegionMarkup<NucleotideSequence, AntigenReceptorRegionType> markup =
+                PrecomputedSequenceRegionMarkup.someRegions(
+                        regions,
+                        NucleotideSequence.ALPHABET, AntigenReceptorRegionType.class);
+
+        // Mutations
+        Mutations<NucleotideSequence> vMutations = headerInfo.vAlignmentsColIndex == -1 ? Mutations.EMPTY_NUCLEOTIDE_MUTATIONS :
+                getMutations(splitLine[headerInfo.vAlignmentsColIndex]),
+                dMutations = headerInfo.dAlignmentsColIndex == -1 ? Mutations.EMPTY_NUCLEOTIDE_MUTATIONS :
+                        getMutations(splitLine[headerInfo.dAlignmentsColIndex]),
+                jMutations = headerInfo.jAlignmentsColIndex == -1 ? Mutations.EMPTY_NUCLEOTIDE_MUTATIONS :
+                        getMutations(splitLine[headerInfo.jAlignmentsColIndex]),
+                cMutations = headerInfo.cAlignmentsColIndex == -1 ? Mutations.EMPTY_NUCLEOTIDE_MUTATIONS :
+                        getMutations(splitLine[headerInfo.cAlignmentsColIndex]);
+
         return new ClonotypeCall<>(id,
                 count, freq,
-                new ReadlessClonotypeImpl(cdr3Nt,
+                new ClonotypeWithReadImpl(
+                        markup,
+                        vMutations, dMutations, jMutations, cMutations,
                         vCalls, dCalls, jCalls, cCalls,
-                        segmentTrimming, junctionMarkup,
-                        cdr3Aa)
+                        segmentTrimming, junctionMarkup)
         );
+    }
+
+    private static Mutations<NucleotideSequence> getMutations(String alignmentString) {
+        if (alignmentString.isEmpty()) {
+            return Mutations.EMPTY_NUCLEOTIDE_MUTATIONS;
+        }
+        String[] splitStr = alignmentString.split("[|;]");
+        int targetFrom = Integer.parseInt(splitStr[0]);
+        String mutationString = splitStr[5];
+
+        return Mutations.decodeNuc(mutationString).move(targetFrom);
+    }
+
+    private static void updateRegions(List<SequenceRegion<NucleotideSequence, AntigenReceptorRegionType>> regions,
+                                      NucleotideSequence fullSequence, String start, String end,
+                                      AntigenReceptorRegionType regionType) {
+        if (!start.isEmpty() && !end.isEmpty()) {
+            int startInt = Integer.parseInt(start), endInt = Integer.parseInt(end);
+            if (startInt >= 0 && endInt >= 0 && startInt < endInt) {
+                regions.add(new SequenceRegion<>(regionType, fullSequence.getRange(startInt, endInt),
+                        startInt, endInt));
+            }
+        }
     }
 
     private Stream<String[]> streamSegmentCalls(String[] splitLine, int index) {
@@ -130,7 +209,12 @@ public class MixcrClonotypeParser extends AbstractClonotypeTableParser<ReadlessC
                 countColIndex, freqColIndex,
                 cdr3NtColIndex, cdr3AaColIndex,
                 vColIndex, dColIndex, jColIndex, cColIndex,
-                refPointColIndex;
+                refPointColIndex,
+                targetSequenceColIndex,
+                vAlignmentsColIndex,
+                dAlignmentsColIndex,
+                jAlignmentsColIndex,
+                cAlignmentsColIndex;
 
         HeaderInfo(String[] header) {
             StringArrayIndexer headerParser = new StringArrayIndexer(header);
@@ -144,6 +228,11 @@ public class MixcrClonotypeParser extends AbstractClonotypeTableParser<ReadlessC
             this.jColIndex = headerParser.getIndexOf(new String[]{"allJHitsWithScore", "All J Hits With Score ", "All J hits"}, false);
             this.cColIndex = headerParser.getIndexOf(new String[]{"allCHitsWithScore", "All C Hits With Score ", "All C hits"}, false);
             this.refPointColIndex = headerParser.getIndexOf(new String[]{"refPoints", "Ref. points"});
+            this.targetSequenceColIndex = headerParser.getIndexOf(new String[]{"targetSequences", "clonalSequence", "Clonal sequence(s)"}, false);
+            this.vAlignmentsColIndex = headerParser.getIndexOf(new String[]{"allVAlignments", "All V Alignments"}, false);
+            this.dAlignmentsColIndex = headerParser.getIndexOf(new String[]{"allDAlignments", "All D Alignments"}, false);
+            this.jAlignmentsColIndex = headerParser.getIndexOf(new String[]{"allJAlignments", "All J Alignments"}, false);
+            this.cAlignmentsColIndex = headerParser.getIndexOf(new String[]{"allCAlignments", "All C Alignments"}, false);
         }
     }
 }

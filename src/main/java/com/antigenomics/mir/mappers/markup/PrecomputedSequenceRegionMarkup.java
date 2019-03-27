@@ -5,12 +5,35 @@ import com.milaboratory.core.sequence.Alphabet;
 import com.milaboratory.core.sequence.Sequence;
 
 import java.util.EnumMap;
+import java.util.List;
 import java.util.Objects;
 
 public final class PrecomputedSequenceRegionMarkup<S extends Sequence<S>, E extends Enum<E>>
         extends SequenceRegionMarkup<S, E, PrecomputedSequenceRegionMarkup<S, E>> {
     private final EnumMap<E, SequenceRegion<S, E>> regionMap;
     private final int start, end;
+
+    public static <S extends Sequence<S>, E extends Enum<E>> PrecomputedSequenceRegionMarkup<S, E>
+    someRegions(List<SequenceRegion<S, E>> regions,
+                Alphabet<S> alphabet,
+                Class<E> regionTypeClass) {
+        var regionMap = new EnumMap<E, SequenceRegion<S, E>>(regionTypeClass);
+        for (SequenceRegion<S, E> region : regions) {
+            regionMap.put(region.getRegionType(), region);
+        }
+        int lastEnd = 0;
+        S fullSeq = alphabet.getEmptySequence();
+        for (E regionType : regionTypeClass.getEnumConstants()) {
+            var region = regionMap.get(regionType);
+            if (region != null) {
+                lastEnd = region.getEnd();
+                fullSeq = fullSeq.concatenate(region.getSequence());
+            } else {
+                regionMap.put(regionType, SequenceRegion.empty(regionType, alphabet, lastEnd));
+            }
+        }
+        return new PrecomputedSequenceRegionMarkup<>(fullSeq, regionMap, regionTypeClass);
+    }
 
     public static <S extends Sequence<S>, E extends Enum<E>> PrecomputedSequenceRegionMarkup<S, E> empty(
             Alphabet<S> alphabet,

@@ -5,8 +5,7 @@ import com.milaboratory.core.sequence.AminoAcidSequence;
 import com.milaboratory.core.sequence.NucleotideSequence;
 import com.antigenomics.mir.segment.*;
 
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
 
 public interface Clonotype {
     NucleotideSequence getCdr3Nt();
@@ -39,6 +38,10 @@ public interface Clonotype {
     default ConstantSegment getBestConstantSegment() {
         return getConstantSegmentCalls().stream().max(Comparator.naturalOrder())
                 .map(SegmentCall::getSegment).orElseGet(() -> MissingConstantSegment.INSTANCE);
+    }
+
+    default Map<String, String> getAnnotations() {
+        return Collections.emptyMap();
     }
 
     default double getWeight() {
