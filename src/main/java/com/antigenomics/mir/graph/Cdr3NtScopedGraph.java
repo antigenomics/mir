@@ -113,7 +113,7 @@ public class Cdr3NtScopedGraph<T extends Clonotype>
         return (!requireSegmentMatch ||
                 (segmentsMatch(edge.getFrom().getVariableSegmentCalls(), edge.getTo().getVariableSegmentCalls()) &&
                         segmentsMatch(edge.getFrom().getJoiningSegmentCalls(), edge.getTo().getJoiningSegmentCalls()))) &&
-                goodAlignment(edge.getAlignment());
+                goodAlignment(edge.getCdr3Alignment());
     }
 
     @Override

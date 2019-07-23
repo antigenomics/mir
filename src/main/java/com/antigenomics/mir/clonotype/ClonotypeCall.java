@@ -6,6 +6,7 @@ import com.milaboratory.core.sequence.NucleotideSequence;
 import com.antigenomics.mir.segment.*;
 
 import java.util.List;
+import java.util.Objects;
 
 public class ClonotypeCall<T extends Clonotype> implements Clonotype,
         Comparable<ClonotypeCall<T>> {
@@ -84,5 +85,21 @@ public class ClonotypeCall<T extends Clonotype> implements Clonotype,
     @Override
     public int compareTo(ClonotypeCall<T> o) {
         return Long.compare(count, o.count);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        ClonotypeCall<?> that = (ClonotypeCall<?>) o;
+        return id == that.id &&
+                count == that.count &&
+                Double.compare(that.frequency, frequency) == 0 &&
+                clonotype.equals(that.clonotype);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, count, frequency, clonotype);
     }
 }

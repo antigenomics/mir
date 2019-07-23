@@ -22,7 +22,7 @@ import java.util.concurrent.Callable;
                 "Will first search for CDR3 amino acid match and then perform CDR3 nucleotide alignment." +
                 "Only edges with number of substitutions and indels within search scope (-s/-d) will be returned.",
         mixinStandardHelpOptions = true)
-public class RunCdr3NtScopedGraph implements Callable<Void> {
+public class ComputeCdr3NtScopedGraph implements Callable<Void> {
     // todo: reimplement using available parent classes
     @CommandLine.Option(names = {"-I", "--input"},
             required = true,
@@ -113,9 +113,9 @@ public class RunCdr3NtScopedGraph implements Callable<Void> {
                     new Cdr3NtScopedGraph<>(input, params, false)) // todo
                     .parallelStream()
                     .forEach(edge -> {
-                        var helper = edge.getAlignment().getAlignmentHelper();
-                        int totalMut = edge.getAlignment().getAbsoluteMutations().size(),
-                                indels = edge.getAlignment().getAbsoluteMutations().countOfIndels();
+                        var helper = edge.getCdr3Alignment().getAlignmentHelper();
+                        int totalMut = edge.getCdr3Alignment().getAbsoluteMutations().size(),
+                                indels = edge.getCdr3Alignment().getAbsoluteMutations().countOfIndels();
 
                         String seq1String = helper.getSeq1String();
                         String seq2String = helper.getSeq2String();
