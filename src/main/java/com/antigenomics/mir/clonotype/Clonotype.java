@@ -3,9 +3,10 @@ package com.antigenomics.mir.clonotype;
 import com.antigenomics.mir.segment.*;
 import com.milaboratory.core.sequence.AminoAcidSequence;
 import com.milaboratory.core.sequence.NucleotideSequence;
-import com.antigenomics.mir.segment.*;
-
-import java.util.*;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Map;
 
 public interface Clonotype {
     NucleotideSequence getCdr3Nt();

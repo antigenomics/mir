@@ -3,7 +3,7 @@ package com.antigenomics.mir.graph;
 import com.antigenomics.mir.TestUtils;
 import com.antigenomics.mir.clonotype.Clonotype;
 import com.antigenomics.mir.clonotype.ClonotypeHelper;
-import com.antigenomics.mir.clonotype.ClonotypeTable;
+import com.antigenomics.mir.clonotype.table.ClonotypeTable;
 import com.antigenomics.mir.clonotype.io.ClonotypeTablePipe;
 import com.antigenomics.mir.clonotype.parser.MixcrClonotypeParserFactory;
 import com.antigenomics.mir.pipe.Pipe;

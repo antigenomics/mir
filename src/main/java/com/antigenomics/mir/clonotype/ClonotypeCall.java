@@ -3,10 +3,9 @@ package com.antigenomics.mir.clonotype;
 import com.antigenomics.mir.segment.*;
 import com.milaboratory.core.sequence.AminoAcidSequence;
 import com.milaboratory.core.sequence.NucleotideSequence;
-import com.antigenomics.mir.segment.*;
-
 import java.util.List;
 import java.util.Objects;
+import java.util.Map;
 
 public class ClonotypeCall<T extends Clonotype> implements Clonotype,
         Comparable<ClonotypeCall<T>> {
@@ -70,6 +69,11 @@ public class ClonotypeCall<T extends Clonotype> implements Clonotype,
     @Override
     public List<SegmentCall<ConstantSegment>> getConstantSegmentCalls() {
         return clonotype.getConstantSegmentCalls();
+    }
+
+    @Override
+    public Map<String, String> getAnnotations() {
+        return clonotype.getAnnotations();
     }
 
     @Override
