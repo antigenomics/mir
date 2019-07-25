@@ -18,7 +18,7 @@ public class VDJtoolsClonotypeParserFactory implements ClonotypeTableParserFacto
     }
 
     @Override
-    public VDJdbClonotypeParser create(String[] header) {
-        return new VDJdbClonotypeParser(header, segmentLibrary, majorAlleles);
+    public VDJtoolsClonotypeParser create(String[] header) {
+        return new VDJtoolsClonotypeParser(header, segmentLibrary, majorAlleles);
     }
 }

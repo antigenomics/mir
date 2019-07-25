@@ -1,6 +1,6 @@
 package com.antigenomics.mir.graph;
 
-import com.antigenomics.mir.clonotype.ClonotypeTable;
+import com.antigenomics.mir.clonotype.table.ClonotypeTable;
 import com.antigenomics.mir.pipe.ReproducibleGeneratorPipe;
 import com.antigenomics.mir.rearrangement.RearrangementTemplate;
 import com.antigenomics.mir.rearrangement.converter.MuruganConverterUtils;

@@ -47,9 +47,9 @@ public class VDJdbClonotypeParser implements ClonotypeTableParser<VdjdbClonotype
         NucleotideSequence cdr3Nt = ClonotypeHelper.clonotypeFromAa(cdr3Aa.toString()).getCdr3Nt();
 
         String geneStr = splitLine[headerInfo.geneColIndex];
-        Gene gene = Gene.guess(splitLine[headerInfo.geneColIndex]);
+        Gene gene = Gene.guess(geneStr);
 
-        String speciesStr = splitLine[headerInfo.geneColIndex];
+        String speciesStr = splitLine[headerInfo.speciesColIndex];
         Species species = Species.guess(speciesStr);
 
         SegmentLibrary segmentLibrary = segmentLibraryBundle.get(species, gene);

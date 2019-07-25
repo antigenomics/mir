@@ -32,7 +32,7 @@ public final class MhcAlleleLibraryUtils {
         return MhcAlleleLibraryParser.parse(new FileInputStream(path), species, mhcClassType);
     }
 
-    public static MhcAlelleLibraryBundle<MhcAlleleImpl, MockMhcAlleleLibrary> getDummyMhcLibraryBundle() {
+    public static MhcAlelleLibraryBundle<MhcAlleleImpl, MockMhcAlleleLibrary> getMockMhcLibraryBundle() {
         Map<SpeciesMhcClassTuple, MockMhcAlleleLibrary> mhcLibraryMap = new HashMap<>();
 
         for (Species species : Arrays.asList(Species.Human, Species.Mouse, Species.Monkey)) {

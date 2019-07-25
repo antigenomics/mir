@@ -1,4 +1,4 @@
-package com.antigenomics.mir.segment.parser;
+package com.antigenomics.mir.segment;
 
 import com.antigenomics.mir.segment.FastaSegmentLibraryUtils;
 import com.milaboratory.core.io.sequence.fasta.FastaRecord;
