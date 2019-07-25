@@ -1,12 +1,13 @@
 package com.antigenomics.mir.clonotype.parser;
 
+import com.antigenomics.mir.Species;
 import com.antigenomics.mir.StringArrayIndexer;
 import com.antigenomics.mir.clonotype.ClonotypeCall;
 import com.antigenomics.mir.clonotype.ClonotypeHelper;
 import com.antigenomics.mir.clonotype.annotated.VdjdbClonotype;
 import com.antigenomics.mir.clonotype.rearrangement.JunctionMarkup;
 import com.antigenomics.mir.clonotype.rearrangement.ReadlessClonotypeImpl;
-import com.antigenomics.mir.mhc.MhcAlelleLibraryBundle;
+import com.antigenomics.mir.mhc.*;
 import com.antigenomics.mir.segment.*;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -14,6 +15,7 @@ import com.milaboratory.core.sequence.AminoAcidSequence;
 import com.milaboratory.core.sequence.NucleotideSequence;
 
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class VDJdbClonotypeParser implements ClonotypeTableParser<VdjdbClonotype> {
@@ -40,14 +42,36 @@ public class VDJdbClonotypeParser implements ClonotypeTableParser<VdjdbClonotype
     @Override
     public ClonotypeCall<VdjdbClonotype> parse(String[] splitLine) {
         int id = idCounter.incrementAndGet();
-        int count = 1;
-        double freq = 1.0;
 
         AminoAcidSequence cdr3Aa = new AminoAcidSequence(splitLine[headerInfo.cdr3AaColIndex]);
         NucleotideSequence cdr3Nt = ClonotypeHelper.clonotypeFromAa(cdr3Aa.toString()).getCdr3Nt();
 
-        List<SegmentCall<VariableSegment>> vCalls = Collections.singletonList(getV(splitLine[headerInfo.vSegmColIndex], 1.0f));
-        List<SegmentCall<JoiningSegment>> jCalls = Collections.singletonList(getJ(splitLine[headerInfo.jSegmColIndex], 1.0f));
+        String geneStr = splitLine[headerInfo.geneColIndex];
+        Gene gene = Gene.guess(splitLine[headerInfo.geneColIndex]);
+
+        String speciesStr = splitLine[headerInfo.geneColIndex];
+        Species species = Species.guess(speciesStr);
+
+        SegmentLibrary segmentLibrary = segmentLibraryBundle.get(species, gene);
+        List<SegmentCall<VariableSegment>> vCalls = new ArrayList<>();
+        List<SegmentCall<JoiningSegment>> jCalls = new ArrayList<>();
+        for (String str : splitLine[headerInfo.vSegmColIndex].split(",")) {
+            vCalls.add(new SegmentCall<>(segmentLibrary.getV(str.trim())));
+        }
+        for (String str : splitLine[headerInfo.jSegmColIndex].split(",")) {
+            jCalls.add(new SegmentCall<>(segmentLibrary.getJ(str.trim())));
+        }
+
+        String mhcClassStr = splitLine[headerInfo.mhcClassColIndex];
+        MhcClassType mhcClassType = MhcClassType.guess(mhcClassStr);
+
+        String mhcAStr = splitLine[headerInfo.mhcAColIndex], mhcBStr = splitLine[headerInfo.mhcBColIndex];
+        MhcAlleleLibrary mhcAlleleLibrary = mhcAlelleLibraryBundle.get(species, mhcClassType);
+        MhcAllele mhcAlleleA = mhcAlleleLibrary.getAllele(mhcAStr, MhcChainType.MHCa);
+        MhcAllele mhcAlleleB = mhcAlleleLibrary.getAllele(mhcBStr, MhcChainType.MHCb);
+
+        String antigenEpitopeStr = splitLine[headerInfo.antigenEpitopeColIndex]; // todo: consider caching antigen sequences
+        AminoAcidSequence antigenEpitope = new AminoAcidSequence(antigenEpitopeStr);
 
         Gson gson = new Gson();
 
@@ -60,12 +84,12 @@ public class VDJdbClonotypeParser implements ClonotypeTableParser<VdjdbClonotype
 
         HashMap<String, String> annotations = new HashMap<>() {{
             put("complex.id", splitLine[headerInfo.complexIdColIndex]);
-            put("gene", splitLine[headerInfo.geneColIndex]);
-            put("species", splitLine[headerInfo.geneColIndex]);
-            put("mhc.a", splitLine[headerInfo.mhcAColIndex]);
-            put("mhc.b", splitLine[headerInfo.mhcBColIndex]);
-            put("mhc.class", splitLine[headerInfo.mhcClassColIndex]);
-            put("antigen.epitope", splitLine[headerInfo.antigenEpitopeColIndex]);
+            put("gene", geneStr);
+            put("species", speciesStr);
+            put("mhc.a", mhcAStr);
+            put("mhc.b", mhcBStr);
+            put("mhc.class", mhcClassStr);
+            put("antigen.epitope", antigenEpitopeStr);
             put("antigen.gene", splitLine[headerInfo.antigenGeneColIndex]);
             put("antigen.species", splitLine[headerInfo.antigenSpeciesColIndex]);
             put("reference.id", splitLine[headerInfo.referenceIdColIndex]);
@@ -76,8 +100,7 @@ public class VDJdbClonotypeParser implements ClonotypeTableParser<VdjdbClonotype
             put("web.cdr3fix.unmp", splitLine[headerInfo.webCdr3FixUnmpColIndex]);
         }};
 
-        // todo: epitope -> aa sequence, mhc -> MhcAlleleWithSequence, gene -> Gene, species -> Species
-
+        // todo: do we need this?
         Arrays.asList(headerInfo.methodColIndex, headerInfo.metaColIndex, headerInfo.cdr3FixColIndex).forEach(index -> {
             HashMap<String, String> g = gson.fromJson(splitLine[index], new TypeToken<HashMap<String, String>>() {
             }.getType());
@@ -85,12 +108,9 @@ public class VDJdbClonotypeParser implements ClonotypeTableParser<VdjdbClonotype
             g.forEach(annotations::put);
         });
 
-        return new ClonotypeCall<>(id, count, freq,
-                new ReadlessClonotypeImpl(cdr3Nt,
-                        vCalls, dCalls, jCalls, cCalls,
-                        annotations,
-                        segmentTrimming, junctionMarkup,
-                        cdr3Aa));
+        return new ClonotypeCall<>(id, 1, 1.0,
+                new VdjdbClonotype(vCalls, jCalls, cdr3Aa, junctionMarkup, annotations,
+                        cdr3Nt, antigenEpitope, species, gene, mhcAlleleA, mhcAlleleB));
     }
 
     private static class HeaderInfo {
