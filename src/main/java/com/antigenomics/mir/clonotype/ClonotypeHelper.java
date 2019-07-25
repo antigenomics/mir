@@ -1,5 +1,6 @@
 package com.antigenomics.mir.clonotype;
 
+import com.antigenomics.mir.Species;
 import com.antigenomics.mir.clonotype.table.ClonotypeTable;
 import com.antigenomics.mir.segment.*;
 import com.milaboratory.core.sequence.NucleotideSequence;
@@ -57,7 +58,7 @@ public final class ClonotypeHelper {
                     Map.entry('Y', "TAT")
             );
 
-    private static String mockTranslate(String cdr3aa) {
+    public static String mockTranslate(String cdr3aa) {
         StringBuilder res = new StringBuilder();
         for (int i = 0; i < cdr3aa.length(); i++) {
             res.append(mockCodons.get(cdr3aa.charAt(i)));

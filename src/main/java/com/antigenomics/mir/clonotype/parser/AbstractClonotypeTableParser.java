@@ -17,6 +17,7 @@ public abstract class AbstractClonotypeTableParser<T extends Clonotype> implemen
         this.majorAlleles = majorAlleles;
     }
 
+    @Override
     public String[] getHeader() {
         return header.clone();
     }

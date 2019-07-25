@@ -1,48 +1,17 @@
 package com.antigenomics.mir.mhc;
 
-import com.antigenomics.mir.segment.Species;
+import com.antigenomics.mir.Species;
 
 import java.util.Collection;
-import java.util.Collections;
-import java.util.Map;
-import java.util.stream.Collectors;
 
-public final class MhcAlleleLibrary {
-    private final MhcClassType mhcClass;
-    private final Species species;
-    private final Map<String, MhcAllele> alleleMap;
+public interface MhcAlleleLibrary<T extends MhcAllele> {
+    T getAllele(String id);
 
-    public MhcAlleleLibrary(MhcClassType mhcClass,
-                            Species species,
-                            Map<String, MhcAllele> alleleMap) {
-        this.mhcClass = mhcClass;
-        this.species = species;
-        this.alleleMap = alleleMap;
+    T getAllele(String id, MhcChainType mhcChainType);
 
-        if (alleleMap.isEmpty()) {
-            throw new IllegalArgumentException("Empty allele map");
-        }
-    }
+    MhcClassType getMhcClass();
 
-    public MhcAllele getAllele(String id) {
-        return alleleMap.get(id);
-    }
+    Species getSpecies();
 
-    public MhcClassType getMhcClass() {
-        return mhcClass;
-    }
-
-    public Species getSpecies() {
-        return species;
-    }
-
-    public Collection<MhcAllele> getAlleles() {
-        return Collections.unmodifiableCollection(alleleMap.values());
-    }
-
-    @Override
-    public String toString() {
-        return species + "\t" + mhcClass + ":\n" +
-                alleleMap.values().stream().limit(10).map(MhcAllele::toString).collect(Collectors.joining("\n"));
-    }
+    Collection<T> getAlleles();
 }

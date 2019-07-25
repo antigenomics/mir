@@ -10,7 +10,7 @@ import com.antigenomics.mir.graph.Cdr3NtScopedGraph;
 import com.antigenomics.mir.graph.Scope2DParameters;
 import com.antigenomics.mir.graph.VJGroupedCdr3NtScopedGraph;
 import com.antigenomics.mir.segment.Gene;
-import com.antigenomics.mir.segment.Species;
+import com.antigenomics.mir.Species;
 import picocli.CommandLine;
 
 import java.io.PrintWriter;

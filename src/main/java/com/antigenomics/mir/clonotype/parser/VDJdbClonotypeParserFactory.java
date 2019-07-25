@@ -1,23 +1,16 @@
 package com.antigenomics.mir.clonotype.parser;
 
+import com.antigenomics.mir.clonotype.annotated.VdjdbClonotype;
 import com.antigenomics.mir.clonotype.rearrangement.ReadlessClonotypeImpl;
+import com.antigenomics.mir.mhc.MhcAlleleLibraryUtils;
 import com.antigenomics.mir.segment.SegmentLibrary;
+import com.antigenomics.mir.segment.SegmentLibraryUtils;
 
-public class VDJdbClonotypeParserFactory implements ClonotypeTableParserFactory<ReadlessClonotypeImpl> {
-    private final SegmentLibrary segmentLibrary;
-    private final boolean majorAlleles;
-
-    public VDJdbClonotypeParserFactory(SegmentLibrary segmentLibrary, boolean majorAlleles) {
-        this.segmentLibrary = segmentLibrary;
-        this.majorAlleles = majorAlleles;
-    }
-
-    public VDJdbClonotypeParserFactory(SegmentLibrary segmentLibrary) {
-        this(segmentLibrary, true);
-    }
-
+public class VDJdbClonotypeParserFactory implements ClonotypeTableParserFactory<VdjdbClonotype> {
     @Override
     public VDJdbClonotypeParser create(String[] header) {
-        return new VDJdbClonotypeParser(header, segmentLibrary, majorAlleles);
+        return new VDJdbClonotypeParser(header,
+                SegmentLibraryUtils.getBuiltinTcrAbLibraryBundle(),
+                MhcAlleleLibraryUtils.getBuiltinMhcLibraryBundle());
     }
 }

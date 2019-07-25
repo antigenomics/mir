@@ -1,16 +1,16 @@
 package com.antigenomics.mir.structure;
 
 import com.antigenomics.mir.mappers.markup.SequenceRegionMarkup;
+import com.antigenomics.mir.mhc.MhcAlleleWithSequence;
 import com.antigenomics.mir.structure.pdb.Chain;
 import com.milaboratory.core.sequence.AminoAcidSequence;
-import com.antigenomics.mir.mhc.MhcAllele;
 
 public final class MhcChain implements StructureChainWithMarkup<MhcRegionType> {
-    private final MhcAllele mhcAllele;
+    private final MhcAlleleWithSequence mhcAllele;
     private final Chain structureChain;
     private final SequenceRegionMarkup<AminoAcidSequence, MhcRegionType, ? extends SequenceRegionMarkup> markup;
 
-    public MhcChain(MhcAllele mhcAllele,
+    public MhcChain(MhcAlleleWithSequence mhcAllele,
                     SequenceRegionMarkup<AminoAcidSequence, MhcRegionType, ? extends SequenceRegionMarkup> markup,
                     Chain structureChain) {
         this.mhcAllele = mhcAllele;
@@ -18,7 +18,7 @@ public final class MhcChain implements StructureChainWithMarkup<MhcRegionType> {
         this.structureChain = structureChain;
     }
 
-    public MhcAllele getMhcAllele() {
+    public MhcAlleleWithSequence getMhcAllele() {
         return mhcAllele;
     }
 

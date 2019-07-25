@@ -2,14 +2,16 @@ package com.antigenomics.mir.structure.mapper;
 
 import com.antigenomics.mir.mappers.SequenceMapperFactory;
 import com.antigenomics.mir.mappers.align.SimpleExhaustiveMapperFactory;
+import com.antigenomics.mir.mhc.MhcAlleleLibraryUtils;
+import com.antigenomics.mir.mhc.MhcAlleleWithSequence;
 import com.antigenomics.mir.segment.JoiningSegment;
+import com.antigenomics.mir.segment.SegmentLibraryUtils;
 import com.antigenomics.mir.segment.VariableSegment;
 import com.antigenomics.mir.structure.PeptideChain;
 import com.antigenomics.mir.structure.PeptideMhcComplex;
 import com.milaboratory.core.alignment.AffineGapAlignmentScoring;
 import com.milaboratory.core.alignment.BLASTMatrix;
 import com.milaboratory.core.sequence.AminoAcidSequence;
-import com.antigenomics.mir.mhc.MhcAllele;
 import com.antigenomics.mir.structure.TcrPeptideMhcComplex;
 import com.antigenomics.mir.structure.pdb.Structure;
 
@@ -30,13 +32,13 @@ public class PeptideMhcComplexMapper {
     );
 
     public PeptideMhcComplexMapper(SequenceMapperFactory<AminoAcidSequence> mapperFactory) {
-        this(DefaultComplexMapperLibrary.INSTANCE.getMhcAlleles(),
-                DefaultComplexMapperLibrary.INSTANCE.getVariableSegments(),
-                DefaultComplexMapperLibrary.INSTANCE.getJoiningSegments(),
+        this(MhcAlleleLibraryUtils.getBuiltinMhcLibraryBundle().getAllMhcAlleles(),
+                SegmentLibraryUtils.getBuiltinTcrAbLibraryBundle().getAllVariableSegments(true),
+                SegmentLibraryUtils.getBuiltinTcrAbLibraryBundle().getAllJoiningSegments(true),
                 mapperFactory);
     }
 
-    public PeptideMhcComplexMapper(Collection<MhcAllele> mhcAlleles,
+    public PeptideMhcComplexMapper(Collection<MhcAlleleWithSequence> mhcAlleles,
                                    Collection<VariableSegment> variableSegments,
                                    Collection<JoiningSegment> joiningSegments,
                                    SequenceMapperFactory<AminoAcidSequence> mapperFactory) {

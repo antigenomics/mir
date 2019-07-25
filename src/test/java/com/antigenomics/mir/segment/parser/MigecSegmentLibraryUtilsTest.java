@@ -1,7 +1,8 @@
 package com.antigenomics.mir.segment.parser;
 
 import com.antigenomics.mir.segment.Gene;
-import com.antigenomics.mir.segment.Species;
+import com.antigenomics.mir.Species;
+import com.antigenomics.mir.segment.MigecSegmentLibraryUtils;
 import org.junit.Test;
 
 import java.util.Arrays;

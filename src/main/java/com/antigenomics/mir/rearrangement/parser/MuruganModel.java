@@ -1,7 +1,7 @@
 package com.antigenomics.mir.rearrangement.parser;
 
 import com.antigenomics.mir.segment.Gene;
-import com.antigenomics.mir.segment.Species;
+import com.antigenomics.mir.Species;
 import com.antigenomics.mir.probability.parser.PlainTextHierarchicalModel;
 import com.antigenomics.mir.probability.parser.HierarchicalModelFormula;
 

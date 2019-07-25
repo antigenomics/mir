@@ -2,6 +2,7 @@ package com.antigenomics.mir.structure.mapper;
 
 import com.antigenomics.mir.TestUtils;
 import com.antigenomics.mir.mappers.align.SimpleExhaustiveMapperFactory;
+import com.antigenomics.mir.segment.SegmentLibraryUtils;
 import com.antigenomics.mir.structure.AntigenReceptorRegionType;
 import com.antigenomics.mir.structure.pdb.parser.PdbParserUtils;
 import com.milaboratory.core.alignment.AffineGapAlignmentScoring;
@@ -22,8 +23,8 @@ public class AntigenReceptorMapperTest {
         Structure struct = PdbParserUtils
                 .parseStructure("1ao7_al", TestUtils.streamFrom("structures/1ao7_al.pdb"));
 
-        var allVAlleles = DefaultComplexMapperLibrary.INSTANCE.getVariableSegments();
-        var allJAlleles = DefaultComplexMapperLibrary.INSTANCE.getJoiningSegments();
+        var allVAlleles = SegmentLibraryUtils.getBuiltinTcrAbLibraryBundle().getAllVariableSegments(true);
+        var allJAlleles = SegmentLibraryUtils.getBuiltinTcrAbLibraryBundle().getAllJoiningSegments(true);
 
         var mapper = new AntigenReceptorMapper(allVAlleles, allJAlleles,
                 new SimpleExhaustiveMapperFactory<>(

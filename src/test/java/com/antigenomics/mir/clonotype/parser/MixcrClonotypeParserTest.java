@@ -5,8 +5,8 @@ import com.antigenomics.mir.clonotype.rearrangement.JunctionMarkup;
 import com.antigenomics.mir.structure.AntigenReceptorRegionType;
 import com.milaboratory.core.sequence.AminoAcidSequence;
 import com.antigenomics.mir.segment.Gene;
-import com.antigenomics.mir.segment.Species;
-import com.antigenomics.mir.segment.parser.MigecSegmentLibraryUtils;
+import com.antigenomics.mir.Species;
+import com.antigenomics.mir.segment.MigecSegmentLibraryUtils;
 import com.milaboratory.core.sequence.NucleotideSequence;
 import org.junit.Test;
 

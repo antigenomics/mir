@@ -1,90 +1,60 @@
 package com.antigenomics.mir.mhc;
 
 import com.antigenomics.mir.CommonUtils;
-import com.antigenomics.mir.mappers.markup.ArrayBasedSequenceRegionMarkup;
-import com.antigenomics.mir.segment.Species;
-import com.antigenomics.mir.structure.MhcRegionType;
-import com.milaboratory.core.sequence.AminoAcidSequence;
+import com.antigenomics.mir.Species;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 public final class MhcAlleleLibraryUtils {
-    private static final int NUM_COLUMNS = 10;
-    private static final String HEADER = "species\tmhc.class\tchain\tallele\tsignal.start\tregion1.start\tregion2.start\tregion3.start\tmembrane.start";
-    private static final String RESOURCE_PATH = "mhc/mhc_serotype_prot.txt";
+    public static final String PATH = "mhc/mhc_serotype_prot.txt";
 
-    public static MhcAlleleLibrary load(Species species, MhcClassType mhcClassType) {
-        try {
-            return parse(CommonUtils.getResourceAsStream(RESOURCE_PATH),
-                    species,
-                    mhcClassType);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+    private static final Map<SpeciesMhcClassTuple, MhcAlleleLibrary<MhcAlleleWithSequence>> resourceLibraryCache = new ConcurrentHashMap<>();
+
+    private MhcAlleleLibraryUtils() {
+
     }
 
-    public static MhcAlleleLibrary parse(InputStream inputStream, Species species,
-                                         MhcClassType mhcClassType) throws IOException {
-        Map<String, MhcAllele> mhcAlleles = new HashMap<>();
-        try (BufferedReader br = new BufferedReader(new InputStreamReader(inputStream))) {
-            boolean firstLine = true;
-            String line;
-
-            while ((line = br.readLine()) != null) {
-                if (firstLine) {
-                    if (!line.startsWith(HEADER)) {
-                        throw new RuntimeException("Bad header:\n" + line + "\n- should start with:\n" + HEADER);
+    public static MhcAlleleLibrary<MhcAlleleWithSequence> getLibraryFromResources(Species species, MhcClassType mhcClassType) {
+        return resourceLibraryCache.computeIfAbsent(
+                new SpeciesMhcClassTuple(species, mhcClassType),
+                x -> {
+                    try {
+                        return MhcAlleleLibraryParser.parse(CommonUtils.getResourceAsStream(PATH), species, mhcClassType);
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
                     }
+                });
+    }
 
-                    firstLine = false;
-                    continue;
-                }
+    public static MhcAlleleLibrary<MhcAlleleWithSequence> getLibraryFromFile(String path, Species species, MhcClassType mhcClassType) throws IOException {
+        return MhcAlleleLibraryParser.parse(new FileInputStream(path), species, mhcClassType);
+    }
 
-                String[] splitLine = line.split("\t");
+    public static MhcAlelleLibraryBundle<MhcAlleleImpl, MockMhcAlleleLibrary> getDummyMhcLibraryBundle() {
+        Map<SpeciesMhcClassTuple, MockMhcAlleleLibrary> mhcLibraryMap = new HashMap<>();
 
-                if (splitLine.length < NUM_COLUMNS) {
-                    throw new RuntimeException("Cannot parse MHC allele line, bad number of columns in line:\n" +
-                            Arrays.toString(splitLine));
-                }
-
-                if (species.matches(splitLine[0]) &&
-                        mhcClassType.matches(splitLine[1])) {
-
-                    String id = splitLine[3];
-                    String mhcChainTypeStr = splitLine[2];
-                    MhcChainType mhcChainType = null;
-                    if (MhcChainType.MHCa.matches(mhcChainTypeStr)) {
-                        mhcChainType = MhcChainType.MHCa;
-                    } else if (MhcChainType.MHCb.matches(mhcChainTypeStr)) {
-                        mhcChainType = MhcChainType.MHCb;
-                    } else {
-                        throw new RuntimeException("Cannot parse MHC chain type " + mhcChainTypeStr);
-                    }
-
-                    AminoAcidSequence sequence = new AminoAcidSequence(splitLine[9]);
-
-                    var markup = new ArrayBasedSequenceRegionMarkup<>(
-                            sequence,
-                            new int[]{
-                                    Integer.parseInt(splitLine[4]), // signal   start
-                                    Integer.parseInt(splitLine[5]), // region1   start
-                                    Integer.parseInt(splitLine[6]), // region2   start
-                                    Integer.parseInt(splitLine[7]), // region3   start
-                                    Integer.parseInt(splitLine[8]), // membrane start
-                                    sequence.size()                 // end
-                            },
-                            MhcRegionType.class
-                    );
-
-                    mhcAlleles.put(id, new MhcAllele(id, mhcChainType, mhcClassType, species, markup));
-                }
+        for (Species species : Arrays.asList(Species.Human, Species.Mouse, Species.Monkey)) {
+            for (MhcClassType mhcClassType : Arrays.asList(MhcClassType.MHCI, MhcClassType.MHCII)) {
+                mhcLibraryMap.put(new SpeciesMhcClassTuple(species, mhcClassType),
+                        new MockMhcAlleleLibrary(mhcClassType, species));
             }
         }
 
-        return new MhcAlleleLibrary(mhcClassType, species, mhcAlleles);
+        return new MhcAlelleLibraryBundle<>(mhcLibraryMap);
+    }
+
+    public static MhcAlelleLibraryBundle<MhcAlleleWithSequence, MhcAlleleLibrary<MhcAlleleWithSequence>> getBuiltinMhcLibraryBundle() {
+        Map<SpeciesMhcClassTuple, MhcAlleleLibrary<MhcAlleleWithSequence>> mhcLibraryMap = new HashMap<>();
+
+        for (Species species : Arrays.asList(Species.Human, Species.Mouse)) {
+            for (MhcClassType mhcClassType : Arrays.asList(MhcClassType.MHCI, MhcClassType.MHCII)) {
+                mhcLibraryMap.put(new SpeciesMhcClassTuple(species, mhcClassType),
+                        MhcAlleleLibraryUtils.getLibraryFromResources(species, mhcClassType));
+            }
+        }
+
+        return new MhcAlelleLibraryBundle<>(mhcLibraryMap);
     }
 }

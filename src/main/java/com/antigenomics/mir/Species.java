@@ -1,4 +1,4 @@
-package com.antigenomics.mir.segment;
+package com.antigenomics.mir;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -6,6 +6,7 @@ import java.util.stream.Collectors;
 public enum Species {
     Human("HSA", "HomoSapiens", Arrays.asList("human", "homosapiens", "hsa")),
     Mouse("MMU", "MusMusculus", Arrays.asList("mouse", "musmusculus", "mmu")),
+    Monkey("MAMU", "MacacaMulatta", Arrays.asList("monkey", "macacamulatta", "mamu")),
     Mixed("?", "?", Collections.singletonList("?"));
 
     private final String code, fullName;
@@ -36,6 +37,14 @@ public enum Species {
     public static Species combine(Species... species) {
         var speciesSet = new HashSet<>(Arrays.asList(species));
         return speciesSet.size() > 1 ? Mixed : speciesSet.iterator().next();
+    }
 
+    public static Species guess(String name) {
+        for (Species species : Species.values()) {
+            if (species.matches(name)) {
+                return species;
+            }
+        }
+        throw new IllegalArgumentException("No gene matched name '" + name + "'.");
     }
 }

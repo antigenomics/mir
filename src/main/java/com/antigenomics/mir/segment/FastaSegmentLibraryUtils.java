@@ -1,7 +1,7 @@
-package com.antigenomics.mir.segment.parser;
+package com.antigenomics.mir.segment;
 
+import com.antigenomics.mir.Species;
 import com.antigenomics.mir.rearrangement.parser.MuruganModelParserUtils;
-import com.antigenomics.mir.segment.*;
 import com.antigenomics.mir.structure.AntigenReceptorRegionType;
 import com.milaboratory.core.alignment.AffineGapAlignmentScoring;
 import com.milaboratory.core.io.sequence.fasta.FastaReader;
@@ -11,7 +11,6 @@ import com.antigenomics.mir.mappers.SequenceMapperFactory;
 import com.antigenomics.mir.mappers.align.SimpleExhaustiveMapperFactory;
 import com.antigenomics.mir.mappers.markup.PrecomputedSequenceRegionMarkup;
 import com.antigenomics.mir.mappers.markup.SegmentMarkupRealignerNt;
-import com.antigenomics.mir.segment.*;
 
 import java.io.BufferedReader;
 import java.io.IOException;

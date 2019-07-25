@@ -1,6 +1,6 @@
 package com.antigenomics.mir.structure.mapper;
 
-import com.antigenomics.mir.segment.Species;
+import com.antigenomics.mir.Species;
 import com.antigenomics.mir.structure.TestStructureCache;
 import com.milaboratory.core.sequence.AminoAcidSequence;
 import com.antigenomics.mir.structure.TcrPeptideMhcComplex;

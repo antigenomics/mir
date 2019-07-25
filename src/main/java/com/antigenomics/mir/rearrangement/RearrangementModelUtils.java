@@ -5,7 +5,7 @@ import com.antigenomics.mir.rearrangement.parser.MuruganModel;
 import com.antigenomics.mir.rearrangement.parser.MuruganModelParserUtils;
 import com.antigenomics.mir.segment.Gene;
 import com.antigenomics.mir.segment.SegmentLibrary;
-import com.antigenomics.mir.segment.Species;
+import com.antigenomics.mir.Species;
 
 public final class RearrangementModelUtils {
     public static RearrangementModel loadMuruganModel(SegmentLibrary segmentLibrary) {

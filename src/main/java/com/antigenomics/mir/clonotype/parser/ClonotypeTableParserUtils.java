@@ -5,8 +5,8 @@ import com.antigenomics.mir.clonotype.io.ClonotypeTableBufferedPipe;
 import com.antigenomics.mir.clonotype.io.ClonotypeTablePipe;
 import com.antigenomics.mir.segment.Gene;
 import com.antigenomics.mir.segment.SegmentLibrary;
-import com.antigenomics.mir.segment.Species;
-import com.antigenomics.mir.segment.parser.MigecSegmentLibraryUtils;
+import com.antigenomics.mir.Species;
+import com.antigenomics.mir.segment.MigecSegmentLibraryUtils;
 
 import java.io.InputStream;
 

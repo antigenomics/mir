@@ -1,5 +1,6 @@
 package com.antigenomics.mir.segment;
 
+import com.antigenomics.mir.Species;
 import org.junit.Test;
 
 public class MockSegmentLibraryTest {

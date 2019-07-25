@@ -38,6 +38,7 @@ public class ComputeCdr3VJPairwiseDistances extends ClonotypeTableBaseScript {
     private final AtomicLong warningCounter = new AtomicLong(0);
 
     @Override
+    @SuppressWarnings("unchecked")
     public Void call() throws Exception {
         var pipes = getClonotypePipes().toArray();
         var firstSample = (ClonotypeTablePipe<Clonotype>) pipes[0];

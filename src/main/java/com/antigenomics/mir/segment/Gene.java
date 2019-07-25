@@ -1,5 +1,7 @@
 package com.antigenomics.mir.segment;
 
+import java.util.Arrays;
+
 public enum Gene {
     TRA("TRA", false, 0), TRB("TRB", true, 1),
     TRG("TRG", false, 0), TRD("TRD", true, 1),
@@ -29,5 +31,14 @@ public enum Gene {
 
     public boolean matches(String name) {
         return code.equalsIgnoreCase(name);
+    }
+
+    public static Gene guess(String name) {
+        for (Gene gene : Gene.values()) {
+            if (gene.matches(name)) {
+                return gene;
+            }
+        }
+        throw new IllegalArgumentException("No gene matched name '" + name + "'.");
     }
 }

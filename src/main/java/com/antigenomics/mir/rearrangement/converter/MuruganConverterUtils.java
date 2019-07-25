@@ -5,7 +5,7 @@ import com.antigenomics.mir.rearrangement.blocks.NucleotideDistribution;
 import com.antigenomics.mir.rearrangement.blocks.NucleotidePairDistribution;
 import com.antigenomics.mir.rearrangement.parser.MuruganModel;
 import com.antigenomics.mir.segment.SegmentLibrary;
-import com.antigenomics.mir.segment.parser.FastaSegmentLibraryUtils;
+import com.antigenomics.mir.segment.FastaSegmentLibraryUtils;
 
 import static com.antigenomics.mir.probability.parser.PlainTextHierarchicalModelUtils.*;
 

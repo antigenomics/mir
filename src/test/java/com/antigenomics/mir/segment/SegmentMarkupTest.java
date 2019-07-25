@@ -1,10 +1,10 @@
 package com.antigenomics.mir.segment;
 
+import com.antigenomics.mir.Species;
 import com.milaboratory.core.sequence.AminoAcidSequence;
 import com.milaboratory.core.sequence.NucleotideSequence;
 import com.milaboratory.core.sequence.Sequence;
 import com.antigenomics.mir.mappers.markup.SequenceRegion;
-import com.antigenomics.mir.segment.parser.MigecSegmentLibraryUtils;
 import com.antigenomics.mir.structure.AntigenReceptorRegionType;
 import org.junit.Assert;
 import org.junit.Test;

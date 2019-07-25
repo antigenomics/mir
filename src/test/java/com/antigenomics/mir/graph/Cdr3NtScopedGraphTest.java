@@ -12,8 +12,8 @@ import com.antigenomics.mir.rearrangement.RearrangementTemplate;
 import com.antigenomics.mir.rearrangement.converter.MuruganConverterUtils;
 import com.antigenomics.mir.rearrangement.parser.MuruganModelParserUtils;
 import com.antigenomics.mir.segment.Gene;
-import com.antigenomics.mir.segment.Species;
-import com.antigenomics.mir.segment.parser.MigecSegmentLibraryUtils;
+import com.antigenomics.mir.Species;
+import com.antigenomics.mir.segment.MigecSegmentLibraryUtils;
 import org.junit.Assert;
 import org.junit.Test;
 

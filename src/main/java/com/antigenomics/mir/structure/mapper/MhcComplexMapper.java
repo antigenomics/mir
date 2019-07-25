@@ -1,9 +1,9 @@
 package com.antigenomics.mir.structure.mapper;
 
+import com.antigenomics.mir.mhc.MhcAlleleWithSequence;
 import com.milaboratory.core.sequence.AminoAcidSequence;
 import com.antigenomics.mir.mappers.SequenceMapperFactory;
 import com.antigenomics.mir.mappers.markup.ArrayBasedSequenceRegionMarkup;
-import com.antigenomics.mir.mhc.MhcAllele;
 import com.antigenomics.mir.mappers.markup.MhcMarkupRealigner;
 import com.antigenomics.mir.mhc.MhcClassType;
 import com.antigenomics.mir.structure.MhcRegionType;
@@ -14,23 +14,23 @@ import com.antigenomics.mir.structure.pdb.Chain;
 import java.util.Collection;
 
 public class MhcComplexMapper extends AbstractHeterodimerMapper<MhcRegionType, MhcChain, MhcComplex> {
-    private final Collection<MhcAllele> alleleList;
+    private final Collection<MhcAlleleWithSequence> alleleList;
 
-    public MhcComplexMapper(Collection<MhcAllele> alleleList, SequenceMapperFactory<AminoAcidSequence> mapperFactory) {
+    public MhcComplexMapper(Collection<MhcAlleleWithSequence> alleleList, SequenceMapperFactory<AminoAcidSequence> mapperFactory) {
         super(new MhcMarkupRealigner(alleleList, mapperFactory), MhcComplex::new);
         this.alleleList = alleleList;
     }
 
     @Override
     protected MhcChain createChain(ChainMapperResult<MhcRegionType> result) {
-        return new MhcChain((MhcAllele) result.getResult().getPayload(),
+        return new MhcChain((MhcAlleleWithSequence) result.getResult().getPayload(),
                 result.getResult().getMarkup(),
                 result.getChain());
     }
 
     @Override
     protected MhcChain createDummy(ChainMapperResult<MhcRegionType> template) {
-        var allele = (MhcAllele) template.getResult().getPayload();
+        var allele = (MhcAlleleWithSequence) template.getResult().getPayload();
         if (allele.getMhcClassType() == MhcClassType.MHCI) {
             var b2mOpt = alleleList.stream().filter(x ->
                     x.getMhcClassType() == MhcClassType.MHCI &&

@@ -1,6 +1,6 @@
 package com.antigenomics.mir.structure;
 
-import com.antigenomics.mir.segment.Species;
+import com.antigenomics.mir.Species;
 import com.antigenomics.mir.structure.pdb.Structure;
 import com.antigenomics.mir.structure.pdb.ChainRegion;
 

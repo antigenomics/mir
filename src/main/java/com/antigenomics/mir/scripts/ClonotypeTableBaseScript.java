@@ -6,7 +6,7 @@ import com.antigenomics.mir.clonotype.io.ClonotypeTablePipe;
 import com.antigenomics.mir.clonotype.parser.ClonotypeTableParserUtils;
 import com.antigenomics.mir.clonotype.parser.Software;
 import com.antigenomics.mir.segment.Gene;
-import com.antigenomics.mir.segment.Species;
+import com.antigenomics.mir.Species;
 import picocli.CommandLine;
 
 import java.io.IOException;

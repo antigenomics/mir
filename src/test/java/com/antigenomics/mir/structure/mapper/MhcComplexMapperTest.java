@@ -1,5 +1,6 @@
 package com.antigenomics.mir.structure.mapper;
 
+import com.antigenomics.mir.mhc.MhcAlleleLibraryUtils;
 import com.milaboratory.core.alignment.AffineGapAlignmentScoring;
 import com.milaboratory.core.alignment.BLASTMatrix;
 import com.antigenomics.mir.mappers.align.SimpleExhaustiveMapperFactory;
@@ -16,7 +17,7 @@ public class MhcComplexMapperTest {
     public void test() throws IOException {
         var struct = TestStructureCache.get("1ao7");
 
-        var allAlleles = DefaultComplexMapperLibrary.INSTANCE.getMhcAlleles();
+        var allAlleles = MhcAlleleLibraryUtils.getBuiltinMhcLibraryBundle().getAllMhcAlleles();
 
         var mapper = new MhcComplexMapper(allAlleles,
                 new SimpleExhaustiveMapperFactory<>(

@@ -1,9 +1,10 @@
 package com.antigenomics.mir.segment.parser;
 
+import com.antigenomics.mir.segment.FastaSegmentLibraryUtils;
 import com.milaboratory.core.io.sequence.fasta.FastaRecord;
 import com.milaboratory.core.sequence.NucleotideSequence;
 import com.antigenomics.mir.segment.Gene;
-import com.antigenomics.mir.segment.Species;
+import com.antigenomics.mir.Species;
 import com.antigenomics.mir.structure.AntigenReceptorRegionType;
 import org.junit.Assert;
 import org.junit.Test;

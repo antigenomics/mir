@@ -1,9 +1,9 @@
-package com.antigenomics.mir.segment.parser;
+package com.antigenomics.mir.segment;
 
+import com.antigenomics.mir.Species;
 import com.antigenomics.mir.segment.*;
 import com.milaboratory.core.sequence.NucleotideSequence;
 import com.antigenomics.mir.StringArrayIndexer;
-import com.antigenomics.mir.segment.*;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -29,11 +29,11 @@ final class MigecSegmentLibraryParser {
 
     }
 
-    public static SegmentLibraryImpl load(InputStream data, Species species, Gene gene) throws IOException {
-        return load(data, species, gene, true);
+    public static SegmentLibraryImpl parse(InputStream data, Species species, Gene gene) throws IOException {
+        return parse(data, species, gene, true);
     }
 
-    public static SegmentLibraryImpl load(InputStream data, Species species, Gene gene,
+    public static SegmentLibraryImpl parse(InputStream data, Species species, Gene gene,
                                           boolean fixDV) throws IOException {
         Map<String, VariableSegment> variableSegmentMap = new HashMap<>();
         Map<String, DiversitySegment> diversitySegmentMap = new HashMap<>();

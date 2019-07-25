@@ -1,5 +1,7 @@
 package com.antigenomics.mir.segment;
 
+import com.antigenomics.mir.Species;
+
 import java.util.*;
 import java.util.stream.Collectors;
 

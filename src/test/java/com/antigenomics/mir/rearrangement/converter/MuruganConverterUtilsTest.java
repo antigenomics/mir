@@ -1,12 +1,12 @@
 package com.antigenomics.mir.rearrangement.converter;
 
 import com.antigenomics.mir.segment.Gene;
-import com.antigenomics.mir.segment.Species;
+import com.antigenomics.mir.Species;
 import org.junit.Test;
 
 import static com.antigenomics.mir.rearrangement.converter.MuruganConverterUtils.*;
 import static com.antigenomics.mir.rearrangement.parser.MuruganModelParserUtils.getModelFromResources;
-import static com.antigenomics.mir.segment.parser.MigecSegmentLibraryUtils.getLibraryFromResources;
+import static com.antigenomics.mir.segment.MigecSegmentLibraryUtils.getLibraryFromResources;
 
 public class MuruganConverterUtilsTest {
     @Test

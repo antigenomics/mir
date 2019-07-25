@@ -3,32 +3,42 @@ package com.antigenomics.mir.clonotype.parser;
 import com.antigenomics.mir.StringArrayIndexer;
 import com.antigenomics.mir.clonotype.ClonotypeCall;
 import com.antigenomics.mir.clonotype.ClonotypeHelper;
+import com.antigenomics.mir.clonotype.annotated.VdjdbClonotype;
 import com.antigenomics.mir.clonotype.rearrangement.JunctionMarkup;
 import com.antigenomics.mir.clonotype.rearrangement.ReadlessClonotypeImpl;
-import com.antigenomics.mir.clonotype.rearrangement.SegmentTrimming;
+import com.antigenomics.mir.mhc.MhcAlelleLibraryBundle;
 import com.antigenomics.mir.segment.*;
 import com.google.gson.Gson;
-import com.google.gson.internal.LinkedTreeMap;
 import com.google.gson.reflect.TypeToken;
 import com.milaboratory.core.sequence.AminoAcidSequence;
 import com.milaboratory.core.sequence.NucleotideSequence;
 
-import java.lang.reflect.Type;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.function.Consumer;
 
-public class VDJdbClonotypeParser extends AbstractClonotypeTableParser<ReadlessClonotypeImpl> {
+public class VDJdbClonotypeParser implements ClonotypeTableParser<VdjdbClonotype> {
     private final HeaderInfo headerInfo;
+    private final String[] header;
     private final AtomicInteger idCounter = new AtomicInteger();
+    private final SegmentLibraryBundle segmentLibraryBundle;
+    private final MhcAlelleLibraryBundle mhcAlelleLibraryBundle;
 
-    public VDJdbClonotypeParser(String[] header, SegmentLibrary segmentLibrary, boolean majorAlleles) {
-        super(header, segmentLibrary, majorAlleles);
+    public VDJdbClonotypeParser(String[] header,
+                                SegmentLibraryBundle segmentLibraryBundle,
+                                MhcAlelleLibraryBundle mhcAlelleLibraryBundle) {
+        this.header = header;
         this.headerInfo = new HeaderInfo(header);
+        this.segmentLibraryBundle = segmentLibraryBundle;
+        this.mhcAlelleLibraryBundle = mhcAlelleLibraryBundle;
     }
 
     @Override
-    public ClonotypeCall<ReadlessClonotypeImpl> parse(String[] splitLine) {
+    public String[] getHeader() {
+        return header.clone();
+    }
+
+    @Override
+    public ClonotypeCall<VdjdbClonotype> parse(String[] splitLine) {
         int id = idCounter.incrementAndGet();
         int count = 1;
         double freq = 1.0;
@@ -38,12 +48,6 @@ public class VDJdbClonotypeParser extends AbstractClonotypeTableParser<ReadlessC
 
         List<SegmentCall<VariableSegment>> vCalls = Collections.singletonList(getV(splitLine[headerInfo.vSegmColIndex], 1.0f));
         List<SegmentCall<JoiningSegment>> jCalls = Collections.singletonList(getJ(splitLine[headerInfo.jSegmColIndex], 1.0f));
-
-        // TODO: Singleton list with MissingSegment or empty list?
-        List<SegmentCall<DiversitySegment>> dCalls = Collections.singletonList(getD("", 1.0f)); // Or Empty list?
-        List<SegmentCall<ConstantSegment>> cCalls = Collections.singletonList(getC("", 1.0f));  // Or Empty list?
-
-        SegmentTrimming segmentTrimming = new SegmentTrimming(-1, -1, -1, -1);
 
         Gson gson = new Gson();
 
@@ -71,6 +75,8 @@ public class VDJdbClonotypeParser extends AbstractClonotypeTableParser<ReadlessC
             put("web.cdr3fix.nc", splitLine[headerInfo.webCdr3FixNcColIndex]);
             put("web.cdr3fix.unmp", splitLine[headerInfo.webCdr3FixUnmpColIndex]);
         }};
+
+        // todo: epitope -> aa sequence, mhc -> MhcAlleleWithSequence, gene -> Gene, species -> Species
 
         Arrays.asList(headerInfo.methodColIndex, headerInfo.metaColIndex, headerInfo.cdr3FixColIndex).forEach(index -> {
             HashMap<String, String> g = gson.fromJson(splitLine[index], new TypeToken<HashMap<String, String>>() {
