@@ -8,7 +8,7 @@ import com.milaboratory.core.sequence.AminoAcidSequence;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public class Cdr3VJPairwiseDistances<T extends Clonotype>
+public final class Cdr3VJPairwiseDistances<T extends Clonotype>
         implements Pipe<ClonotypeEdgeWithFullAlignment<T, AminoAcidSequence>> {
     private final CachedSegmentAligner<AminoAcidSequence> segmentAlignerV, segmentAlignerJ;
     private final Cdr3Aligner<AminoAcidSequence> cdr3Aligner;
@@ -25,21 +25,14 @@ public class Cdr3VJPairwiseDistances<T extends Clonotype>
         this.cdr3Aligner = new Cdr3Aligner<>(scoringCdr3);
     }
 
-    private Stream<ClonotypeEdgeWithFullAlignment<T, AminoAcidSequence>> flatMap(boolean parallel) {
-        var clonotype2Lst = clonotypes2.stream().collect(Collectors.toList());
-
-        return (parallel ? clonotypes1.stream() : clonotypes2.parallelStream())
-                .flatMap(from -> clonotype2Lst.stream().map(to -> align(from, to)));
-    }
-
     @Override
     public Stream<ClonotypeEdgeWithFullAlignment<T, AminoAcidSequence>> stream() {
-        return flatMap(false);
+        return GraphUtils.flatMap(clonotypes1, clonotypes2, this::align, false);
     }
 
     @Override
     public Stream<ClonotypeEdgeWithFullAlignment<T, AminoAcidSequence>> parallelStream() {
-        return flatMap(true);
+        return GraphUtils.flatMap(clonotypes1, clonotypes2, this::align, true);
     }
 
     private ClonotypeEdgeWithFullAlignment<T, AminoAcidSequence> align(T clonotype1, T clonotype2) {

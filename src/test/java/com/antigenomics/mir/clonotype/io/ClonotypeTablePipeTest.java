@@ -16,6 +16,16 @@ import static org.junit.Assert.assertEquals;
 
 public class ClonotypeTablePipeTest {
     @Test
+    public void closeTest() {
+        var sampleSupplier = TestUtils.streamSupplierFrom("samples/trad_sample.txt.gz");
+        var library = MigecSegmentLibraryUtils.getLibraryFromResources(Species.Human, Gene.TRA);
+        var parserFactory = new VDJtoolsClonotypeParserFactory(library, true);
+
+        var clonotypeIterator = new ClonotypeTablePipe<>(sampleSupplier.get(), parserFactory);
+        assertEquals(1051, clonotypeIterator.stream().count());
+    }
+
+    @Test
     public void readVdjdbTest() {
         var sampleSupplier = TestUtils.streamSupplierFrom("samples/vdjdb.txt.gz");
         var parserFactory = new VDJdbClonotypeParserFactory();

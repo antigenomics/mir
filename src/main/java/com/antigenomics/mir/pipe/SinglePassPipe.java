@@ -1,6 +1,7 @@
 package com.antigenomics.mir.pipe;
 
 import java.util.Iterator;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 

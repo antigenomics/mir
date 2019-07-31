@@ -10,6 +10,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class ClonotypeTablePipe<T extends Clonotype>
         implements SinglePassPipe<ClonotypeCall<T>>, AutoCloseable {
@@ -53,7 +54,7 @@ public class ClonotypeTablePipe<T extends Clonotype>
                 line = bufferedReader.readLine();
                 return line != null;
             }
-        } catch (IOException e) {
+        } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
