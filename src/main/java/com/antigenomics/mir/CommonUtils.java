@@ -8,6 +8,7 @@ import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 
 public final class CommonUtils {
+    private static final int IO_BUFFER_SIZE = 65536;
     private static final CommonUtils THIS = new CommonUtils();
 
     private CommonUtils() {
@@ -19,7 +20,7 @@ public final class CommonUtils {
 
     public static InputStream getFileAsStream(String path, boolean gzip) throws IOException {
         var stream = new FileInputStream(path);
-        return gzip ? new GZIPInputStream(stream) : stream;
+        return gzip ? new GZIPInputStream(stream, IO_BUFFER_SIZE) : new BufferedInputStream(stream, IO_BUFFER_SIZE);
     }
 
     public static OutputStream createFileAsStream(String path) throws IOException {
@@ -28,7 +29,7 @@ public final class CommonUtils {
 
     public static OutputStream createFileAsStream(String path, boolean gzip) throws IOException {
         var stream = new FileOutputStream(path);
-        return gzip ? new GZIPOutputStream(stream) : stream;
+        return gzip ? new GZIPOutputStream(stream, IO_BUFFER_SIZE) : new BufferedOutputStream(stream, IO_BUFFER_SIZE);
     }
 
     public static InputStream getResourceAsStream(String path) throws IOException {
@@ -37,7 +38,7 @@ public final class CommonUtils {
 
     public static InputStream getResourceAsStream(String path, boolean gzip) throws IOException {
         var stream = THIS.getClass().getClassLoader().getResourceAsStream(path);
-        return gzip ? new GZIPInputStream(stream) : stream;
+        return gzip ? new GZIPInputStream(stream, IO_BUFFER_SIZE) : new BufferedInputStream(stream, IO_BUFFER_SIZE);
     }
 
     private static boolean isGzipped(String path) {
