@@ -77,6 +77,11 @@ public class VariableSegmentImpl implements VariableSegment {
     }
 
     @Override
+    public NucleotideSequence getGermlineSequenceNtWithoutCdr3() {
+        return germlineNt.getRange(0, germlineNt.size() - cdr3Part.size());
+    }
+
+    @Override
     public AminoAcidSequence getGermlineSequenceAa() {
         return regionMarkupAa.getFullSequence();
     }

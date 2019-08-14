@@ -15,7 +15,8 @@ public class Examples implements Runnable {
                 .addSubcommand("filter-structures", new FilterStructures())
                 .addSubcommand("clonotype-summary-stats", new ClonotypeSummaryStatistics())
                 .addSubcommand("compute-tpm-contacts", new ComputeTPMContacts())
-                .addSubcommand("cdr3aavj-pairwise-dist", new ComputeCdr3VJPairwiseDistances());
+                .addSubcommand("cdr3aavj-pairwise-dist", new ComputeCdr3VJPairwiseDistances())
+                .addSubcommand("compute-receptor-contigs", new ComputeReceptorContigs());
         cmd.parseWithHandler(new CommandLine.RunAll(), args);
     }
 

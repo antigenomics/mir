@@ -30,6 +30,11 @@ public final class MissingConstantSegment implements ConstantSegment {
     }
 
     @Override
+    public NucleotideSequence getGermlineSequenceNtWithoutCdr3() {
+        return NucleotideSequence.EMPTY;
+    }
+
+    @Override
     public AminoAcidSequence getGermlineSequenceAa() {
         return AminoAcidSequence.EMPTY;
     }

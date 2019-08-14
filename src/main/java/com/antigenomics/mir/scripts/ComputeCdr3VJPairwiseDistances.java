@@ -41,6 +41,9 @@ public class ComputeCdr3VJPairwiseDistances extends ClonotypeTableBaseScript {
     @SuppressWarnings("unchecked")
     public Void call() throws Exception {
         var pipes = getClonotypePipes().toArray();
+        if (pipes.length != 2) {
+            throw new RuntimeException("Exactly two samples should be provided in input");
+        }
         var firstSample = (ClonotypeTablePipe<Clonotype>) pipes[0];
         var secondSample = (ClonotypeTablePipe<Clonotype>) pipes[1];
         AlignmentScoring<AminoAcidSequence>

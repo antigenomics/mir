@@ -1,5 +1,5 @@
 package com.antigenomics.mir.clonotype.parser;
 
 public enum Software {
-    VDJtools, MIXCR, MIR
+    VDJtools, MIXCR, MIR, VDJdb
 }

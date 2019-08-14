@@ -43,6 +43,11 @@ public class ConstantSegmentImpl implements ConstantSegment {
     }
 
     @Override
+    public NucleotideSequence getGermlineSequenceNtWithoutCdr3() {
+        return germlineSequenceNt;
+    }
+
+    @Override
     public AminoAcidSequence getGermlineSequenceAa() {
         return germlineSequenceAa;
     }

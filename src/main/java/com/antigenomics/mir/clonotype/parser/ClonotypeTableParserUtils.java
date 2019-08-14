@@ -26,6 +26,10 @@ public final class ClonotypeTableParserUtils {
                 parserFactory = new MixcrClonotypeParserFactory(segmentLibrary, majorAllelesOnly);
                 break;
 
+            case VDJdb:
+                parserFactory = new VDJdbClonotypeParserFactory();
+                break;
+
             default:
                 throw new IllegalArgumentException("Software " + software + " not supported");
         }

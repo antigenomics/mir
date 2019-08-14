@@ -3,6 +3,7 @@ package com.antigenomics.mir.clonotype;
 import com.antigenomics.mir.segment.*;
 import com.milaboratory.core.sequence.AminoAcidSequence;
 import com.milaboratory.core.sequence.NucleotideSequence;
+
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -47,5 +48,12 @@ public interface Clonotype {
 
     default double getWeight() {
         return 1.0;
+    }
+
+    default NucleotideSequence getGermlineContigNt() {
+        return getBestVariableSegment().getGermlineSequenceNtWithoutCdr3()
+                .concatenate(getCdr3Nt())
+                .concatenate(getBestJoiningSegment().getGermlineSequenceNtWithoutCdr3())
+                .concatenate(getBestConstantSegment().getGermlineSequenceNtWithoutCdr3());
     }
 }

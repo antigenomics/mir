@@ -65,6 +65,11 @@ public class DiversitySegmentImpl implements DiversitySegment {
     }
 
     @Override
+    public NucleotideSequence getGermlineSequenceNtWithoutCdr3() {
+        return NucleotideSequence.EMPTY;
+    }
+
+    @Override
     public AminoAcidSequence getGermlineSequenceAa() {
         return cdr3PartAa;
     }

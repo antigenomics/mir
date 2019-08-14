@@ -82,6 +82,11 @@ public class JoiningSegmentImpl implements JoiningSegment {
     }
 
     @Override
+    public NucleotideSequence getGermlineSequenceNtWithoutCdr3() {
+        return germlineNt.getRange(cdr3Part.size(), germlineNt.size());
+    }
+
+    @Override
     public AminoAcidSequence getGermlineSequenceAa() {
         return regionMarkupAa.getFullSequence();
     }

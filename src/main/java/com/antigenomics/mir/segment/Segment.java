@@ -8,6 +8,8 @@ public interface Segment {
 
     NucleotideSequence getGermlineSequenceNt();
 
+    NucleotideSequence getGermlineSequenceNtWithoutCdr3();
+
     AminoAcidSequence getGermlineSequenceAa();
 
     boolean isMissingInLibrary();
