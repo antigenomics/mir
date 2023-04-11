@@ -39,6 +39,9 @@ public class TestStructureCache {
             cache.put("4grl",
                     PdbParserUtils.parseStructure("4grl_al", TestUtils.streamFrom("structures/4grl_al.pdb"))
             );
+            cache.put("5d2n",
+                    PdbParserUtils.parseStructure("5d2n_al2", TestUtils.streamFrom("structures/5d2n_al2.pdb"))
+            );
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

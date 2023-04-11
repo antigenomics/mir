@@ -19,4 +19,17 @@ public class BackboneWriterTest {
         //System.out.println(os.toString());
         System.out.println(os.toString().substring(0, 600) + "...");
     }
+
+    @Test
+    public void test2() throws IOException {
+        var os = new ByteArrayOutputStream();
+        try (var writer = new BackboneWriter(os)) {
+            var geom = new StructureAxesAndTorsions(TestStructureCache.get("5d2n"));
+
+            writer.accept(geom);
+        }
+
+        //System.out.println(os.toString());
+        System.out.println(os.toString().substring(0, 600) + "...");
+    }
 }
