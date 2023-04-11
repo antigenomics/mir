@@ -100,6 +100,7 @@ public class MixcrClonotypeParser extends AbstractClonotypeTableParser<Clonotype
             //  e.g. CDR3 ref points -- show skip & issue a warning
 
             String[] refPoints = refPointsLine.split(":");
+
             int cdr3Start = Integer.parseInt(refPoints[RP_CDR3_BEGIN]),
                     vEnd = parseJunctionMarkup(refPoints[RP_V_END_TRIMMED], cdr3Start),
                     jStart = parseJunctionMarkup(refPoints[RP_J_START_TRIMMED], cdr3Start),
@@ -115,7 +116,7 @@ public class MixcrClonotypeParser extends AbstractClonotypeTableParser<Clonotype
 
             segmentTrimming = new SegmentTrimming(vDel, jDel, d5Del, d3Del);
 
-            if (headerInfo.targetSequenceColIndex != -1) {
+            if (headerInfo.targetSequenceColIndex != -1 && refPoints.length > RP_FR4_END) {
                 NucleotideSequence fullSequence = new NucleotideSequence(splitLine[headerInfo.targetSequenceColIndex]);
                 updateRegions(regions, fullSequence, refPoints[RP_FR1_BEGIN], refPoints[RP_FR1_END], AntigenReceptorRegionType.FR1);
                 updateRegions(regions, fullSequence, refPoints[RP_FR1_END], refPoints[RP_CDR1_END], AntigenReceptorRegionType.CDR1);
@@ -157,10 +158,10 @@ public class MixcrClonotypeParser extends AbstractClonotypeTableParser<Clonotype
     }
 
     private static Mutations<NucleotideSequence> getMutations(String alignmentString) {
-        if (alignmentString.isEmpty()) {
+        String[] splitStr = alignmentString.split("[|;]");
+        if (splitStr.length < 6 || splitStr[0].length() == 0 || splitStr[5].length() == 0) {
             return Mutations.EMPTY_NUCLEOTIDE_MUTATIONS;
         }
-        String[] splitStr = alignmentString.split("[|;]");
         int targetFrom = Integer.parseInt(splitStr[0]);
         String mutationString = splitStr[5];
 
